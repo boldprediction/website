@@ -2,66 +2,69 @@
 
 
 {% block header %}
-<div class="container-fluid">
-    <hr>
-	<div class="row">
-		<div class="col-md-12">
-			<h1 class="text-center text-info" >
-				BOLDpredictions
-			</h1>
-		</div>
-    </div>
-</div>
-
 {% endblock%}
 
 
 {% block content %}
 
 {% load static %}
+<section class="subscribe spacing">
+	<div class="container">
+		<!-- <div class="row">
+			<div class="col-md-12">
+				<h1 class="text-center text-info" >
+					BOLDpredictions
+				</h1>
+			</div>
+		</div>
+		<hr> -->
+		<div class="row">
 
-<div class="container-fluid">
-    <hr>
-	<!-- <div class="row">
-		<div class="col-md-12">
-			<h1 class="text-center text-info" >
-				BOLDpredictions
-			</h1>
+			<div class="col-md-4">
+			</div>
+			
+			<div class="col-md-4">
+				<!-- <p style="color: white" >Register to BOLDpredictions</p> -->
+					{% for error in form.non_field_errors %}
+						<span style="color: red">
+						{{error}}
+						</span>
+					{% endfor %}
+				<form role="form" method="post" action="{% url 'register' %}">
+					{% for field in form.visible_fields %}
+						<div class="form-group">
+							<label style="color: white" >
+								{{field.label_tag}}
+							</label>
+							{{ field }}
+						</div>
+					{% endfor %}
+					{% csrf_token%}
+					<div id="subscribe">
+						<p class="subscribe-input"><input type="submit" value="Register" name="Submit"></p> 
+					</div>
+				</form>
+			</div>
+			<div class="col-md-4">
+			</div>
 		</div>
 	</div>
-    <hr> -->
-	<div class="row">
-
-		<div class="col-md-4">
-        </div>
-        
-		<div class="col-md-4">
-            <p style="color: black" >Register to BOLDpredictions:</p>
-                {% for error in form.non_field_errors %}
-                    <span style="color: red">
-                    {{error}}
-                    </span>
-                {% endfor %}
-			<form role="form" method="post" action="{% url 'register' %}">
-                {% for field in form.visible_fields %}
-                    <div class="form-group">
-                        <label style="color: black" >
-                            {{field.label_tag}}
-                        </label>
-                        {{ field }}
-                    </div>
-                {% endfor %}
-                {% csrf_token%}
-
-				<button type="submit" class="btn btn-primary" style="width: 100px">
-					Register
-				</button>
-			</form>
-		</div>
-		<div class="col-md-4">
+</section>
+<section class="features spacing">
+	<div class="container">
+	<div id="subscribe">  
+	<!-- <h2 class="text-center">Login in with Social Media</h2> -->
+	<h3>Login in with Social Media</h3>
+		<div id="socialIcons">
+			<ul> 
+				<li><a href="" title="Twitter" class="twitterIcon"></a></li>
+				<li><a href="" title="facebook" class="facebookIcon"></a></li>
+			</ul>
 		</div>
 	</div>
-</div>
+		
+	</div>
+</section>
 
 
 {% endblock%}

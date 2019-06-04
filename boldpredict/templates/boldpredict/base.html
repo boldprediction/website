@@ -4,15 +4,26 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">		{% load static %}
+		<link href="{% static 'boldpredict/styles.css' %}" rel="stylesheet" type="text/css">
 		{% block staticfiles %}
 		{% endblock %}
  		<link href="{% static 'boldpredict/base.css' %}" rel="stylesheet" type="text/css">
         <!-- Bootstrap core CSS -->
-
-		<title>BOLDpredictions</title>
+		
+		<title>BOLD predictions</title>
 	</head>
 	<body>
-		<div class = "head">
+		<section class="main">
+			<div id="Content" class="wrapper topSection">
+				<div id="Header">
+					<div class="wrapper">
+						<div class="logo"><h1><img src="{% static 'images/logo.png' %}" />BOLD predictions</h1>	</div>
+					</div>
+				</div>
+				<!-- <h2>Stay tuned we're launching soon.</h2> 	 -->
+			<!-- <div class="countdown styled"></div> -->
+			</div>
+		</section>
 			{% block header %}
 			{% endblock %}
 		</div>

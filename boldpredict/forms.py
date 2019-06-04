@@ -1,8 +1,8 @@
 from django import forms
 
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
 from boldpredict.models import *
+from django.contrib.auth.password_validation import validate_password, get_default_password_validators
 
 class RegistrationForm(forms.Form):
     username = forms.CharField(max_length = 20,
@@ -50,6 +50,7 @@ class RegistrationForm(forms.Form):
             raise forms.ValidationError("Password and confirm password don't match.")
         username = self.cleaned_data.get('username')
         email = self.cleaned_data.get('email')
+        validate_password(password,password_validators = get_default_password_validators())
         if User.objects.filter(username__exact=username):
             raise forms.ValidationError("Username is already exist.")
         if User.objects.filter(email__exact=email):
