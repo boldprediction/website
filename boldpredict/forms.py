@@ -18,7 +18,7 @@ class RegistrationForm(forms.Form):
                                error_messages = {'required':'password cannot be none'},
                                )
     confirm_pwd = forms.CharField(max_length = 20,
-                                  label = 'Confirm',
+                                  label = 'Confirm password',
                                   required = True,
                                   widget = forms.PasswordInput(attrs= {'id':'id_confirm_password','class' : 'form-control'}),
                                   error_messages = {'required':'password cannot be none'},
@@ -49,9 +49,10 @@ class RegistrationForm(forms.Form):
         if password and confirm_pwd and password != confirm_pwd:
             raise forms.ValidationError("Password and confirm password don't match.")
         username = self.cleaned_data.get('username')
+        email = self.cleaned_data.get('email')
         if User.objects.filter(username__exact=username):
             raise forms.ValidationError("Username is already exist.")
         if User.objects.filter(email__exact=email):
             raise forms.ValidationError("Email is already registered.")
-            
+
         return cleaned_data
