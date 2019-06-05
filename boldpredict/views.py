@@ -16,7 +16,6 @@ def register_action(request):
     context['form'] = form
 
     if not form.is_valid():
-        # add error message here
         return render(request, 'boldpredict/register.html', context)
 
     new_user = User.objects.create_user(username=form.cleaned_data['username'],

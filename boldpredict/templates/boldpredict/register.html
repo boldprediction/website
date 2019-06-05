@@ -1,24 +1,26 @@
 {% extends "boldpredict/base.html" %}
 
+{% block staticfiles %}
+{% load static %}
+<link href="{% static 'boldpredict/register.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
 
 {% block header %}
-	<h2>Registration</h2> 	
+<section>
+	<div id="Content" class="wrapper topSection">
+			<div id="Header">
+				<h2>Registration</h2> 
+			</div>
+	</div>
+</section>
 {% endblock%}
 
 
 {% block content %}
 
 {% load static %}
-<section class="subscribe spacing">
+<section class="register spacing">
 	<div class="container">
-		<!-- <div class="row">
-			<div class="col-md-12">
-				<h1 class="text-center text-info" >
-					BOLDpredictions
-				</h1>
-			</div>
-		</div>
-		<hr> -->
 		<div class="row">
 
 			<div class="col-md-4">
@@ -41,8 +43,10 @@
 						</div>
 					{% endfor %}
 					{% csrf_token%}
-					<div id="subscribe">
-						<p class="subscribe-input"><input type="submit" value="Register" name="Submit"></p> 
+					<div id="register">
+						<p class="register-input">
+							<input type="submit" value="Register" name="Submit">
+						</p> 
 					</div>
 				</form>
 			</div>
@@ -51,13 +55,16 @@
 		</div>
 	</div>
 </section>
-<section class="features spacing">
+<section class="login spacing">
 	<div class="container">
-	<div id="subscribe">  
-	<!-- <h2 class="text-center">Login in with Social Media</h2> -->
-	<h3>Login in with Social Media</h3>
+	<div id="register">  
+	<h3>Login with Social Media</h3>
+		<!-- <p class="register-input">
+			<input type="submit" value="Login" name="Submit">
+		</p>  -->
 		<div id="socialIcons">
 			<ul> 
+				<!-- <li><a href="" title="Boldprediction" class="boldIcon"> </a></li> -->
 				<li><a href="" title="Twitter" class="twitterIcon"></a></li>
 				<li><a href="" title="facebook" class="facebookIcon"></a></li>
 			</ul>

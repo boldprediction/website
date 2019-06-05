@@ -7,7 +7,6 @@
 		<link href="{% static 'boldpredict/styles.css' %}" rel="stylesheet" type="text/css">
 		{% block staticfiles %}
 		{% endblock %}
- 		<link href="{% static 'boldpredict/base.css' %}" rel="stylesheet" type="text/css">
         <!-- Bootstrap core CSS -->
 		
 		<title>BOLD predictions</title>
@@ -15,17 +14,20 @@
 	<body>
 		<section class="main">
 			<div id="Content" class="wrapper topSection">
-				<div id="Header">
-					<div class="wrapper">
-						<div class="logo"><h1><img src="{% static 'images/logo.png' %}" />BOLD predictions</h1>	</div>
+				<!-- <div class = "row">
+					<a href="" title="login" class = "login_btn"> Login </a>
+				</div> -->
+				<div class = "row" >
+					<div id="Header">
+						<div class="wrapper">
+							<div class="logo"><h1><img src="{% static 'images/logo.png' %}" />BOLD predictions</h1>	</div>
+						</div>
 					</div>
 				</div>
-				{% block header %}
-				{% endblock %}
-				<!-- <h2>Stay tuned we're launching soon.</h2> 	 -->
-			<!-- <div class="countdown styled"></div> -->
 			</div>
 		</section>
+		{% block header %}
+		{% endblock %}
 
 		</div>
 		<div>
