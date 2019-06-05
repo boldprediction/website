@@ -1,11 +1,31 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from boldpredict.forms import RegistrationForm
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate,login,logout
 
 
 
 # Create your views here.
+def login_action(request):
+    pass 
+
+def logout_action(request):
+    logout(request)
+    return redirect(reverse('login')) 
+
+def contrast_action(request):
+    pass 
+
+def index(request):
+    pass 
+
+def experiment_action(request):
+    pass 
+
+
+def my_profile_action(request):
+    pass 
+
 def register_action(request):
     context = {}
     if request.method == 'GET':

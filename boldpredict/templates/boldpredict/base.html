@@ -1,41 +1,64 @@
 <!doctype html>
 <html lang="en">
-	<head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">		{% load static %}
-		<link href="{% static 'boldpredict/styles.css' %}" rel="stylesheet" type="text/css">
-		{% block staticfiles %}
-		{% endblock %}
-        <!-- Bootstrap core CSS -->
-		
-		<title>BOLD predictions</title>
-	</head>
-	<body>
-		<section class="main">
-			<div id="Content" class="wrapper topSection">
-				<!-- <div class = "row">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	{% load static %}
+	<link href="{% static 'boldpredict/styles.css' %}" rel="stylesheet" type="text/css">
+	{% block staticfiles %}
+	{% endblock %}
+	<!-- Bootstrap core CSS -->
+
+	<title>BOLD predictions</title>
+</head>
+
+<body>
+	<section class="main">
+		<div id="Content" class="wrapper topSection">
+			<!-- <div class = "row">
 					<a href="" title="login" class = "login_btn"> Login </a>
 				</div> -->
-				<div class = "row" >
-					<div id="Header">
-						<div class="wrapper">
-							<div class="logo"><h1><img src="{% static 'images/logo.png' %}" />BOLD predictions</h1>	</div>
+			<div id="Header">
+				<div class="wrapper">
+					<!-- <div class="logo"><h1><img src="{% static 'images/logo.png' %}" />BOLD predictions</h1>	</div> -->
+					<div class="logo">
+						<div class="row">
+							<div class="col-md-8">
+								<h1><img src="{% static 'images/logo.png' %}" />BOLD predictions</h1>
+							</div>
+							<div class="col-md-4">
+									<ul class="nav navbar">
+										<li><a href="{% url 'index' %}" class="active">Home</a></li>
+										<li><a href="{% url 'contrast' %}">Contrasts</a></li>
+										<li><a href="{% url 'experiment' %}">Experiments</a></li>
+										{% if user.is_authenticated %}
+										<li><a href="{% url 'my_profile' %}">My Profile</a></li>
+										<li><a href="{% url 'logout' %}">Logout</a></li>
+										{% else %}
+										<li><a href="{% url 'login' %}">Login</a></li>
+										<li><a href="{% url 'register' %}">Register</a></li>
+										{% endif %}
+									</ul>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</section>
-		{% block header %}
-		{% endblock %}
+	</section>
+	{% block header %}
+	{% endblock %}
 
-		</div>
-		<div>
-		    {% block content %}
-		    {% endblock %}
-		</div>
-		<span class="tempBy">
-				Copyright © 2019. Gallantlab All rights reserved.
-		</span>
-	</body>
+	</div>
+	<div>
+		{% block content %}
+		{% endblock %}
+	</div>
+	<span class="tempBy">
+		Copyright © 2019. Gallantlab All rights reserved.
+	</span>
+</body>
+
 </html>
