@@ -8,6 +8,7 @@
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	{% load static %}
 	<link href="{% static 'boldpredict/styles.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'boldpredict/font-awesome.css' %}" rel="stylesheet" type="text/css">
 	{% block staticfiles %}
 	{% endblock %}
 	<!-- Bootstrap core CSS -->
@@ -40,6 +41,7 @@
 										{% else %}
 										<li><a href="{% url 'login' %}">Login</a></li>
 										<li><a href="{% url 'register' %}">Register</a></li>
+										<a href="#" class="social-button google"><i class="fa fa-google-plus"></i></a>
 										{% endif %}
 									</ul>
 							</div>
