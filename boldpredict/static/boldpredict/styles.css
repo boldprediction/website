@@ -35,7 +35,7 @@ h1 {
 	font-weight:bold;
 	letter-spacing:-2px;
 	/* line-height:40px; */
-	text-align:center;
+	/* text-align:center; */
 }
 .ie h1 {
 	filter: dropshadow(color=#000000, offx=0, offy=3);
@@ -96,7 +96,7 @@ padding-top: 10px
 }
 .logo{width: auto;margin: 0 auto;padding: 16px;border-radius: 30px;padding-bottom: 10px;}
 .logo h1{color: #ffffff;font-weight:600;}
-.logo img {width: 60px;height: 60px;text-align: center;display: block;margin: 0 auto 10px;}
+.logo img {width: 60px;height: 60px;/*text-align: center;display: block;*/margin: 0 auto 10px;}
 .wrapper {
 margin: 0 auto;
 position: relative;
@@ -226,8 +226,3 @@ margin:10px;
 	  margin-bottom:10px; 
 	}
 }
-
-/* .login_btn{
-	background-position: 10px 0px;
-}
- */

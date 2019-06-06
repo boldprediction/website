@@ -19,6 +19,11 @@ class LoginForm(forms.Form):
                                )
 
 class RegistrationForm(forms.Form):
+    email = forms.CharField(max_length = 30,
+                        label = 'E-mail',
+                        required = True,
+                        widget = forms.EmailInput(attrs = {'id':'id_email','class' : 'form-control'}),
+                        )
     username = forms.CharField(max_length = 20,
                                label = 'Username',
                                required = True,
@@ -37,11 +42,7 @@ class RegistrationForm(forms.Form):
                                   widget = forms.PasswordInput(attrs= {'id':'id_confirm_password','class' : 'form-control'}),
                                   error_messages = {'required':'password cannot be none'},
                                   )
-    email = forms.CharField(max_length = 30,
-                            label = 'E-mail',
-                            required = False,
-                            widget = forms.EmailInput(attrs = {'id':'id_email','class' : 'form-control'}),
-                            )
+
     first_name = forms.CharField(max_length = 20,
                                  label = 'First Name',
                                  required = True,
