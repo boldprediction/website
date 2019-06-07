@@ -50,6 +50,8 @@ class RegistrationForm(forms.Form):
         if password and confirm_pwd and password != confirm_pwd:
             raise forms.ValidationError("Password and confirm password don't match.")
         username = self.cleaned_data.get('username')
+        if not all([ (x.isdigit() or x.isalpha()) for x in username ]):
+            raise forms.ValidationError("Username should be alphanumeric characters.")
         email = self.cleaned_data.get('email')
         validate_password(password,password_validators = get_default_password_validators())
         if User.objects.filter(username__exact=username):
