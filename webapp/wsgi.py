@@ -11,7 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-if os.environ.get('dev_env',None) = "false":
+if os.environ.get('dev_env',None) == "false":
     os.environ.set('DJANGO_SETTINGS_MODULE','webapp.test_settings')
 else:
     os.environ.set('DJANGO_SETTINGS_MODULE','webapp.settings')
