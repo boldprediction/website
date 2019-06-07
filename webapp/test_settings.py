@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'boldpredict',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'Bold@15213',
     }
 }
 
