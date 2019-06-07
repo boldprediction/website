@@ -131,3 +131,8 @@ LOGIN_URL = '/login'
 
 #After login render to url
 LOGIN_REDIRECT_URL = ''
+
+# try:
+#     from settings import *
+# except:
+#     pass
