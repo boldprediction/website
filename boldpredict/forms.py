@@ -5,17 +5,17 @@ from boldpredict.models import *
 from django.contrib.auth.password_validation import validate_password, get_default_password_validators
 
 class RegistrationForm(forms.Form):
-    email = forms.CharField(max_length = 30,
-                        label = 'E-mail',
-                        required = True,
-                        widget = forms.EmailInput(attrs = {'id':'id_email','class' : 'form-control'}),
-                        )
     username = forms.CharField(max_length = 20,
                                label = 'Username',
                                required = True,
                                widget = forms.TextInput(attrs={'id' : 'id_username','class' : 'form-control'}),
                                error_messages = {'required':'username cannot be none'},
                                )
+    email = forms.CharField(max_length = 30,
+                    label = 'E-mail',
+                    required = True,
+                    widget = forms.EmailInput(attrs = {'id':'id_email','class' : 'form-control'}),
+                    )
     password = forms.CharField(max_length = 20,
                                label = "Password",
                                required = True,
