@@ -70,11 +70,11 @@ def login_action(request):
 
     new_user = authenticate(username=form.cleaned_data['username'],
                             password=form.cleaned_data['password'])
-    
-
-    if new_user is not None:
-        return redirect(reverse('register'))
-        login(request, new_user)
-    else:
-        messages.error(request,'Username or Password is incorrect')
-        return redirect(reverse('login'))
+    login(request, new_user)
+    return redirect(reverse('index'))
+    # if new_user is not None:
+    #     return redirect(reverse('register'))
+    #     login(request, new_user)
+    # else:
+    #     messages.error(request,'Username or Password is incorrect')
+    #     return redirect(reverse('login'))
