@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from boldpredict.forms import RegistrationForm
+from boldpredict.forms import RegistrationForm, LoginForm
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate, login,logout
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 # Used to generate a one-time-use token to verify a user's email address
 from django.contrib.auth.tokens import default_token_generator
+from django import forms
 
 # Used to send mail from within Django
 from django.core.mail import send_mail
@@ -88,3 +90,28 @@ def confirm_action(request, username, token):
     user.save()
 
     return render(request, 'boldpredict/confirmed.html', {})
+
+#Login Action
+def login_action(request):
+    context = {}
+    if request.method == 'GET':
+        context['form'] = LoginForm()
+        return render(request, 'boldpredict/login.html', context)
+
+    form = LoginForm(request.POST)
+    context['form'] = form
+
+    if not form.is_valid():
+        return render(request, 'boldpredict/login.html', context)
+
+    new_user = authenticate(username=form.cleaned_data['username'],
+                            password=form.cleaned_data['password'])
+
+    login(request, new_user)
+    return redirect(reverse('index'))
+    # if new_user is not None:
+    #     return redirect(reverse('register'))
+    #     login(request, new_user)
+    # else:
+    #     messages.error(request,'Username or Password is incorrect')
+    #     return redirect(reverse('login'))
