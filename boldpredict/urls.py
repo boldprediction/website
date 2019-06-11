@@ -11,4 +11,6 @@ urlpatterns = [
     path('experiment', views.experiment_action, name='experiment'),
     path('my_profile', views.my_profile_action, name='my_profile'),
     path('register', views.register_action, name='register'),
+    path('confirm-registration/<slug:username>/<slug:token>',
+        views.confirm_action, name='confirm'),
 ]
