@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django import forms
 
 
 
@@ -73,8 +74,8 @@ def login_action(request):
     
 
     if new_user is not None:
-        return redirect(reverse('register'))
         login(request, new_user)
+        return redirect(reverse('register'))
     else:
-        messages.error(request,'Username or Password is incorrect')
+        messages.info(request,'Username or Password is incorrect')
         return redirect(reverse('login'))
