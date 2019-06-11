@@ -73,10 +73,6 @@ def register_action(request):
     context['email'] = form.cleaned_data['email']
     return render(request, 'boldpredict/needs-confirmation.html', context)
 
-    # new_user = authenticate(username=form.cleaned_data['username'],
-    #                         password=form.cleaned_data['password'])
-    # login(request, new_user)
-    #return redirect(reverse('index'))
 
 
 @transaction.atomic
