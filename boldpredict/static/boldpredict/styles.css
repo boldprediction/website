@@ -384,3 +384,22 @@ width: 100%;
 	position:relative !important;
 	}
 }
+
+input[type="submit"] {
+	width: 132px;
+	margin-left: -1px;
+	background: #f05b5d;
+	border: 1px #f05b5d solid;
+	color: #fff;
+}
+button[type="submit"] {
+	width: 132px;
+	margin-left: -1px;
+	background: #f05b5d;
+	border: 1px #f05b5d solid;
+	color: #fff;
+}
+
+.submit_button{
+	text-align:center;
+}

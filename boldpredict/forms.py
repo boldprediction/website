@@ -56,13 +56,13 @@ class RegistrationForm(forms.Form):
 
     first_name = forms.CharField(max_length = 20,
                                  label = 'First Name',
-                                 required = True,
+                                 required = False,
                                  widget = forms.TextInput(attrs = {'id' : 'id_first_name','class' : 'form-control'}),
                                  error_messages = {'required':'first name cannot be none'},
                                  )
     last_name = forms.CharField(max_length = 20,
                                 label = 'Last Name',
-                                required = True,
+                                required = False,
                                 widget = forms.TextInput(attrs = {'id' : 'id_last_name','class' : 'form-control'}),
                                 error_messages = {'required':'last name cannot be none'},
                                 )
