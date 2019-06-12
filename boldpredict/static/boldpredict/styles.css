@@ -399,3 +399,7 @@ button[type="submit"] {
 	border: 1px #f05b5d solid;
 	color: #fff;
 }
+
+.submit_button{
+	text-align:center;
+}
