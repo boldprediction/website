@@ -12,16 +12,21 @@ function refresh_contrast(){
 
 function updatePage(response) {
     // Removes the old to-do list items
-    console.log("updatePage = "+updatePage);
+    // console.log("updatePage = "+updatePage);
     var success = response['success'];
+    // console.log("success = " + success);
+    // console.log("image_location = " + response['image_location']);
     if( success === "true" ) {
         var location  =  response['image_location'];
+        // console.log("entered into success code");
         // read from efs
-        var content = $("#content");
+        var content = document.getElementById("content");
         content.innerHTML = "<img src =" + location + "  width='200px'>";
+        // console.log("content = ", content.innerHTML);
+        window.clearInterval(interval);
     }
 }
 
 window.onload = refresh_contrast
-window.setInterval(refresh_contrast, 10000);
+var interval = window.setInterval(refresh_contrast, 10000);
 
