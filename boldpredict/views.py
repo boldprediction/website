@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from archpoc.models import *
+from boldpredict.models import *
 from django.http import HttpResponse
 import boto3
 
@@ -30,14 +30,14 @@ def send_message(contrast_id):
 
 
 def index(request):
-    return render(request, 'archpoc/index.html', {})
+    return render(request, 'boldpredict/index.html', {})
 
 def new_contrast(request):
     new_contrast = Contrast()
     new_contrast.save()
     send_message(new_contrast.id)
     print("new_contrastid = ", new_contrast.id)
-    return render(request, 'archpoc/wait_contrast.html', {'contrast_id': new_contrast.id})
+    return render(request, 'boldpredict/wait_contrast.html', {'contrast_id': new_contrast.id})
 
 def refresh_contrast(request):
     contrast_id = request.GET['contrast_id']
