@@ -25,7 +25,7 @@ SECRET_KEY = 'pk2xjlsrruw**)+#3m6-c$8=nhh@$8ipe3&3g3-4+3%&iozw*#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['3.13.100.240']
 
 
 # Application definition
@@ -77,13 +77,22 @@ WSGI_APPLICATION = 'webapp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'boldpredictions',
+        'NAME': 'boldpredict_archpoc',
         'USER': 'root',
-        'PASSWORD': 'Bold15213',
-        'HOST':'http://boldpred.ckhq7usxo2xa.us-east-2.rds.amazonaws.com/',
-        'PORT': '3306'
+        'PASSWORD': 'Bold@15213',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'boldpredictions',
+#         'USER': 'root',
+#         'PASSWORD': 'Bold15213'
+#         # 'HOST':'http://boldpred.ckhq7usxo2xa.us-east-2.rds.amazonaws.com/',
+#         # 'PORT': '3306'
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
