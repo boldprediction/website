@@ -74,25 +74,24 @@ WSGI_APPLICATION = 'webapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'boldpredict_archpoc',
+#         'USER': 'root',
+#         'PASSWORD': 'Bold@15213',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'boldpredict_archpoc',
         'USER': 'root',
-        'PASSWORD': 'Bold@15213',
+        'PASSWORD': 'Bold15213',
+        'HOST':'boldpred.ckhq7usxo2xa.us-east-2.rds.amazonaws.com',
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'boldpredictions',
-#         'USER': 'root',
-#         'PASSWORD': 'Bold15213'
-#         # 'HOST':'http://boldpred.ckhq7usxo2xa.us-east-2.rds.amazonaws.com/',
-#         # 'PORT': '3306'
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators

@@ -81,6 +81,15 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'boldpredictions',
+#         'USER': 'root',
+#         'PASSWORD': 'Bold15213'
+#         'HOST':'boldpred.ckhq7usxo2xa.us-east-2.rds.amazonaws.com',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
