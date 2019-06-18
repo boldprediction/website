@@ -403,3 +403,8 @@ button[type="submit"] {
 .submit_button{
 	text-align:center;
 }
+
+.radio_button{
+	text-align:center;
+	font-size:20px;
+}
