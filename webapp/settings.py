@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import json
 
 from configparser import ConfigParser
 
@@ -135,7 +136,7 @@ LOGIN_REDIRECT_URL = ''
 config = ConfigParser()
 print("\n\n\n" + BASE_DIR + "\n\n\n")
 
-config.read(os.path.join(BASE_DIR, 'config.ini'))
+config.read(os.path.join(BASE_DIR, 'config/config.ini'))
 
 EMAIL_HOST = config.get('Email', 'Host')
 EMAIL_PORT = int(config.get('Email', 'Port'))
@@ -145,3 +146,11 @@ EMAIL_USE_TLS = True
 
 print('Email host:port = {host}:{port}, user={user}'.format(
         host=EMAIL_HOST, port=EMAIL_PORT, user=EMAIL_HOST_USER))
+
+# load contrast configuration 
+CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, 'config/contrast_config.json')
+with open(CONTRAST_CONFIG_DIR, 'r') as f:
+    contrast_config = json.load(f)
+
+STIMULI_TYPES = contrast_config.get('stimuli_type',None)
+MODEL_TYPES = contrast_config.get('model_type',None)

@@ -11,6 +11,7 @@ from django import forms
 
 # Used to send mail from within Django
 from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 def login_action(request):
@@ -22,7 +23,20 @@ def logout_action(request):
     return redirect(reverse('login')) 
 
 def contrast_action(request):
-    return render(request, 'boldpredict/index.html', {})
+    stimuli_types = settings.STIMULI_TYPES
+    model_types = settings.MODEL_TYPES
+    # context = {"stimuli_types": settings.STIMULI_TYPES}
+    context = {}
+    context['stimulis'] = {}
+    for stimuli_key,models in model_types.items():
+        context['stimulis'][stimuli_key] = {"name":stimuli_types[stimuli_key],"models": models}
+    # context['model_types'] = settings.MODEL_TYPES
+    print("context = ", context)
+    return render(request, 'boldpredict/new_contrast.html', context)
+
+
+def new_contrast(request):
+    return render(request, 'boldpredict/contrast_filler.html', {})
 
 def index(request):
     return render(request, 'boldpredict/index.html', {})
