@@ -14,6 +14,12 @@ from django.http import HttpResponse,Http404
 from django.core.mail import send_mail
 from django.conf import settings
 
+# stimuli type constant strings
+WORD_LIST = "word_list"
+IMAGE = "image"
+SENTENCE = "sentence"
+
+
 # Create your views here.
 def login_action(request):
     return render(request, 'boldpredict/index.html', {})
@@ -34,18 +40,21 @@ def contrast_action(request):
 
 def new_contrast(request):
     context = {}
-    if request.method != 'POST':
+    if request.method != 'GET':
         raise Http404
-    if  not request.POST.get('stimuli_type',None) or not request.POST.get('model_type',None):
+    if  not request.GET.get('stimuli_type',None) or not request.GET.get('model_type',None):
         context['stimulis'] = settings.STIMULI_TYPES
         context['model_types'] = settings.MODEL_TYPES
         context['error'] = "Please choose both stimuli type and model type!"
         return render(request, 'boldpredict/contrast_type.html', context)
 
-
-
-    context['form'] = WordListForm()
-    return render(request, 'boldpredict/contrast_filler.html', context)
+    stimuli_type = request.GET['stimuli_type']
+    model_type = request.GET['model_type']
+    if stimuli_type == WORD_LIST:
+        context['form'] = WordListForm()
+        return render(request, 'boldpredict/contrast_filler.html', context)
+    
+    return redirect(reverse('contrast'))
         
 
 def index(request):

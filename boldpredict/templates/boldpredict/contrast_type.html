@@ -30,7 +30,7 @@
 {% block content %}
 <section>
     <div class="container">
-        <form method="post" action="{% url 'new_contrast' %}">
+        <form method="get" action="{% url 'new_contrast' %}">
             <div class="row">
                 {% if error %}
                 <span style="color: red">
@@ -45,7 +45,7 @@
             <div class="row" id="id_stimuli_types">
                 {% for stimuli_key,stimuli_value in stimulis.items %}
                 <div class="col-md-3">
-                    <input class="radio_button" type="radio" name="stimuli_type" value="{{stimuli_value}}"
+                    <input class="radio_button" type="radio" name="stimuli_type" value="{{stimuli_key}}"
                         onclick="chooseStimuli('{{stimuli_key}}')" /> {{stimuli_value}} <br />
                 </div>
                 {% endfor %}
@@ -61,7 +61,6 @@
             <br />
             <br />
             <input type="submit" class="submit_button" value="New Contrast">
-            {% csrf_token%}
         </form>
     </div>
 </section>
