@@ -23,13 +23,13 @@
 {% block content %}
 <section>
     <div class="container">
-        <div class="col-md-6">
-            <form method="post" action="{% url 'new_contrast' %}">
-                <div id="id_privacy_setting">
-                    Contrast Privacy Settings
-                    <br>
-                    <br>
-                    <div class="row">
+        <div class="row">
+            <div class="col-md-6">
+                <form method="post" action="{% url 'new_contrast' %}">
+                    <div id="id_privacy_setting">
+                        Contrast Privacy Settings
+                        <br>
+                        <br>
                         <div class="col-md-3">
                             {% if user.is_authenticated %}
                             <input class="radio_button" type="radio" name="stimuli_type" value="Public" /> Public
@@ -51,20 +51,45 @@
                             {% endif %}
                         </div>
                     </div>
-                </div>
-                <br>
+                    <br>
 
-                {% for field in form.visible_fields %}
-                <div class="form-group">
-                    <label style="color: white">
-                        {{field.label_tag}}
-                    </label>
-                    {{ field }}
+                    {% for field in form.visible_fields %}
+                    <div class="form-group">
+                        <label style="color: white">
+                            {{field.label_tag}}
+                        </label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="submit_button">Submit</button>
+                    {% csrf_token%}
+                </form>
+            </div>
+            <div class="col-md-6">
+                <br>
+                <br>
+                <h3>
+                    Suggestions for first condition
+                </h3>
+                <div class="btn-group" id='first_cond'>
+                    {% for condition in conditions %}
+                    <button class="save btn btn-inverse" id="id_first_bnt_{{condition.name}}">
+                        <h6>{{condition.name}}</h6> {{condition.brief_part1}} <br>{{condition.brief_part2}} ..."
+                    </button>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-                <button type="submit" class="submit_button" >Submit</button>
-                {% csrf_token%}
-            </form>
+
+                <h3>
+                    Suggestions for second condition
+                </h3>
+                <div class="btn-group" id='second_cond'>
+                    {% for condition in conditions %}
+                    <button class="save btn btn-inverse" id="id_second_bnt_{{condition.name}}">
+                        <h6>{{condition.name}}</h6> {{condition.brief_part1}} <br>{{condition.brief_part2}} ..."
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </section>
