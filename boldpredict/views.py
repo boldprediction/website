@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from boldpredict.forms import RegistrationForm, LoginForm
+from boldpredict.forms import RegistrationForm, LoginForm, WordListForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
@@ -32,13 +32,15 @@ def contrast_action(request):
 
 
 def new_contrast(request):
+    context = {}
     if  not request.POST.get('stimuli_type',None) or not request.POST.get('model_type',None):
-        context = {}
         context['stimulis'] = settings.STIMULI_TYPES
         context['model_types'] = settings.MODEL_TYPES
         context['error'] = "Please choose both stimuli type and model type!"
         return render(request, 'boldpredict/contrast_type.html', context)
-    return render(request, 'boldpredict/contrast_filler.html', {})
+
+    context['form'] = WordListForm()
+    return render(request, 'boldpredict/contrast_filler.html', context)
         
 
 def index(request):

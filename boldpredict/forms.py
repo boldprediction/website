@@ -1,5 +1,4 @@
 from django import forms
-
 from django.contrib.auth.models import User
 from boldpredict.models import *
 from django.contrib.auth import authenticate
@@ -85,3 +84,16 @@ class RegistrationForm(forms.Form):
             raise forms.ValidationError("Email is already registered.")
 
         return cleaned_data
+
+class WordListForm(forms.ModelForm):
+    class Meta:
+        model = Contrast
+        fields = ['contrast_title','list1_name', 'list1_text', 'baseline_choice', 'list2_name', 'list2_text', 'permutation_choice']
+        widgets = {
+            'contrast_title': forms.Textarea(attrs ={'cols':50, 'rows':1}),
+            'list1_name': forms.Textarea(attrs ={'cols':50, 'rows':1}),
+            'list2_name': forms.Textarea(attrs ={'cols':50, 'rows':1}),
+            'list1_text': forms.Textarea(attrs ={'cols':50, 'rows':10}),
+            'list2_text': forms.Textarea(attrs ={'cols':50, 'rows':10}),
+            # 'privacy_choice':forms.RadioSelect(),
+        }
