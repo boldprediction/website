@@ -8,6 +8,7 @@ from django.db import transaction
 # Used to generate a one-time-use token to verify a user's email address
 from django.contrib.auth.tokens import default_token_generator
 from django import forms
+from django.http import HttpResponse,Http404
 
 # Used to send mail from within Django
 from django.core.mail import send_mail
@@ -33,11 +34,15 @@ def contrast_action(request):
 
 def new_contrast(request):
     context = {}
+    if request.method != 'POST':
+        raise Http404
     if  not request.POST.get('stimuli_type',None) or not request.POST.get('model_type',None):
         context['stimulis'] = settings.STIMULI_TYPES
         context['model_types'] = settings.MODEL_TYPES
         context['error'] = "Please choose both stimuli type and model type!"
         return render(request, 'boldpredict/contrast_type.html', context)
+
+
 
     context['form'] = WordListForm()
     return render(request, 'boldpredict/contrast_filler.html', context)
