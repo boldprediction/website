@@ -94,6 +94,8 @@ width: 100%;
 z-index: 1;
 padding-top: 10px
 }
+#Header h2 {margin: 0px;padding: 0px;text-align: center;font-size: 28px;font-weight: 300;color: #ffffff;margin-bottom:40px;text-transform: capitalize;line-height: 38px;}
+
 .logo{width: auto;margin: 0 auto;padding: 16px;border-radius: 30px;padding-bottom: 10px;}
 .logo h1{color: #ffffff;font-weight:600;}
 .logo img {width: 60px;height: 60px;/*text-align: center;display: block;*/margin: 0 auto 10px;}
