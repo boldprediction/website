@@ -1,0 +1,12 @@
+{
+    "stimuli_type": {
+        "word_list": "Word List",
+        "sentence": "Sentences",
+        "image": "Images"
+    },
+    "model_type":{
+        "word_list": ["english1000","word2vec"],
+        "sentence": ["ELMo","BERT"],
+        "image": ["CNN","english1000"]
+    }
+}
