@@ -11,7 +11,7 @@ class Contrast(models.Model):
     PRIVACY_CHOICES = [(PRIVATE, 'Private'),(PUBLIC, 'Public')]
     id = HashidAutoField(primary_key=True)
     privacy_choice = models.CharField('Contrast Privacy Settings',choices=PRIVACY_CHOICES, max_length=2,default=PUBLIC) 
-    contrast_title = models.TextField('Contrast Title (Optional)')
+    contrast_title = models.TextField('Contrast Title (Optional)', blank=True)
     list1_name = models.TextField('Enter name of Condition 1')
     list1_text = models.TextField('Enter stimulus words separated by a comma')
     baseline_choice = models.BooleanField('Compare to baseline.', default=False)

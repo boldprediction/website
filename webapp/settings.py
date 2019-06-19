@@ -154,3 +154,4 @@ with open(CONTRAST_CONFIG_DIR, 'r') as f:
 
 STIMULI_TYPES = contrast_config.get('stimuli_type',None)
 MODEL_TYPES = contrast_config.get('model_type',None)
+WORD_LIST_CONDITIONS = contrast_config.get('word_list_conditions',None)

@@ -51,11 +51,21 @@ def new_contrast(request):
     stimuli_type = request.GET['stimuli_type']
     model_type = request.GET['model_type']
     if stimuli_type == WORD_LIST:
+        context['conditions'] = []
+        for condition_key,condition_value in settings.WORD_LIST_CONDITIONS.items():
+            condition = {}
+            condition['name'] = condition_key
+            condition['brief_part1'] = condition_value[:30]
+            condition['brief_part2'] = condition_value[30:60]
+            context['conditions'].append(condition)
         context['form'] = WordListForm()
         return render(request, 'boldpredict/contrast_filler.html', context)
     
     return redirect(reverse('contrast'))
         
+def start_contrast(request):
+    return render(request, 'boldpredict/index.html', {})
+
 
 def index(request):
     return render(request, 'boldpredict/index.html', {})
