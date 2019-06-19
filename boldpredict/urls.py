@@ -13,4 +13,6 @@ urlpatterns = [
     path('register', views.register_action, name='register'),
     path('confirm-registration/<slug:username>/<slug:token>',
         views.confirm_action, name='confirm'),
+     path('forget_password',views.forget,name='forget_password'),
+    path('reset_password',views.reset,name='reset_password')
 ]

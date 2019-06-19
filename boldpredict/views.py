@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from boldpredict.forms import RegistrationForm, LoginForm
+from boldpredict.forms import RegistrationForm, LoginForm, ForgotForm, ResetForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
@@ -11,6 +11,9 @@ from django import forms
 
 # Used to send mail from within Django
 from django.core.mail import send_mail
+
+from django.core.exceptions import ObjectDoesNotExist
+
 
 # Create your views here.
 def login_action(request):
@@ -115,3 +118,49 @@ def login_action(request):
     # else:
     #     messages.error(request,'Username or Password is incorrect')
     #     return redirect(reverse('login'))
+
+#reset password
+def reset(request):
+    context = {}
+    if request.method == 'POST':
+        username = request.POST['username']
+        try:
+            user = User.objects.get(username=username)
+            user.set_password(request.POST['password'])
+            print("Password changed")
+            user.save()
+            return redirect(reverse('login'))
+        except ObjectDoesNotExist:
+            return render(request, 'boldpredict/forget_password.html', {})
+
+def forget(request):
+    context = {}
+    
+    
+    if request.method == 'GET':
+        context['form'] = ForgotForm()
+        return render(request, 'boldpredict/forget_password.html', context)
+
+    form = ForgotForm(request.POST)
+    if not form.is_valid():
+        return render(request, 'boldpredict/forget_password.html', context)
+
+    reset_context = {}
+    reset_form = ResetForm()
+    messages = []
+    try:
+        user = User.objects.get(username=form.cleaned_data['username'])
+        if (user.email == form.cleaned_data['email']):
+            reset_context['form'] = reset_form
+            reset_context['username'] = form.cleaned_data['username']
+            return render(request, 'boldpredict/reset_password.html', reset_context)
+        else:
+            messages.append("Username does not match email address")
+            context['messages'] = messages
+            return render(request, 'boldpredict/forget_password.html', context)
+    except ObjectDoesNotExist:
+        context['messages'] = messages
+        messages.append("User does not exist with username")
+        return render(request, 'boldpredict/forget_password.html', context)
+
+

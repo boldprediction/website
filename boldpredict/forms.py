@@ -85,3 +85,48 @@ class RegistrationForm(forms.Form):
             raise forms.ValidationError("Email is already registered.")
 
         return cleaned_data
+
+class ForgotForm(forms.Form):
+    username = forms.CharField(max_length = 20,
+                               label = 'Username',
+                               required = True,
+                               widget = forms.TextInput(attrs={'id' : 'id_username','class' : 'form-control'}),
+                               error_messages = {'required':'username cannot be none'},
+                               )
+    email = forms.CharField(max_length = 30,
+                        label = 'E-mail',
+                        required = True,
+                        widget = forms.EmailInput(attrs = {'id':'id_email','class' : 'form-control'}),
+                        )
+    def clean(self):
+        cleaned_data = super().clean()
+
+        username = cleaned_data.get('username')
+        email = cleaned_data.get('email')
+        return cleaned_data
+
+
+class ResetForm(forms.Form):
+
+    password = forms.CharField(max_length = 20,
+                               label = "Password",
+                               required = True,
+                               widget = forms.PasswordInput(attrs= {'id' : 'id_password','class' : 'form-control'}),
+                               error_messages = {'required':'password cannot be none'},
+                               )
+    confirm_pwd = forms.CharField(max_length = 20,
+                                  label = 'Confirm password',
+                                  required = True,
+                                  widget = forms.PasswordInput(attrs= {'id':'id_confirm_password','class' : 'form-control'}),
+                                  error_messages = {'required':'password cannot be none'},
+                                  )
+
+    def clean(self):
+        cleaned_data = super(RegistrationForm, self).clean()
+
+        password = cleaned_data.get('password')
+        confirm_pwd = cleaned_data.get('confirm_pwd')
+        if password and confirm_pwd and password != confirm_pwd:
+            raise forms.ValidationError("Password and confirm password don't match.")
+
+        return cleaned_data
