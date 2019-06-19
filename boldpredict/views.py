@@ -25,18 +25,21 @@ def logout_action(request):
 def contrast_action(request):
     stimuli_types = settings.STIMULI_TYPES
     model_types = settings.MODEL_TYPES
-    # context = {"stimuli_types": settings.STIMULI_TYPES}
     context = {}
-    context['stimulis'] = {}
-    for stimuli_key,models in model_types.items():
-        context['stimulis'][stimuli_key] = {"name":stimuli_types[stimuli_key],"models": models}
-    # context['model_types'] = settings.MODEL_TYPES
-    print("context = ", context)
-    return render(request, 'boldpredict/new_contrast.html', context)
+    context['stimulis'] = stimuli_types
+    context['model_types'] = model_types
+    return render(request, 'boldpredict/contrast_type.html', context)
 
 
 def new_contrast(request):
+    if  not request.POST.get('stimuli_type',None) or not request.POST.get('model_type',None):
+        context = {}
+        context['stimulis'] = settings.STIMULI_TYPES
+        context['model_types'] = settings.MODEL_TYPES
+        context['error'] = "Please choose both stimuli type and model type!"
+        return render(request, 'boldpredict/contrast_type.html', context)
     return render(request, 'boldpredict/contrast_filler.html', {})
+        
 
 def index(request):
     return render(request, 'boldpredict/index.html', {})
