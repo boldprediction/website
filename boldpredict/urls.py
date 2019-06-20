@@ -14,5 +14,7 @@ urlpatterns = [
     path('confirm-registration/<slug:username>/<slug:token>',
         views.confirm_action, name='confirm'),
      path('forget_password',views.forget,name='forget_password'),
-    path('reset_password',views.reset,name='reset_password')
+    path('reset_password',views.reset,name='reset_password'),
+    path('confirm-reset/<slug:username>/<slug:token>',
+        views.confirmreset_action, name='confirmreset'),
 ]

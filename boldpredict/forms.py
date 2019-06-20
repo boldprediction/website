@@ -87,12 +87,12 @@ class RegistrationForm(forms.Form):
         return cleaned_data
 
 class ForgotForm(forms.Form):
-    username = forms.CharField(max_length = 20,
-                               label = 'Username',
-                               required = True,
-                               widget = forms.TextInput(attrs={'id' : 'id_username','class' : 'form-control'}),
-                               error_messages = {'required':'username cannot be none'},
-                               )
+    # username = forms.CharField(max_length = 20,
+    #                            label = 'Username',
+    #                            required = True,
+    #                            widget = forms.TextInput(attrs={'id' : 'id_username','class' : 'form-control'}),
+    #                            error_messages = {'required':'username cannot be none'},
+    #                            )
     email = forms.CharField(max_length = 30,
                         label = 'E-mail',
                         required = True,
@@ -101,7 +101,7 @@ class ForgotForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
 
-        username = cleaned_data.get('username')
+        # username = cleaned_data.get('username')
         email = cleaned_data.get('email')
         return cleaned_data
 
