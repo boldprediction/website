@@ -12,7 +12,6 @@ body {
 	margin:0;
 	color: #fff;
 	background-size:cover;
-	/* background:url('../images/swirl_pattern.png') top left repeat; */
 	background: #212121;
 }
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */

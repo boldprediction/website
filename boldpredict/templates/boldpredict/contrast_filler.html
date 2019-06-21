@@ -61,7 +61,6 @@
                         </div>
                     </div>
                     <br>
-
                     {% for field in form.visible_fields %}
                     <div class="form-group">
                         <label style="color: white">
@@ -82,7 +81,7 @@
                 </h3>
                 <div class="btn-group" id='first_cond'>
                     {% for condition in conditions %}
-                    <button class="save btn btn-inverse" id="id_first_bnt_{{condition.name}}">
+                    <button class="save btn btn-inverse" id="id_first_bnt_{{condition.name}}"  style="color: grey">
                         <h6>{{condition.name}}</h6> {{condition.brief_part1}} <br>{{condition.brief_part2}} ..."
                     </button>
                     {% endfor %}
@@ -93,7 +92,7 @@
                 </h3>
                 <div class="btn-group" id='second_cond'>
                     {% for condition in conditions %}
-                    <button class="save btn btn-inverse" id="id_second_bnt_{{condition.name}}">
+                    <button class="save btn btn-inverse" id="id_second_bnt_{{condition.name}}" style="color: grey">
                         <h6>{{condition.name}}</h6> {{condition.brief_part1}} <br>{{condition.brief_part2}} ..."
                     </button>
                     {% endfor %}

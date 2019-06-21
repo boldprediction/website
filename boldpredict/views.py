@@ -55,8 +55,8 @@ def new_contrast(request):
         for condition_key,condition_value in settings.WORD_LIST_CONDITIONS.items():
             condition = {}
             condition['name'] = condition_key
-            condition['brief_part1'] = condition_value[:30]
-            condition['brief_part2'] = condition_value[30:60]
+            condition['brief_part1'] = condition_value[:25]
+            condition['brief_part2'] = condition_value[25:50]
             context['conditions'].append(condition)
         context['form'] = WordListForm()
         return render(request, 'boldpredict/contrast_filler.html', context)
