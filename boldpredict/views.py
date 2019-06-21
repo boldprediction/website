@@ -13,6 +13,7 @@ from django.http import HttpResponse,Http404
 # Used to send mail from within Django
 from django.core.mail import send_mail
 from django.conf import settings
+import json
 
 # stimuli type constant strings
 WORD_LIST = "word_list"
@@ -51,6 +52,7 @@ def new_contrast(request):
     stimuli_type = request.GET['stimuli_type']
     model_type = request.GET['model_type']
     if stimuli_type == WORD_LIST:
+        context['word_list_suggestions'] = json.dumps(settings.WORD_LIST_CONDITIONS)
         context['conditions'] = []
         for condition_key,condition_value in settings.WORD_LIST_CONDITIONS.items():
             condition = {}

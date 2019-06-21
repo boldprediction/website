@@ -12,6 +12,23 @@ function chooseStimuli(stimuli_type) {
     }
 }
 
+function chooseSuggestion(button_index,condition_name) {
+    var list_name_id = "",list_text_id = "";
+    if(button_index == '1'){
+        list_name_id = "id_list1_name";
+        list_text_id = "id_list1_text";
+    }
+    else{
+        list_name_id = "id_list2_name";
+        list_text_id = "id_list2_text";
+    }
+    list_input = document.getElementById(list_name_id);
+    text_input = document.getElementById(list_text_id);
+
+    list_input.value = condition_name;
+    text_input.value = word_list_suggest_obj[condition_name];
+}
+
 
 $(document).ready(function () {
     $("#id_baseline_choice").click(function () {

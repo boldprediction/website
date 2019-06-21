@@ -12,7 +12,12 @@
         border-radius: 0px;
     }
 </style>
-
+<script>
+    var word_list_suggestions = '{{ word_list_suggestions | safe}}';
+    // model_types_setting = model_types_setting.replace(/'/gi, '"').toString();
+    var word_list_suggest_obj = JSON.parse(word_list_suggestions);
+        // var model_types_setting = JSON.parse("{{ model_types}}");
+</script>
 {% endblock %}
 
 
@@ -62,7 +67,7 @@
                     </div>
                     <br>
                     {% for field in form.visible_fields %}
-                    <div class="form-group">
+                    <div class="form-group"  style="color: black">
                         <label style="color: white">
                             {{field.label_tag}}
                         </label>
@@ -81,7 +86,8 @@
                 </h3>
                 <div class="btn-group" id='first_cond'>
                     {% for condition in conditions %}
-                    <button class="save btn btn-inverse" id="id_first_bnt_{{condition.name}}"  style="color: white">
+                    <button class="save btn btn-inverse" id="id_first_bnt_{{condition.name}}" style="color: grey"
+                        onclick="chooseSuggestion('1','{{condition.name}}')">
                         <h6>{{condition.name}}</h6> {{condition.brief_part1}} <br>{{condition.brief_part2}} ..."
                     </button>
                     {% endfor %}
@@ -92,7 +98,8 @@
                 </h3>
                 <div class="btn-group" id='second_cond'>
                     {% for condition in conditions %}
-                    <button class="save btn btn-inverse" id="id_second_bnt_{{condition.name}}" style="color: white">
+                    <button class="save btn btn-inverse" id="id_second_bnt_{{condition.name}}" style="color: grey"
+                        onclick="chooseSuggestion('2','{{condition.name}}')">
                         <h6>{{condition.name}}</h6> {{condition.brief_part1}} <br>{{condition.brief_part2}} ..."
                     </button>
                     {% endfor %}
