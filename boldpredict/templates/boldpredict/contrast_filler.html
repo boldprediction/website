@@ -88,7 +88,7 @@
                     {% for condition in conditions %}
                     <button class="save btn btn-inverse" id="id_first_bnt_{{condition.name}}" style="color: grey"
                         onclick="chooseSuggestion('1','{{condition.name}}')">
-                        <h6>{{condition.name}}</h6> {{condition.brief_part1}} <br>{{condition.brief_part2}} ..."
+                        <h6>{{condition.name}}</h6> {{condition.brief_part1}} <br>{{condition.brief_part2}} ...
                     </button>
                     {% endfor %}
                 </div>
@@ -113,5 +113,6 @@
 <br>
 <br>
 <br>
-<br>
+                        <br>
+
 {% endblock%}
