@@ -6,6 +6,13 @@
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script src="{% static 'boldpredict/js/new_contrast.js' %}" type="text/javascript"></script>
+<style type="text/css">
+    .btn {
+        width: 33%;
+        border-radius: 0px;
+    }
+</style>
+
 {% endblock %}
 
 
@@ -24,10 +31,12 @@
 <section>
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <form method="post" action="{% url 'start_contrast' %}">
-                    <div id="id_privacy_setting">
-                        Contrast Privacy Settings
+                    <div id="id_privacy_setting" class="form-group">
+                        <label>
+                            Contrast Privacy Settings
+                        </label>
                         <br>
                         <br>
                         <div class="col-md-3">
@@ -65,7 +74,7 @@
                     {% csrf_token%}
                 </form>
             </div>
-            <!-- <div class="col-md-6">
+            <div class="col-md-7">
                 <br>
                 <br>
                 <h3>
@@ -73,11 +82,9 @@
                 </h3>
                 <div class="btn-group" id='first_cond'>
                     {% for condition in conditions %}
-                    <div class="row">
-                        <button id="id_first_bnt_{{condition.name}}">
-                            <h6>{{condition.name}}</h6> {{condition.brief_part1}} <br>{{condition.brief_part2}} ..."
-                        </button>
-                    </div>
+                    <button class="save btn btn-inverse" id="id_first_bnt_{{condition.name}}">
+                        <h6>{{condition.name}}</h6> {{condition.brief_part1}} <br>{{condition.brief_part2}} ..."
+                    </button>
                     {% endfor %}
                 </div>
 
@@ -91,7 +98,7 @@
                     </button>
                     {% endfor %}
                 </div>
-            </div> -->
+            </div>
         </div>
     </div>
 </section>
