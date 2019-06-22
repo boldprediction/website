@@ -38,44 +38,48 @@
         <div class="row">
             <div class="col-md-5">
                 <form method="post" action="{% url 'start_contrast' %}">
-                    <div id="id_privacy_setting" class="form-group">
-                        <label>
-                            Contrast Privacy Settings
-                        </label>
+                    <div class="form-group" style="color: black">
+                        <div>
+                            <label style="color: white">
+                                Contrast Privacy Settings
+                            </label>
+                            <br>
+                            <br>
+                            <div class="col-md-3" style="color: white">
+                                {% if user.is_authenticated %}
+                                <input class="radio_button" type="radio" name="stimuli_type" value="Public" /> Public
+                                <br />
+                                {% else %}
+                                <input class="radio_button" type="radio" name="stimuli_type" value="Public" checked />
+                                Public
+                                <br />
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3" style="color: white">
+                                {% if user.is_authenticated %}
+                                <input class="radio_button" type="radio" name="stimuli_type" value="Private" /> Private
+                                <br />
+                                {% else %}
+                                <input class="radio_button" type="radio" name="stimuli_type" value="Private" disabled />
+                                Private
+                                <br />
+                                {% endif %}
+                            </div>
+                        </div>
                         <br>
                         <br>
-                        <div class="col-md-3">
-                            {% if user.is_authenticated %}
-                            <input class="radio_button" type="radio" name="stimuli_type" value="Public" /> Public
-                            <br />
-                            {% else %}
-                            <input class="radio_button" type="radio" name="stimuli_type" value="Public" checked />
-                            Public
-                            <br />
-                            {% endif %}
+                        {% for field in form.visible_fields %}
+                        <div>
+                            <label style="color: white">
+                                {{field.label_tag}}
+                            </label>
+                            {{ field }}
                         </div>
-                        <div class="col-md-3">
-                            {% if user.is_authenticated %}
-                            <input class="radio_button" type="radio" name="stimuli_type" value="Private" /> Private
-                            <br />
-                            {% else %}
-                            <input class="radio_button" type="radio" name="stimuli_type" value="Private" disabled />
-                            Private
-                            <br />
-                            {% endif %}
-                        </div>
+                        <br>
+                        {% endfor %}
+                        <button type="submit" class="submit_button">Submit</button>
+                        {% csrf_token%}
                     </div>
-                    <br>
-                    {% for field in form.visible_fields %}
-                    <div class="form-group"  style="color: black">
-                        <label style="color: white">
-                            {{field.label_tag}}
-                        </label>
-                        {{ field }}
-                    </div>
-                    {% endfor %}
-                    <button type="submit" class="submit_button">Submit</button>
-                    {% csrf_token%}
                 </form>
             </div>
             <div class="col-md-7">
@@ -92,7 +96,9 @@
                     </button>
                     {% endfor %}
                 </div>
-
+                <br>
+                <br>
+                <br>
                 <h3>
                     Suggestions for second condition
                 </h3>
@@ -113,6 +119,6 @@
 <br>
 <br>
 <br>
-                        <br>
+<br>
 
 {% endblock%}
