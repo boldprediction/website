@@ -24,6 +24,7 @@ class LoginForm(forms.Form):
         username = cleaned_data.get('username')
         password = cleaned_data.get('password')
         user1 = authenticate(username = username, password = password)
+        user=User.objects.get(username=username)
         if user.is_active == False:
             raise forms.ValidationError("User not validated")
         if user1 is None:
