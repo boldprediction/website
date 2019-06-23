@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction,models
+from django.http import Http404
 # Used to generate a one-time-use token to verify a user's email address
 from django.contrib.auth.tokens import default_token_generator
 from django import forms
@@ -110,26 +111,29 @@ def login_action(request):
     new_user = authenticate(username=form.cleaned_data['username'],
                             password=form.cleaned_data['password'])
 
-    login(request, new_user)
-    return redirect(reverse('index'))
-    # if new_user is not None:
-    #     return redirect(reverse('register'))
-    #     login(request, new_user)
-    # else:
-    #     messages.error(request,'Username or Password is incorrect')
-    #     return redirect(reverse('login'))
+    if new_user is not None:
+        login(request, new_user)
+        return redirect(reverse('index'))
+    else:
+        return redirect(reverse('login'))
 
 #reset password
 # note : There is an inherit flaw in this logic.
 def reset(request):
     context = {}
+    form = ResetForm(request.POST)
+    context['form'] = form
+    context['username'] = request.POST['username']
+    if not form.is_valid():
+        return render(request, 'boldpredict/reset_password.html', context)
+
     if request.method == 'POST':
         username = request.POST['username']
         try:
             user = User.objects.get(username=username)
             user.set_password(request.POST['password'])
-            print("Password changed")
             user.save()
+            messages.success(request, "Your password has been changed.")
             return redirect(reverse('login'))
         except ObjectDoesNotExist:
             return render(request, 'boldpredict/forget_password.html', {})

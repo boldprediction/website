@@ -23,10 +23,11 @@ class LoginForm(forms.Form):
 
         username = cleaned_data.get('username')
         password = cleaned_data.get('password')
-        user = authenticate(username = username, password = password)
-        if not user:
+        user1 = authenticate(username = username, password = password)
+        if user.is_active == False:
+            raise forms.ValidationError("User not validated")
+        if user1 is None:
             raise forms.ValidationError("Invalid username/password")
-
         return cleaned_data
 
 class RegistrationForm(forms.Form):
@@ -87,12 +88,6 @@ class RegistrationForm(forms.Form):
         return cleaned_data
 
 class ForgotForm(forms.Form):
-    # username = forms.CharField(max_length = 20,
-    #                            label = 'Username',
-    #                            required = True,
-    #                            widget = forms.TextInput(attrs={'id' : 'id_username','class' : 'form-control'}),
-    #                            error_messages = {'required':'username cannot be none'},
-    #                            )
     email = forms.CharField(max_length = 30,
                         label = 'E-mail',
                         required = True,
@@ -100,8 +95,6 @@ class ForgotForm(forms.Form):
                         )
     def clean(self):
         cleaned_data = super().clean()
-
-        # username = cleaned_data.get('username')
         email = cleaned_data.get('email')
         return cleaned_data
 
@@ -122,11 +115,10 @@ class ResetForm(forms.Form):
                                   )
 
     def clean(self):
-        cleaned_data = super(RegistrationForm, self).clean()
-
+        cleaned_data = super(ResetForm, self).clean()
         password = cleaned_data.get('password')
         confirm_pwd = cleaned_data.get('confirm_pwd')
         if password and confirm_pwd and password != confirm_pwd:
             raise forms.ValidationError("Password and confirm password don't match.")
-
+        print("Here is the result: ",validate_password(password,password_validators = get_default_password_validators()))
         return cleaned_data
