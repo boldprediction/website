@@ -121,5 +121,4 @@ class ResetForm(forms.Form):
         confirm_pwd = cleaned_data.get('confirm_pwd')
         if password and confirm_pwd and password != confirm_pwd:
             raise forms.ValidationError("Password and confirm password don't match.")
-        print("Here is the result: ",validate_password(password,password_validators = get_default_password_validators()))
         return cleaned_data
