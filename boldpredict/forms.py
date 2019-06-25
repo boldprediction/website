@@ -23,10 +23,15 @@ class LoginForm(forms.Form):
 
         username = cleaned_data.get('username')
         password = cleaned_data.get('password')
-        user = authenticate(username = username, password = password)
-        if not user:
-            raise forms.ValidationError("Invalid username/password")
 
+        try:
+            user=User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise forms.ValidationError("User does not exist")
+        if user.is_active == False:
+            raise forms.ValidationError("User not validated")
+        if authenticate(username = username, password = password) == None:
+            raise forms.ValidationError("Invalid username/password")
         return cleaned_data
 
 class RegistrationForm(forms.Form):
@@ -84,4 +89,40 @@ class RegistrationForm(forms.Form):
         if User.objects.filter(email__exact=email):
             raise forms.ValidationError("Email is already registered.")
 
+        return cleaned_data
+
+class ForgotForm(forms.Form):
+    email = forms.CharField(max_length = 30,
+                        label = 'E-mail',
+                        required = True,
+                        widget = forms.EmailInput(attrs = {'id':'id_email','class' : 'form-control'}),
+                        )
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        return cleaned_data
+
+
+class ResetForm(forms.Form):
+
+    password = forms.CharField(max_length = 20,
+                               label = "Password",
+                               required = True,
+                               widget = forms.PasswordInput(attrs= {'id' : 'id_password','class' : 'form-control'}),
+                               error_messages = {'required':'password cannot be none'},
+                               )
+    confirm_pwd = forms.CharField(max_length = 20,
+                                  label = 'Confirm password',
+                                  required = True,
+                                  widget = forms.PasswordInput(attrs= {'id':'id_confirm_password','class' : 'form-control'}),
+                                  error_messages = {'required':'password cannot be none'},
+                                  )
+
+    def clean(self):
+        cleaned_data = super(ResetForm, self).clean()
+        password = cleaned_data.get('password')
+        confirm_pwd = cleaned_data.get('confirm_pwd')
+        if password and confirm_pwd and password != confirm_pwd:
+            raise forms.ValidationError("Password and confirm password don't match.")
+        validate_password(password,password_validators = get_default_password_validators())
         return cleaned_data
