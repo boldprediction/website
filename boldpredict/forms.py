@@ -23,11 +23,14 @@ class LoginForm(forms.Form):
 
         username = cleaned_data.get('username')
         password = cleaned_data.get('password')
-        user1 = authenticate(username = username, password = password)
-        user=User.objects.get(username=username)
+
+        try:
+            user=User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise forms.ValidationError("User does not exist")
         if user.is_active == False:
             raise forms.ValidationError("User not validated")
-        if user1 is None:
+        if authenticate(username = username, password = password) == None:
             raise forms.ValidationError("Invalid username/password")
         return cleaned_data
 
