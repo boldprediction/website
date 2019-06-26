@@ -230,7 +230,7 @@ def forget(request):
 
         send_mail(subject="Verify your email address",message= email_body,from_email="boldpredictionscmu@gmail.com",recipient_list=[user.email])
         context['email'] = form.cleaned_data['email']
-        return render(request, 'boldpredict/needs-confirmation1.html', context)
+        return render(request, 'boldpredict/static_resetpassword.html', context)
 
     except ObjectDoesNotExist:
         forgot_context = {}
