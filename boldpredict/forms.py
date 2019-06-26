@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from boldpredict.models import *
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password, get_default_password_validators
+import re
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length = 20,
@@ -59,13 +60,13 @@ class RegistrationForm(forms.Form):
 
     first_name = forms.CharField(max_length = 20,
                                  label = 'First Name',
-                                 required = False,
+                                 required = True,
                                  widget = forms.TextInput(attrs = {'id' : 'id_first_name','class' : 'form-control'}),
                                  error_messages = {'required':'first name cannot be none'},
                                  )
     last_name = forms.CharField(max_length = 20,
                                 label = 'Last Name',
-                                required = False,
+                                required = True,
                                 widget = forms.TextInput(attrs = {'id' : 'id_last_name','class' : 'form-control'}),
                                 error_messages = {'required':'last name cannot be none'},
                                 )
@@ -81,6 +82,8 @@ class RegistrationForm(forms.Form):
         if not all([ (x.isdigit() or x.isalpha()) for x in username ]):
             raise forms.ValidationError("Username should be alphanumeric characters.")
         email = self.cleaned_data.get('email')
+        if  not re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email):
+            raise forms.ValidationError("Wrong format email address!")
         validate_password(password,password_validators = get_default_password_validators())
         if User.objects.filter(username__exact=username):
             raise forms.ValidationError("Username is already exist.")
