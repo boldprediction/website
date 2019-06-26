@@ -79,8 +79,13 @@ class RegistrationForm(forms.Form):
         if password and confirm_pwd and password != confirm_pwd:
             raise forms.ValidationError("Password and confirm password don't match.")
         username = self.cleaned_data.get('username')
-        if not all([ (x.isdigit() or x.isalpha()) for x in username ]):
+
+        if all([ x.isdigit() for x in username ]):
+                raise forms.ValidationError("Username should not be all digits.")
+
+        if  not re.match(r"^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$", username):
             raise forms.ValidationError("Username should be alphanumeric characters.")
+            
         email = self.cleaned_data.get('email')
         if  not re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email):
             raise forms.ValidationError("Wrong format email address!")
