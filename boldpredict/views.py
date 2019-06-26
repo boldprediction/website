@@ -37,7 +37,16 @@ def experiment_action(request):
 
 @login_required
 def my_profile_action(request):
-    return render(request, 'boldpredict/index.html', {})
+    if request.method != 'GET':
+        return Http404
+    user = request.user
+    context = {}
+    context['username'] = user.username
+    context['first_name'] = user.first_name
+    context['last_name'] = user.last_name
+    context['email'] = user.email
+    
+    return render(request, 'boldpredict/my_profile.html', context)
 
 
 def register_action(request):
