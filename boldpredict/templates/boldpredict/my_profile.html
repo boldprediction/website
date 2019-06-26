@@ -1,0 +1,63 @@
+{% extends "boldpredict/base.html" %}
+
+
+{% block header %}
+<section>
+    <div id="Content" class="wrapper topSection">
+        <div id="Header">
+            <h2>My Profile</h2>
+        </div>
+    </div>
+</section>
+{% endblock%}
+
+
+{% block content %}
+{% load static %}
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-3">
+                User Name:
+            </div>
+            <div class="col-md-3">
+                {{username}}
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-3">
+                First Name:
+            </div>
+            <div class="col-md-3">
+                {{first_name}}
+            </div>
+            <div class="col-md-2"></div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-4"></div>
+
+            <div class="col-md-3">
+                Last Name:
+            </div>
+            <div class="col-md-3">
+                {{last_name}}
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-3">
+                Email:
+            </div>
+            <div class="col-md-3">
+                {{email}}
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+</section>
+{% endblock%}
