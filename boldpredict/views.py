@@ -104,20 +104,55 @@ def login_action(request):
 
     form = LoginForm(request.POST)
     context['form'] = form
-
     if not form.is_valid():
         return render(request, 'boldpredict/login.html', context)
+
+    try:
+        users = User.objects.get(username=form.cleaned_data['username'])
+        if not users.is_active:            
+            context['email'] = users.email
+            return render(request, 'boldpredict/resend_activation.html', context)
+            
+    except ObjectDoesNotExist:
+        return render(request, 'boldpredict/login.html', context)
+
 
     new_user = authenticate(username=form.cleaned_data['username'],
                             password=form.cleaned_data['password'])
 
-    if new_user is not None:
-        login(request, new_user)
-        return redirect(reverse('index'))
-    else:
-        return redirect(reverse('login'))
+    login(request, new_user)
+    return redirect(reverse('index'))
 
 #reset password
+
+def resend(request):
+    try:
+        user = User.objects.get(email=request.POST['email'])
+        if user.is_active:
+            return redirect(reverse('login'))
+        
+        token = default_token_generator.make_token(user)
+        email_body = """
+        Please click the link below to verify your email address and
+        complete the registration of your account:
+        
+        http://{host}{path}
+        """.format(host=request.get_host(), path=reverse('confirm', args=(user.username, token)))
+        
+        send_mail(subject="Verify your email address",
+              message= email_body,
+              from_email="boldpredictionscmu@gmail.com",
+              recipient_list=[user.email])
+        
+        form = LoginForm(request.POST)
+        context={}
+        context['email'] = request.POST['email']
+        return render(request, 'boldpredict/needs-confirmation.html', context)
+
+    except ObjectDoesNotExist:
+        messages.error("account not found")
+        return redirect(reverse('login'))
+
 # note : There is an inherit flaw in this logic.
 def reset(request):
     context = {}
@@ -159,24 +194,24 @@ def confirmreset_action(request, username, token):
     return render(request, 'boldpredict/reset_password.html', reset_context)
 
 
+#
+
 #forgot password function which triggers the mail 
 def forget(request):
     context = {}
-    
+    context['form'] = ForgotForm()
     if request.method == 'GET':
-        context['form'] = ForgotForm()
         return render(request, 'boldpredict/forget_password.html', context)
 
     form = ForgotForm(request.POST)
+    context['form'] = form
     if not form.is_valid():
         return render(request, 'boldpredict/forget_password.html', context)
 
-    reset_context = {}
-    reset_form = ResetForm()
-    messages = []
+    # reset_context = {}
+    # reset_form = ResetForm()
     try:
         user = User.objects.get(email=form.cleaned_data['email'])
-        print(user.email)
 
         token = default_token_generator.make_token(user)
         email_body = """
@@ -189,9 +224,9 @@ def forget(request):
         return render(request, 'boldpredict/needs-confirmation1.html', context)
 
     except ObjectDoesNotExist:
-        context['messages'] = messages
-        messages.append("email id does not exist in our database")
-        return render(request, 'boldpredict/forget_password.html', context)
+        forgot_context = {}
+        forgot_context['form']= ForgotForm()
+        return render(request, 'boldpredict/forget_password.html', forgot_context)
 
 ############---------------forgot_initial_implementation------------------#############
 #Initial implementation of forget function which resets the password without a mail link 

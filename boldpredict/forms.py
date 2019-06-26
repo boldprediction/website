@@ -1,5 +1,5 @@
 from django import forms
-
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from boldpredict.models import *
 from django.contrib.auth import authenticate
@@ -26,11 +26,9 @@ class LoginForm(forms.Form):
 
         try:
             user=User.objects.get(username=username)
-        except User.DoesNotExist:
+        except ObjectDoesNotExist:
             raise forms.ValidationError("User does not exist")
-        if user.is_active == False:
-            raise forms.ValidationError("User not validated")
-        if authenticate(username = username, password = password) == None:
+        if authenticate(username = username, password = password) == None and user.is_active == True:
             raise forms.ValidationError("Invalid username/password")
         return cleaned_data
 
@@ -98,8 +96,13 @@ class ForgotForm(forms.Form):
                         widget = forms.EmailInput(attrs = {'id':'id_email','class' : 'form-control'}),
                         )
     def clean(self):
-        cleaned_data = super().clean()
+        cleaned_data = super(ForgotForm,self).clean()
         email = cleaned_data.get('email')
+        try:
+            user = User.objects.get(email=email)
+        except ObjectDoesNotExist:
+            raise forms.ValidationError("Email is not registered")
+    
         return cleaned_data
 
 
