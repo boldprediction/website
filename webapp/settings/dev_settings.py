@@ -133,7 +133,7 @@ LOGIN_REDIRECT_URL = ''
 config = ConfigParser()
 print("\n\n\n" + BASE_DIR + "\n\n\n")
 
-config.read(os.path.join(BASE_DIR, '../config/config.ini'))
+config.read(os.path.join(BASE_DIR, '../../config/config.ini'))
 
 EMAIL_HOST = config.get('Email', 'Host')
 EMAIL_PORT = int(config.get('Email', 'Port'))
@@ -143,3 +143,5 @@ EMAIL_USE_TLS = True
 
 print('Email host:port = {host}:{port}, user={user}'.format(
         host=EMAIL_HOST, port=EMAIL_PORT, user=EMAIL_HOST_USER))
+
+SECRET_KEY = config.get('System', 'Secret_key')
