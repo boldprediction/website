@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['3.13.100.240']
+ALLOWED_HOSTS = ['3.15.123.123']
 
 
 # Application definition
@@ -136,7 +136,7 @@ LOGIN_REDIRECT_URL = ''
 config = ConfigParser()
 print("\n\n\n" + BASE_DIR + "\n\n\n")
 
-config.read(os.path.join(BASE_DIR, '../website-config/config.ini'))
+config.read(os.path.join(BASE_DIR, '../../website-config/config.ini'))
 
 EMAIL_HOST = config.get('Email', 'Host')
 EMAIL_PORT = int(config.get('Email', 'Port'))
