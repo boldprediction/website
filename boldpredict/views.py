@@ -15,6 +15,7 @@ from django.http import HttpResponse,Http404
 from django.core.mail import send_mail
 from django.conf import settings
 import json
+from boldpredict.models import *
 
 # stimuli type constant strings
 WORD_LIST = "word_list"
@@ -70,7 +71,7 @@ def new_contrast(request):
     return redirect(reverse('contrast'))
         
 def start_contrast(request):
-    return render(request, 'boldpredict/index.html', {})
+    return render(request, 'boldpredict/processing.html', {})
 
 
 def index(request):
@@ -317,5 +318,8 @@ def forget(request):
 #         messages.append("User does not exist with username")
 #         return render(request, 'boldpredict/forget_password.html', context)
 ############-------------------------------------------------------#############
-
+def refresh_contrast(request):
+    contrast_id = request.GET['contrast_id']
+    json_msg = '{ "success": "false" }'
+    return HttpResponse(json_msg, content_type='application/json')
 
