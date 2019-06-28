@@ -11,9 +11,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-import json
 
 from configparser import ConfigParser
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,13 +22,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%gpqon)zz-pv4%=0q_x6$uxhga-qzkh8=f9+&wu)y(c*hnly!!'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['3.15.123.123']
 
 
 # Application definition
@@ -79,8 +76,10 @@ WSGI_APPLICATION = 'webapp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'boldpredict',
+        'USER': 'root',
+        'PASSWORD': 'Bold@15213',
     }
 }
 
@@ -125,6 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'images/')
 
 #Login in Url
@@ -136,7 +136,7 @@ LOGIN_REDIRECT_URL = ''
 config = ConfigParser()
 print("\n\n\n" + BASE_DIR + "\n\n\n")
 
-config.read(os.path.join(BASE_DIR, '../config/config.ini'))
+config.read(os.path.join(BASE_DIR, '../../website-config/config.ini'))
 
 EMAIL_HOST = config.get('Email', 'Host')
 EMAIL_PORT = int(config.get('Email', 'Port'))
@@ -147,11 +147,5 @@ EMAIL_USE_TLS = True
 print('Email host:port = {host}:{port}, user={user}'.format(
         host=EMAIL_HOST, port=EMAIL_PORT, user=EMAIL_HOST_USER))
 
-# load contrast configuration 
-CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, 'config/contrast_config.json')
-with open(CONTRAST_CONFIG_DIR, 'r') as f:
-    contrast_config = json.load(f)
 
-STIMULI_TYPES = contrast_config.get('stimuli_type',None)
-MODEL_TYPES = contrast_config.get('model_type',None)
-WORD_LIST_CONDITIONS = contrast_config.get('word_list_conditions',None)
+SECRET_KEY = config.get('System', 'Secret_key')
