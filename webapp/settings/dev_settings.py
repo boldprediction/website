@@ -146,7 +146,7 @@ print('Email host:port = {host}:{port}, user={user}'.format(
         host=EMAIL_HOST, port=EMAIL_PORT, user=EMAIL_HOST_USER))
 
 # load contrast configuration 
-CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, 'config/contrast_config.json')
+CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')
 with open(CONTRAST_CONFIG_DIR, 'r') as f:
     contrast_config = json.load(f)
 
