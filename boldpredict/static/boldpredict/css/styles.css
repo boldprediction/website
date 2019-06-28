@@ -508,7 +508,7 @@
     }
     /* below for loading css */
     /* Start the loader code, first, let's align it the center of screen */
-    
+    /* Refer to https://github.com/SparksFly8/Tools.git */
     .loader {
         position: absolute;
         top: 50%;
