@@ -66,11 +66,41 @@ def new_contrast(request):
             condition['brief_part2'] = condition_value[25:50]
             context['conditions'].append(condition)
         context['form'] = WordListForm()
+        context['public'] = True
         return render(request, 'boldpredict/contrast_filler.html', context)
     
     return redirect(reverse('contrast'))
         
-def start_contrast(request):
+def word_list_start_contrast(request):
+    context = {}
+    if request.method != 'POST':
+        raise Http404
+    
+    form = WordListForm(request.POST)
+    contrast_type = request.POST['contrast_type']
+    model_type = request.POST['model_type']
+    stimuli_type = request.POST['stimuli_type']
+
+    if contrast_type == 'Private':
+        context['public'] = False
+    else:
+        context['public'] = True
+
+    context['form'] = form
+    
+    if not form.is_valid():
+        context['model_type'] = model_type
+        context['stimili_type'] = stimuli_type
+        context['word_list_suggestions'] = json.dumps(settings.WORD_LIST_CONDITIONS)
+        context['conditions'] = []
+        for condition_key,condition_value in settings.WORD_LIST_CONDITIONS.items():
+            condition = {}
+            condition['name'] = condition_key
+            condition['brief_part1'] = condition_value[:25]
+            condition['brief_part2'] = condition_value[25:50]
+            context['conditions'].append(condition)
+        return render(request, 'boldpredict/contrast_filler.html', context)
+
     return render(request, 'boldpredict/processing.html', {})
 
 
@@ -132,7 +162,7 @@ def register_action(request):
               recipient_list=[new_user.email])
 
     context['email'] = form.cleaned_data['email']
-    return render(request, 'boldpredict/needs-confirmation.html', context)
+    return render(request, 'boldpredict/needs_confirmation.html', context)
 
 
 
@@ -202,7 +232,7 @@ def resend(request):
         form = LoginForm(request.POST)
         context={}
         context['email'] = request.POST['email']
-        return render(request, 'boldpredict/needs-confirmation.html', context)
+        return render(request, 'boldpredict/needs_confirmation.html', context)
 
     except ObjectDoesNotExist:
         messages.error("account not found")
