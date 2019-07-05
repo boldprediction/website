@@ -79,7 +79,7 @@ def index(request):
  
 
 def experiment_action(request):
-    return render(request, 'boldpredict/index.html', {}) 
+    return render(request, 'boldpredict/MNI_Test.html', {}) 
 
 @login_required
 def my_profile_action(request):
@@ -283,43 +283,13 @@ def forget(request):
         forgot_context['form']= ForgotForm()
         return render(request, 'boldpredict/forget_password.html', forgot_context)
 
-############---------------forgot_initial_implementation------------------#############
-#Initial implementation of forget function which resets the password without a mail link 
-#forgot password function which triggers the mail 
-# def forget(request):
-#     context = {}
-    
-    
-#     if request.method == 'GET':
-#         context['form'] = ForgotForm()
-#         return render(request, 'boldpredict/forget_password.html', context)
-
-#     form = ForgotForm(request.POST)
-#     if not form.is_valid():
-#         return render(request, 'boldpredict/forget_password.html', context)
-
-#     reset_context = {}
-#     reset_form = ResetForm()
-#     messages = []
-#     try:
-#         user = User.objects.get(username=form.cleaned_data['username'])
-#         if (user.email == form.cleaned_data['email']):
-#             u1= User.objects.get(email=form.cleaned_data['email'])
-#             print(u1.email)
-#             reset_context['form'] = reset_form
-#             reset_context['username'] = form.cleaned_data['username']
-#             return render(request, 'boldpredict/reset_password.html', reset_context)
-#         else:
-#             messages.append("Username does not match email address")
-#             context['messages'] = messages
-#             return render(request, 'boldpredict/forget_password.html', context)
-#     except ObjectDoesNotExist:
-#         context['messages'] = messages
-#         messages.append("User does not exist with username")
-#         return render(request, 'boldpredict/forget_password.html', context)
-############-------------------------------------------------------#############
 def refresh_contrast(request):
     contrast_id = request.GET['contrast_id']
     json_msg = '{ "success": "false" }'
     return HttpResponse(json_msg, content_type='application/json')
 
+# MNI_view to render the brain image 
+# def MNI_view(request,contrast_id):
+#     c = Contrast.objects.get(c=contrast_id)
+#     names = c.get_MNI_names()
+#     return render(request,'boldpredict/MNI_1.html',names)

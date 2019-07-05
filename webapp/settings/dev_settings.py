@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import json
 
-from configparser import ConfigParser
+from configparser import RawConfigParser
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -131,10 +131,10 @@ LOGIN_URL = '/login'
 #After login render to url
 LOGIN_REDIRECT_URL = ''
 
-config = ConfigParser()
+config = RawConfigParser()
 print("\n\n\n" + BASE_DIR + "\n\n\n")
 
-config.read(os.path.join(BASE_DIR, '../../config/config.ini'))
+config.read(os.path.join(BASE_DIR, '../config/config.ini'))
 
 EMAIL_HOST = config.get('Email', 'Host')
 EMAIL_PORT = int(config.get('Email', 'Port'))
@@ -153,4 +153,4 @@ with open(CONTRAST_CONFIG_DIR, 'r') as f:
 STIMULI_TYPES = contrast_config.get('stimuli_type',None)
 MODEL_TYPES = contrast_config.get('model_type',None)
 WORD_LIST_CONDITIONS = contrast_config.get('word_list_conditions',None)
-SECRET_KEY = config.get('System', 'Secret_key')
+SECRET_KEY = config.get('System', 'SECRET_KEY')
