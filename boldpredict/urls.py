@@ -19,6 +19,9 @@ urlpatterns = [
     path('forget_password',views.forget,name='forget_password'),
     path('resend_activation',views.resend,name='resend_activation'),
     path('reset_password',views.reset,name='reset_password'),
+    path('mni_test.html',views.MNI_view,name='mni_test'),
+    # path('<int:c_id>/contrast/<int:subj_num>', views.subj_view, name='subj'),
+    path('subj/<int:subj_num>', views.subj_view, name='subj'),
     path('confirm-reset/<slug:username>/<slug:token>',
         views.confirmreset_action, name='confirmreset'),
 ]

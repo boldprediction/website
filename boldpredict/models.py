@@ -20,8 +20,13 @@ class Contrast(models.Model):
     permutation_choice = models.BooleanField('Run permutation/bootstrap test(needs more waiting time)', default=False)
     # experiment_id = models.BigIntegerField('experiment if it exists',default=0)
     # figures_list = models.TextField('Enter name of Condition 1', default = '')
-    # MNIstr = models.TextField('model str')
+    MNIstr = models.TextField('model str')
     # subjstr = models.TextField('model str')
     # pmaps = models.TextField('model str')
     # replicated_figure = models.TextField('replicated_image',  default = '')
     # random_roi_file = models.TextField('random_roi_file',  default = '')
+    def get_MNI_names(self):
+        strs = dict()
+        strs['Cstr'] = self.MNIstr
+        # print strs['Cstr']
+        return strs

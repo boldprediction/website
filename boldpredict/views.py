@@ -25,6 +25,9 @@ SENTENCE = "sentence"
 
 from django.core.exceptions import ObjectDoesNotExist
 
+# Contrast model 
+from .models import Contrast
+
 
 # Create your views here.
 def login_action(request):
@@ -79,7 +82,9 @@ def index(request):
  
 
 def experiment_action(request):
-    return render(request, 'boldpredict/MNI_Test.html', {}) 
+    # return render(request, 'boldpredict/MNI_Test.html', {}) 
+    return render(request, 'boldpredict/contrast.html', {}) 
+
 
 @login_required
 def my_profile_action(request):
@@ -290,6 +295,16 @@ def refresh_contrast(request):
 
 # MNI_view to render the brain image 
 # def MNI_view(request,contrast_id):
-#     c = Contrast.objects.get(c=contrast_id)
-#     names = c.get_MNI_names()
-#     return render(request,'boldpredict/MNI_1.html',names)
+def MNI_view(request):
+    # c = Contrast.objects.get(c=contrast_id)
+    # names = c.get_MNI_names()
+    # return render(request,'boldpredict/MNI.html',names)
+    return render(request, 'boldpredict/mni_test.html', {}) 
+
+#subj_view to render the 8 different subjects 
+# def subj_view(request, c_id, subj_num):
+def subj_view(request):
+    # c =  Contrast.objects.get(pk=c_id)
+    # names = c.get_subj_names(subj_num)
+    # return render(request, 'simulate/subj_{0}.html'.format(subj_num),names)
+    return render(request, 'simulate/subj_1.html')
