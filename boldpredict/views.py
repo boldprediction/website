@@ -352,3 +352,5 @@ def refresh_contrast(request):
     json_msg = '{ "success": "false" }'
     return HttpResponse(json_msg, content_type='application/json')
 
+def contrast_result(request,contrast_id):
+    return render(request, 'boldpredict/contrast_result.html', {})

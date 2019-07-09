@@ -21,4 +21,5 @@ urlpatterns = [
     path('reset_password',views.reset,name='reset_password'),
     path('confirm-reset/<slug:username>/<slug:token>',
         views.confirmreset_action, name='confirmreset'),
+    path('contrast_result/<slug:contrast_id>', views.contrast_result, name='contrast_result'),
 ]
