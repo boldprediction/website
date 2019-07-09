@@ -33,7 +33,7 @@ function process_time_out() {
     var contrast_id = document.getElementById("contrastId").value;
     var contrast_link =  'contrast_result/' + contrast_id
     // should replace the ip address later
-    var ip_address = '127.0.0.1:8000/'
+    var ip_address = 'http://127.0.0.1:8000/'
     loader = document.getElementById("id_contrast_section");
     loader.innerHTML = "<div class='container'> <br><br><br><br><br>" +
         "<br><br><h3>System time out, please come back or try a new contrast later.</h3>" +
