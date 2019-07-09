@@ -186,7 +186,7 @@ class WordListForm(forms.ModelForm):
 
         if not all([x.isdigit() or x.isalpha() or x == ',' or x == ' ' for x in list1_text]):
             raise forms.ValidationError("Please enter words for condition 1")
-        if list2_name != 'baseline'and not all([x.isdigit() or x.isalpha() or x == ',' or x == ' ' for x in list2_text]):
+        if list2_text and list2_name != 'baseline' and not all([x.isdigit() or x.isalpha() or x == ',' or x == ' ' for x in list2_text]):
             raise forms.ValidationError("Please enter words for condition 2")
         return cleaned_data
 

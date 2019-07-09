@@ -3,19 +3,19 @@ from hashid_field import HashidAutoField
 from boldpredict.constants import *
 
 class Experiment(models.Model):
-    title = models.TextField('experiment_title')
+    title = models.TextField('experiment_title',null=True)
     authors = models.TextField('authors_name',null=True)
     DOI = models.TextField('DOI',null=True)
     
-    stimili_type = models.CharField('Stimuli Type',choices=STIMULI_TYPE_CHOICE, max_length=20,default=WORD_LIST) 
-    coordinates_space = models.CharField('Coordinate Space',choices=COORDINATE_SPACE_CHOICE, max_length=20,default=MNI) 
+    stimuli_type = models.CharField('Stimuli Type',choices=STIMULI_TYPE_CHOICE, max_length=20,default=WORD_LIST) 
+    coordinate_space = models.CharField('Coordinate Space',choices=COORDINATE_SPACE_CHOICE, max_length=20,default=MNI) 
     model_type = models.CharField('Model Type',choices=MODEL_TYPE_CHOICE, max_length=20,default=ENG1000) 
     # contrasts_res = models.TextField('model str')
     # objects = ExpManager()
 
 class Stimuli(models.Model):
     name = models.TextField('name of stimuli',max_length=200)
-    stimili_type = models.CharField('Stimuli Type',choices=STIMULI_TYPE_CHOICE, max_length=20,default=WORD_LIST) 
+    stimuli_type = models.CharField('Stimuli Type',choices=STIMULI_TYPE_CHOICE, max_length=20,default=WORD_LIST) 
     experiment = models.ForeignKey(Experiment,related_name="stimulus",on_delete=models.CASCADE)
 
 class WordListStimuli(models.Model):

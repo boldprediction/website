@@ -64,6 +64,8 @@ def new_contrast(request):
             context['conditions'].append(condition)
         context['form'] = WordListForm()
         context['public'] = True
+        context['model_type'] = model_type
+        context['stimuli_type'] = stimuli_type
         return render(request, 'boldpredict/contrast_filler.html', context)
     
     return redirect(reverse('contrast'))
