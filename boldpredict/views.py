@@ -17,7 +17,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import json
 from boldpredict.models import *
-from boldpredict.services import experiment_service
+from boldpredict.api import experiment_api
 
 # constants
 from boldpredict import constants
@@ -103,8 +103,10 @@ def word_list_start_contrast(request):
             context['conditions'].append(condition)
         return render(request, 'boldpredict/contrast_filler.html', context)
 
-
-    contrast = experiment_service.create_word_list_contrast(**request.POST)
+    params = dict(request.POST)
+    params['baseline_choice'] = form.clean_baseline_choice()
+    params['permutation_choice'] = form.clean_permutation_choice()
+    contrast = experiment_api.create_word_list_contrast(**params)
     return render(request, 'boldpredict/processing.html', {'contrast_id':contrast.id})
 
 
