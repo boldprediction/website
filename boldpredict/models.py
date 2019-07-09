@@ -54,7 +54,7 @@ class Condition(models.Model):
     stimulus = models.ManyToManyField(Stimuli,related_name='related_conditions')
     contrast  = models.ForeignKey(Contrast,related_name="conditions",on_delete=models.CASCADE)
 
-class Coordinates(models.Model):
+class Coordinate(models.Model):
     name = models.TextField('roi name')
     x = models.IntegerField('x')
     y = models.IntegerField('y')
