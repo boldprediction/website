@@ -337,6 +337,6 @@ def subj_view(request):
     # names = c.get_subj_names(subj_num)
     # return render(request, 'simulate/subj_{0}.html'.format(subj_num),names)
     return render(request, 'simulate/subj_1.html')
-    
+
 def contrast_result(request,contrast_id):
-    return render(request, 'boldpredict/contrast_result.html', {})
+    return render(request, 'boldpredict/contrast.html', {"contrast_id": contrast_id}) 
