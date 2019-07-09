@@ -31,9 +31,8 @@ class WordListStimuli(models.Model):
     parent_stimuli = models.OneToOneField(
         Stimuli, related_name='word_list_stimuli', on_delete=models.CASCADE)
 
+
 # Create your models here.
-
-
 class Contrast(models.Model):
     id = HashidAutoField(primary_key=True)
     privacy_choice = models.CharField(
