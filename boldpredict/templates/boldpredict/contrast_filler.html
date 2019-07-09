@@ -56,10 +56,10 @@
                             <br>
                             <div class="col-md-3" style="color: white">
                                 {% if not public %}
-                                <input class="radio_button" type="radio" name="contrast_type" value="Public" /> Public
+                                <input class="radio_button" type="radio" name="contrast_type" value="PU" /> Public
                                 <br />
                                 {% else %}
-                                <input class="radio_button" type="radio" name="contrast_type" value="Public" checked />
+                                <input class="radio_button" type="radio" name="contrast_type" value="PU" checked />
                                 Public
                                 <br />
                                 {% endif %}
@@ -67,14 +67,14 @@
                             <div class="col-md-3" style="color: white">
                                 {% if user.is_authenticated %}
                                 {% if not public %}
-                                <input class="radio_button" type="radio" name="contrast_type" value="Private" checked />
+                                <input class="radio_button" type="radio" name="contrast_type" value="PR" checked />
                                 Private
                                 {% else %}
-                                <input class="radio_button" type="radio" name="contrast_type" value="Private" /> Private
+                                <input class="radio_button" type="radio" name="contrast_type" value="PR" /> Private
                                 {% endif %}
                                 <br />
                                 {% else %}
-                                <input class="radio_button" type="radio" name="contrast_type" value="Private"
+                                <input class="radio_button" type="radio" name="contrast_type" value="PR"
                                     disabled />
                                 Private
                                 <br />
