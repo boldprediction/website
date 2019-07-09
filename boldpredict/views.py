@@ -101,8 +101,8 @@ def word_list_start_contrast(request):
         return render(request, 'boldpredict/contrast_filler.html', context)
 
 
-    experiment_service.create_contrast_with_experiment(request.POST)
-    return render(request, 'boldpredict/processing.html', {})
+    contrast = experiment_service.create_word_list_contrast(**request.POST)
+    return render(request, 'boldpredict/processing.html', {'contrast_id':contrast.id})
 
 
 def index(request):
