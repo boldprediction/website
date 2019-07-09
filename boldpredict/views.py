@@ -17,7 +17,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import json
 from boldpredict.models import *
-from boldpredict.api import experiment_api
+from boldpredict.api import contrast_api
 
 # constants
 from boldpredict import constants
@@ -106,7 +106,7 @@ def word_list_start_contrast(request):
     params = dict(request.POST)
     params['baseline_choice'] = form.clean_baseline_choice()
     params['permutation_choice'] = form.clean_permutation_choice()
-    contrast = experiment_api.create_word_list_contrast(**params)
+    contrast = contrast_api.create_single_word_list_contrast(**params)
     return render(request, 'boldpredict/processing.html', {'contrast_id':contrast.id})
 
 
@@ -325,20 +325,15 @@ def refresh_contrast(request):
     return HttpResponse(json_msg, content_type='application/json')
 
 # MNI_view to render the brain image 
-# def MNI_view(request,contrast_id):
-def MNI_view(request):
-    # c = Contrast.objects.get(c=contrast_id)
-    # names = c.get_MNI_names()
-    # return render(request,'boldpredict/MNI.html',names)
-    return render(request, 'boldpredict/mni_test.html', {}) 
+def MNI_view(request,contrast_id):
+    mni_str = contrast_api.get_contrast_mni_str(contrast_id)
+    return render(request, 'boldpredict/MNI.html',mni_str) 
 
 #subj_view to render the 8 different subjects 
-# def subj_view(request, c_id, subj_num):
-def subj_view(request):
-    # c =  Contrast.objects.get(pk=c_id)
-    # names = c.get_subj_names(subj_num)
-    # return render(request, 'simulate/subj_{0}.html'.format(subj_num),names)
-    return render(request, 'simulate/subj_1.html')
+def subj_view(request,contrast_id,subj_num):
+    subj_str = contrast_api.get_contrast_subj_str(contrast_id,subj_num)
+    return render(request, 'simulate/subj_{0}.html'.format(subj_num),subj_str)
 
-def contrast_result(request,contrast_id):
-    return render(request, 'boldpredict/contrast.html', {"contrast_id": contrast_id}) 
+def contrast_view(request,contrast_id):
+    contrast = contrast_api.get_word_list_contrast(contrast_id)
+    return render(request, 'boldpredict/contrast.html', contrast) 

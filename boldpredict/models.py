@@ -52,11 +52,11 @@ class Contrast(models.Model):
     # pmaps = models.TextField('model str')
     # replicated_figure = models.TextField('replicated_image',  default = '')
     # random_roi_file = models.TextField('random_roi_file',  default = '')
-    def get_MNI_names(self):
-        strs = dict()
-        strs['Cstr'] = self.MNIstr
-        # print strs['Cstr']
-        return strs
+    # def get_MNI_names(self):
+    #     strs = dict()
+    #     strs['Cstr'] = self.MNIstr
+    #     # print strs['Cstr']
+    #     return strs
     # pmaps = models.TextField('permutation parameter')
     # replicated_figure = models.TextField('replicated_image',  default = '')
     # random_roi_file = models.TextField('random_roi_file',  default = '')
@@ -65,6 +65,7 @@ class Contrast(models.Model):
     # list2_name = models.TextField('Enter name of Condition 2')
     # list2_text = models.TextField ('Enter stimulus words separated by a comma')
 
+# for coordinate analysis 
 # class Coordinates_holder(models.Model):
 #     title = models.TextField('', default = '')
 #     roi_image_filename = models.TextField('',  default = '')

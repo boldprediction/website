@@ -90,9 +90,10 @@
                 <h2> Main Contrast Image </h2>
             </p>
         </center>
-        {% comment %} <iframe id="mni_iframe" height=55% width="100%" src="MNI.html?c_id={{c_id}}" frameBorder="0">
-            {% endcomment %}
-            <iframe id="MNI_view" height=500 width="100%" src="mni_test.html" frameBorder="10">
+        {% comment %} 
+        <iframe id="mni_iframe" height=55% width="100%" src="MNI.html?c_id={{c_id}}" frameBorder="0">
+        {% endcomment %}
+            <iframe id="MNI_view" height=500 width="100%" src="{% url 'MNI_view' c_id  %}" frameBorder="10">
 
             </iframe>
     </div>

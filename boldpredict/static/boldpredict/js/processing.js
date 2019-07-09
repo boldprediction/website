@@ -1,5 +1,5 @@
 interval_time = 10000;
-time_out_time = 50000;
+time_out_time = 10000;
 
 function processing_contrast() {
     var contrast_id = document.getElementById("contrastId").value;
@@ -37,7 +37,7 @@ function process_time_out() {
     loader = document.getElementById("id_contrast_section");
     loader.innerHTML = "<div class='container'> <br><br><br><br><br>" +
         "<br><br><h3>System time out, please come back or try a new contrast later.</h3>" +
-        "<br><h3>Contrast link = " + contrast_link + " </h3></div>";
+        "<br><h3>Contrast link = " + ip_address + contrast_link + " </h3></div>";
     window.clearInterval(interval);
     window.location.replace(ip_address + contrast_link);
 }
