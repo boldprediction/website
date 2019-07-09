@@ -9,7 +9,7 @@ urlpatterns = [
     path('logout', views.logout_action, name='logout'),
     path('contrast', views.contrast_action, name='contrast'),
     path('new_contrast', views.new_contrast, name='new_contrast'),
-    path('start_contrast', views.start_contrast, name='start_contrast'),
+    path('word_list_start_contrast', views.word_list_start_contrast, name='word_list_start_contrast'),
     path('refresh_contrast', views.refresh_contrast, name='refresh_contrast'),
     path('experiment', views.experiment_action, name='experiment'),
     path('my_profile', views.my_profile_action, name='my_profile'),
@@ -24,4 +24,5 @@ urlpatterns = [
     path('subj/<int:subj_num>', views.subj_view, name='subj'),
     path('confirm-reset/<slug:username>/<slug:token>',
         views.confirmreset_action, name='confirmreset'),
+    path('contrast_result/<slug:contrast_id>', views.contrast_result, name='contrast_result'),
 ]

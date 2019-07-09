@@ -1,8 +1,9 @@
 {% extends "boldpredict/base.html" %} {% block staticfiles %} {% load static %}
 <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script src="{% static 'boldpredict/js/processing.js' %}" type="text/javascript"></script>
+{% endblock %}
 
-{% endblock %} {% block content %}
+{% block content %}
 <section id="id_contrast_section">
     <div class="loader">
         <div>P</div>
@@ -18,4 +19,5 @@
     </div>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 </section>
+<input id= "contrastId" class="hidden" name="contrast_id" value={{contrast_id}} />
 {% endblock%}

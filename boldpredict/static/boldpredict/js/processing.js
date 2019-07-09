@@ -2,8 +2,8 @@ interval_time = 10000;
 time_out_time = 50000;
 
 function processing_contrast() {
-    // contrast_id = document.getElementById("contrastId").value;
-    contrast_id = "1";
+    var contrast_id = document.getElementById("contrastId").value;
+    // contrast_id = "1";
     console.log("contrast_id = ", contrast_id);
     $.ajax({
         url: "/refresh_contrast?contrast_id=" + contrast_id,
@@ -30,11 +30,16 @@ function updatePage(response) {
 }
 
 function process_time_out() {
+    var contrast_id = document.getElementById("contrastId").value;
+    var contrast_link =  'contrast_result/' + contrast_id
+    // should replace the ip address later
+    var ip_address = 'http://127.0.0.1:8000/'
     loader = document.getElementById("id_contrast_section");
     loader.innerHTML = "<div class='container'> <br><br><br><br><br>" +
-        "<br><br><h3>System time out, please refresh or try a new contrast later.</h3>" +
-        "</div>";
+        "<br><br><h3>System time out, please come back or try a new contrast later.</h3>" +
+        "<br><h3>Contrast link = " + contrast_link + " </h3></div>";
     window.clearInterval(interval);
+    window.location.replace(ip_address + contrast_link);
 }
 window.onload = processing_contrast
 var interval = window.setInterval(processing_contrast, interval_time);

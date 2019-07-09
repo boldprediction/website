@@ -11,7 +11,8 @@
         width: 33%;
         border-radius: 0px;
     }
-    .btn button:hover{
+
+    .btn button:hover {
         color: white;
     }
 </style>
@@ -40,7 +41,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-5">
-                <form method="post" action="{% url 'start_contrast' %}">
+                {% for error in form.non_field_errors %}
+                <span style="color: red">
+                    {{error}}
+                </span>
+                {% endfor %}
+                <form method="post" action="{% url 'word_list_start_contrast' %}">
                     <div class="form-group" style="color: black">
                         <div>
                             <label style="color: white">
@@ -49,21 +55,27 @@
                             <br>
                             <br>
                             <div class="col-md-3" style="color: white">
-                                {% if user.is_authenticated %}
-                                <input class="radio_button" type="radio" name="stimuli_type" value="Public" /> Public
+                                {% if not public %}
+                                <input class="radio_button" type="radio" name="contrast_type" value="PU" /> Public
                                 <br />
                                 {% else %}
-                                <input class="radio_button" type="radio" name="stimuli_type" value="Public" checked />
+                                <input class="radio_button" type="radio" name="contrast_type" value="PU" checked />
                                 Public
                                 <br />
                                 {% endif %}
                             </div>
                             <div class="col-md-3" style="color: white">
                                 {% if user.is_authenticated %}
-                                <input class="radio_button" type="radio" name="stimuli_type" value="Private" /> Private
+                                {% if not public %}
+                                <input class="radio_button" type="radio" name="contrast_type" value="PR" checked />
+                                Private
+                                {% else %}
+                                <input class="radio_button" type="radio" name="contrast_type" value="PR" /> Private
+                                {% endif %}
                                 <br />
                                 {% else %}
-                                <input class="radio_button" type="radio" name="stimuli_type" value="Private" disabled />
+                                <input class="radio_button" type="radio" name="contrast_type" value="PR"
+                                    disabled />
                                 Private
                                 <br />
                                 {% endif %}
@@ -83,6 +95,8 @@
                         <button type="submit" class="submit_button">Submit</button>
                         {% csrf_token%}
                     </div>
+                    <input class="hidden" name="stimuli_type" value={{model_type}} />
+                    <input class="hidden" name="model_type" value={{stimuli_type}} />
                 </form>
             </div>
             <div class="col-md-7">
@@ -123,5 +137,4 @@
 <br>
 <br>
 <br>
-
 {% endblock%}
