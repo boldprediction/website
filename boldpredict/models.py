@@ -48,8 +48,8 @@ class Contrast(models.Model):
         'Run permutation/bootstrap test(needs more waiting time)', default=False)
     experiment = models.ForeignKey(
         Experiment, related_name="contrasts", on_delete=models.CASCADE)
-    MNIstr = models.TextField('MNI res str', null=True)
-    subjstr = models.TextField('subject res str', null=True)
+    MNIstr = models.TextField('MNI res str', null=True,blank=True)
+    subjstr = models.TextField('subject res str', null=True,blank=True)
 
     # experiment_id = models.BigIntegerField('experiment if it exists',default=0)
     # figures_list = models.TextField('Enter name of Condition 1', default = '')
