@@ -43,7 +43,9 @@ def create_single_word_list_contrast(*args, **kwargs):
 
     # contrast
     contrast_type = kwargs.get('contrast_type', PUBLIC)
-    contrast_title = kwargs.get('contrast_title', None)
+    contrast_title = kwargs.get('contrast_title', list1_name + '-' + list2_name)
+    if len(contrast_title) == 0:
+        contrast_title = list1_name + '-' + list2_name
     baseline_choice = kwargs.get('baseline_choice', False)
     permutation_choice = kwargs.get('permutation_choice', False)
     contrast = Contrast.objects.create(contrast_title=contrast_title,
@@ -54,7 +56,6 @@ def create_single_word_list_contrast(*args, **kwargs):
     # create condition
     condition1 = Condition.objects.create(
         condition_name=list1_name, contrast=contrast)
-
     combine1 = ConditionCombination.objects.create(stimuli = stimuli1,condition = condition1)
     condition2 = Condition.objects.create(
         condition_name=list2_name, contrast=contrast)
@@ -96,6 +97,7 @@ def get_word_list_contrast(contrast_id):
     contrast_dict['list2'] = list2_text
     contrast_dict['do_perm'] = contrast.permutation_choice
     contrast_dict['c_id'] = contrast.id
+    contrast_dict['contrast_title'] = contrast.contrast_title
     return contrast_dict
 
 def get_contrast_mni_str(contrast_id):

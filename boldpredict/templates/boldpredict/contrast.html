@@ -3,17 +3,12 @@
 {% block content %}
 
 <body>
-
     <div class="row">
-
-
         <div class="col-sm-12">
             <div class="col-sm-6">
                 <center>
-                    <h1> <a href="/"> <span class="glyphicon glyphicon-chevron-left"> </span> </a> {{list1_name}} -
-                        {{list2_name}}</h1>
+                    <h2>{{contrast_title}}</h2>
                 </center>
-
                 <div class="col-sm-6">
                     <h3>{{list1_name}}</h3>
                     <p .pre-scrollable>{{list1}}</p>
@@ -87,12 +82,9 @@
         <br>
         <center>
             <p>
-                <h2> Main Contrast Image </h2>
+                <h3> Main Contrast Image </h3>
             </p>
         </center>
-        {% comment %} 
-        <iframe id="mni_iframe" height=55% width="100%" src="MNI.html?c_id={{c_id}}" frameBorder="0">
-        {% endcomment %}
             <iframe id="MNI_view" height=500 width="100%" src="{% url 'MNI_view' c_id  %}" frameBorder="10">
 
             </iframe>

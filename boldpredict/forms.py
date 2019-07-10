@@ -162,13 +162,13 @@ class WordListForm(forms.ModelForm):
                                  widget=forms.Textarea(
                                      attrs={'cols': 50, 'rows': 1}),
                                  )
-    list1_text = forms.CharField(max_length=200,
+    list1_text = forms.CharField(max_length=1000,
                                  label='Enter stimulus words separated by a comma',
                                  required=True,
                                  widget=forms.Textarea(
                                      attrs={'cols': 50, 'rows': 10}),
                                  )
-    list2_text = forms.CharField(max_length=200,
+    list2_text = forms.CharField(max_length=1000,
                                  label='Enter stimulus words separated by a comma',
                                  required=True,
                                  widget=forms.Textarea(
@@ -183,11 +183,11 @@ class WordListForm(forms.ModelForm):
         list1_text = cleaned_data.get('list1_text')
         list2_text = cleaned_data.get('list2_text')
         list2_name = cleaned_data.get('list2_name')
-
         if not all([x.isdigit() or x.isalpha() or x == ',' or x == ' ' for x in list1_text]):
             raise forms.ValidationError("Please enter words for condition 1")
         if list2_text and list2_name != 'baseline' and not all([x.isdigit() or x.isalpha() or x == ',' or x == ' ' for x in list2_text]):
             raise forms.ValidationError("Please enter words for condition 2")
+        print("cleaned_data = ", cleaned_data)
         return cleaned_data
     
     def clean_baseline_choice(self):
