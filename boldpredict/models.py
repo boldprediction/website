@@ -4,18 +4,23 @@ from boldpredict.constants import *
 
 
 class Experiment(models.Model):
-    experiment_title = models.TextField('experiment_title', null=True)
-    authors = models.TextField('authors_name', null=True)
-    DOI = models.TextField('DOI', null=True)
+    experiment_title = models.TextField('experiment_title', null=True, blank=True)
+    authors = models.TextField('authors_name', null=True, blank=True)
+    DOI = models.TextField('DOI', null=True, blank=True)
 
     stimuli_type = models.CharField(
-        'Stimuli Type', choices=STIMULI_TYPE_CHOICE, max_length=20, default=WORD_LIST)
+        'Stimulus Type', choices=STIMULI_TYPE_CHOICE, max_length=20, default=WORD_LIST)
+
     coordinate_space = models.CharField(
         'Coordinate Space', choices=COORDINATE_SPACE_CHOICE, max_length=20, default=MNI)
+    
     model_type = models.CharField(
         'Model Type', choices=MODEL_TYPE_CHOICE, max_length=20, default=ENG1000)
     # contrasts_res = models.TextField('model str')
     # objects = ExpManager()
+    # def __str__(self):
+    #     return "stimuli_type = " + self.stimuli_type +  " coordinate_space = " + self.coordinate_space \
+    #             + "model_type = " + self.model_type
 
 
 class Stimuli(models.Model):
@@ -52,11 +57,7 @@ class Contrast(models.Model):
     # pmaps = models.TextField('model str')
     # replicated_figure = models.TextField('replicated_image',  default = '')
     # random_roi_file = models.TextField('random_roi_file',  default = '')
-    # def get_MNI_names(self):
-    #     strs = dict()
-    #     strs['Cstr'] = self.MNIstr
-    #     # print strs['Cstr']
-    #     return strs
+
     # pmaps = models.TextField('permutation parameter')
     # replicated_figure = models.TextField('replicated_image',  default = '')
     # random_roi_file = models.TextField('random_roi_file',  default = '')

@@ -151,7 +151,10 @@ EMAIL_USE_TLS = True
 print('Email host:port = {host}:{port}, user={user}'.format(
         host=EMAIL_HOST, port=EMAIL_PORT, user=EMAIL_HOST_USER))
 
-SECRET_KEY = config.get('System', 'Secret_key')
+SECRET_KEY = config.get('System', 'SECRET_KEY')
+HOST_IP = config.get('System', 'HOST_IP')
+APPLICATION_PORT = config.get('System', 'APPLICATION_PORT')
+SUBJECT_NUM = config.get('System', 'SUBJECT_NUM')
 
 # load contrast configuration 
 # CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')

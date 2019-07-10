@@ -1,6 +1,8 @@
 from boldpredict.models import *
 from boldpredict.constants import *
 import json
+from django.conf import settings
+
 
 def create_contrast():
     pass
@@ -28,7 +30,8 @@ def create_single_word_list_contrast(*args, **kwargs):
     stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
     coordinate_space = kwargs.get('coordinate_space', MNI)
     exp = Experiment.objects.create(experiment_title=title, authors=authors,
-                                    DOI=DOI, model_type=model_type, stimuli_type=stimuli_type,
+                                    DOI=DOI, model_type=model_type,
+                                    stimuli_type=stimuli_type,
                                     coordinate_space=coordinate_space)
 
     # create stimuli
@@ -43,7 +46,8 @@ def create_single_word_list_contrast(*args, **kwargs):
 
     # contrast
     contrast_type = kwargs.get('contrast_type', PUBLIC)
-    contrast_title = kwargs.get('contrast_title', list1_name + '-' + list2_name)
+    contrast_title = kwargs.get(
+        'contrast_title', list1_name + '-' + list2_name)
     if len(contrast_title) == 0:
         contrast_title = list1_name + '-' + list2_name
     baseline_choice = kwargs.get('baseline_choice', False)
@@ -56,10 +60,12 @@ def create_single_word_list_contrast(*args, **kwargs):
     # create condition
     condition1 = Condition.objects.create(
         condition_name=list1_name, contrast=contrast)
-    combine1 = ConditionCombination.objects.create(stimuli = stimuli1,condition = condition1)
+    combine1 = ConditionCombination.objects.create(
+        stimuli=stimuli1, condition=condition1)
     condition2 = Condition.objects.create(
         condition_name=list2_name, contrast=contrast)
-    combine2 = ConditionCombination.objects.create(stimuli = stimuli2,condition = condition2)
+    combine2 = ConditionCombination.objects.create(
+        stimuli=stimuli2, condition=condition2)
 
     return contrast
 
@@ -69,13 +75,19 @@ def get_word_list_condition_text(condition):
     stimulus = condition.stimulus.all()
     word_lists = [stimuli.word_list_stimuli.word_list for stimuli in stimulus]
     text = ','.join(word_lists)
-    print("text = ", text)
-    print("word_lists = ", word_lists)
     return text
 
-def get_word_list_contrast(contrast_id):
-    contrast = Contrast.objects.get( id = contrast_id )
-    print("contrast conditions = ",contrast.conditions)
+
+def get_contrast(contrast_id):
+    contrast = Contrast.objects.get(id=contrast_id)
+    if contrast is not None and contrast.experiment.stimuli_type == WORD_LIST:
+        return get_word_list_contrast(contrast)
+    else:
+        # for other types of stimuli
+        return None
+
+
+def get_word_list_contrast(contrast):
     conditions = contrast.conditions.all()
     condition1, condition2 = None, None
     if len(conditions) == 2:
@@ -88,9 +100,9 @@ def get_word_list_contrast(contrast_id):
     list2_name = condition2.condition_name
     list1_text = get_word_list_condition_text(condition1)
     list2_text = get_word_list_condition_text(condition2)
-    
+
     # construct contrast dict
-    contrast_dict  = {}
+    contrast_dict = {}
     contrast_dict['list1_name'] = list1_name
     contrast_dict['list2_name'] = list2_name
     contrast_dict['list1'] = list1_text
@@ -98,18 +110,31 @@ def get_word_list_contrast(contrast_id):
     contrast_dict['do_perm'] = contrast.permutation_choice
     contrast_dict['c_id'] = contrast.id
     contrast_dict['contrast_title'] = contrast.contrast_title
+    contrast_dict['mni_str'] = contrast.MNIstr
+    contrast_dict['stimuli_type'] = WORD_LIST
+    subjstr = contrast.subjstr
+    if subjstr and len(subjstr) > 0:
+        jsonDec = json.decoder.JSONDecoder()
+        subjects_str = []
+        for i in range(settings.SUBJECT_NUM):
+            subjects_str.append(jsonDec.decode(contrast.subjstr)[i])
+        contrast_dict['sub_strs'] = subjects_str
+    else:
+        contrast_dict['sub_str'] = ""
     return contrast_dict
 
+
 def get_contrast_mni_str(contrast_id):
-    contrast = Contrast.objects.get( id = contrast_id )
-    mni_dict =  {}
+    contrast = Contrast.objects.get(id=contrast_id)
+    mni_dict = {}
     mni_dict['Cstr'] = contrast.MNIstr
     mni_dict['c_id'] = contrast.id
     return mni_dict
 
-def get_contrast_subj_str(contrast_id,subj_num):
-    contrast = Contrast.objects.get( id = contrast_id )
-    sub_dict =  {}
+
+def get_contrast_subj_str(contrast_id, subj_num):
+    contrast = Contrast.objects.get(id=contrast_id)
+    sub_dict = {}
     sub_dict['c_id'] = contrast.id
     if not contrast.subjstr or len(contrast.subjstr) == 0:
         sub_dict['Cstr'] = contrast.subjstr

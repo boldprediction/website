@@ -149,7 +149,9 @@ print('Email host:port = {host}:{port}, user={user}'.format(
 
 
 SECRET_KEY = config.get('System', 'Secret_key')
-
+SECRET_KEY = config.get('System', 'SECRET_KEY')
+HOST_IP = config.get('System', 'HOST_IP')
+APPLICATION_PORT = config.get('System', 'APPLICATION_PORT')
 # load contrast configuration 
 # CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')
 # with open(CONTRAST_CONFIG_DIR, 'r') as f:

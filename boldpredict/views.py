@@ -107,7 +107,10 @@ def word_list_start_contrast(request):
     params['baseline_choice'] = form.clean_baseline_choice()
     params['permutation_choice'] = form.clean_permutation_choice()
     contrast = contrast_api.create_single_word_list_contrast(**params)
-    return render(request, 'boldpredict/processing.html', {'contrast_id':contrast.id})
+    context['contrast_id'] = contrast.id
+    context['host_ip'] = settings.HOST_IP
+    context['app_port'] = settings.APPLICATION_PORT
+    return render(request, 'boldpredict/processing.html', context)
 
 
 def index(request):
@@ -122,7 +125,7 @@ def experiment_action(request):
 @login_required
 def my_profile_action(request):
     if request.method != 'GET':
-        return Http404
+        raise Http404
     user = request.user
     context = {}
     context['username'] = user.username
@@ -320,8 +323,17 @@ def forget(request):
         return render(request, 'boldpredict/forget_password.html', forgot_context)
 
 def refresh_contrast(request):
+    if not request.GET.get('contrast_id', None):
+        raise Http404
     contrast_id = request.GET['contrast_id']
-    json_msg = '{ "success": "false" }'
+    contrast = contrast_api.get_contrast(contrast_id)
+    if contrast is None:
+        raise Http404
+    mni_str = contrast['mni_str']
+    if mni_str and len(mni_str) == 0:
+        json_msg = '{ "success": "false" }'
+    else:
+        json_msg = '{ "success": "true" }'
     return HttpResponse(json_msg, content_type='application/json')
 
 # MNI_view to render the brain image 
@@ -335,5 +347,7 @@ def subj_view(request,contrast_id,subj_num):
     return render(request, 'boldpredict/subj_{0}.html'.format(subj_num),subj_str)
 
 def contrast_view(request,contrast_id):
-    contrast = contrast_api.get_word_list_contrast(contrast_id)
-    return render(request, 'boldpredict/contrast.html', contrast) 
+    contrast = contrast_api.get_contrast(contrast_id)
+    if contrast and contrast['stimuli_type'] == WORD_LIST:
+        return render(request, 'boldpredict/word_list_contrast.html', contrast) 
+    return render(request, 'boldpredict/index.html', {}) 
