@@ -1,6 +1,6 @@
 from boldpredict.models import *
 from boldpredict.constants import *
-
+import json
 
 def create_contrast():
     pass
@@ -109,6 +109,7 @@ def get_contrast_mni_str(contrast_id):
 def get_contrast_subj_str(contrast_id,subj_num):
     contrast = Contrast.objects.get( id = contrast_id )
     sub_dict =  {}
-    mni_dict['Cstr'] = jsonDec.decode(contrast.subjstr)[subj_num - 1]
-    mni_dict['c_id'] = contrast.id
-    return mni_dict
+    jsonDec = json.decoder.JSONDecoder()
+    sub_dict['Cstr'] = jsonDec.decode(contrast.subjstr)[subj_num - 1]
+    sub_dict['c_id'] = contrast.id
+    return sub_dict

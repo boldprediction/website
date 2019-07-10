@@ -332,7 +332,7 @@ def MNI_view(request,contrast_id):
 #subj_view to render the 8 different subjects 
 def subj_view(request,contrast_id,subj_num):
     subj_str = contrast_api.get_contrast_subj_str(contrast_id,subj_num)
-    return render(request, 'simulate/subj_{0}.html'.format(subj_num),subj_str)
+    return render(request, 'boldpredict/subj_{0}.html'.format(subj_num),subj_str)
 
 def contrast_view(request,contrast_id):
     contrast = contrast_api.get_word_list_contrast(contrast_id)
