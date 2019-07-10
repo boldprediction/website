@@ -116,7 +116,7 @@ def index(request):
 
 def experiment_action(request):
     # return render(request, 'boldpredict/MNI_Test.html', {}) 
-    return render(request, 'boldpredict/contrast.html', {}) 
+    return render(request, 'boldpredict/index.html', {}) 
 
 
 @login_required
