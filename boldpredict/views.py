@@ -330,7 +330,7 @@ def refresh_contrast(request):
     if contrast is None:
         raise Http404
     mni_str = contrast['mni_str']
-    if mni_str and len(mni_str) == 0:
+    if not mni_str or len(mni_str) == 0:
         json_msg = '{ "success": "false" }'
     else:
         json_msg = '{ "success": "true" }'
