@@ -104,12 +104,16 @@ def get_contrast_mni_str(contrast_id):
     contrast = Contrast.objects.get( id = contrast_id )
     mni_dict =  {}
     mni_dict['Cstr'] = contrast.MNIstr
+    mni_dict['c_id'] = contrast.id
     return mni_dict
 
 def get_contrast_subj_str(contrast_id,subj_num):
     contrast = Contrast.objects.get( id = contrast_id )
     sub_dict =  {}
+    sub_dict['c_id'] = contrast.id
+    if not contrast.subjstr or len(contrast.subjstr) == 0:
+        sub_dict['Cstr'] = contrast.subjstr
+        return sub_dict
     jsonDec = json.decoder.JSONDecoder()
     sub_dict['Cstr'] = jsonDec.decode(contrast.subjstr)[subj_num - 1]
-    sub_dict['c_id'] = contrast.id
     return sub_dict

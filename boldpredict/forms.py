@@ -187,7 +187,6 @@ class WordListForm(forms.ModelForm):
             raise forms.ValidationError("Please enter words for condition 1")
         if list2_text and list2_name != 'baseline' and not all([x.isdigit() or x.isalpha() or x == ',' or x == ' ' for x in list2_text]):
             raise forms.ValidationError("Please enter words for condition 2")
-        print("cleaned_data = ", cleaned_data)
         return cleaned_data
     
     def clean_baseline_choice(self):
