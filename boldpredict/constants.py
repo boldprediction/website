@@ -4,9 +4,9 @@ PUBLIC = 'PU'
 PRIVACY_CHOICES = [(PRIVATE, 'Private'), (PUBLIC, 'Public')]
 
 #coordinate space
-MNI = 'MNI'
+MNI = 'mni'
 TALAI = 'TALA'
-COORDINATE_SPACE_CHOICE = [(MNI, 'MNI'), (TALAI, 'talairach')]
+COORDINATE_SPACE_CHOICE = [(MNI, 'mni'), (TALAI, 'talairach')]
 
 #stimuli type
 WORD_LIST = "word_list"

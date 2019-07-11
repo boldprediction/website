@@ -155,6 +155,10 @@ SECRET_KEY = config.get('System', 'SECRET_KEY')
 HOST_IP = config.get('System', 'HOST_IP')
 APPLICATION_PORT = config.get('System', 'APPLICATION_PORT')
 SUBJECT_NUM = int(config.get('System', 'SUBJECT_NUM'))
+QUERY_URL = config.get('System', 'QUERY_URL')
+
+AWS_ACCESS_KEY = config.get('System', 'AWS_ACCESS_KEY')
+AWS_SECRET_KEY = config.get('System', 'AWS_SECRET_KEY')
 
 # load contrast configuration 
 # CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')

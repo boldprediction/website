@@ -17,7 +17,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import json
 from boldpredict.models import *
-from boldpredict.api import contrast_api
+from boldpredict.api import contrast_api,sqs_api
 
 # constants
 from boldpredict import constants
@@ -107,6 +107,8 @@ def word_list_start_contrast(request):
     params['baseline_choice'] = form.clean_baseline_choice()
     params['permutation_choice'] = form.clean_permutation_choice()
     contrast = contrast_api.create_single_word_list_contrast(**params)
+    sqs_api.send_contrast_message(sqs_api.create_contrast_sqs_message(contrast),contrast.experiment.stimuli_type)
+
     context['contrast_id'] = contrast.id
     context['host_ip'] = settings.HOST_IP
     context['app_port'] = settings.APPLICATION_PORT

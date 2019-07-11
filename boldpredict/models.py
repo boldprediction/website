@@ -9,7 +9,7 @@ class Experiment(models.Model):
     DOI = models.TextField('DOI', null=True, blank=True)
 
     stimuli_type = models.CharField(
-        'Stimulus Type', choices=STIMULI_TYPE_CHOICE, max_length=20, default=WORD_LIST)
+        'Stimuli Type', choices=STIMULI_TYPE_CHOICE, max_length=20, default=WORD_LIST)
 
     coordinate_space = models.CharField(
         'Coordinate Space', choices=COORDINATE_SPACE_CHOICE, max_length=20, default=MNI)
