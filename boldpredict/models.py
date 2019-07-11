@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from hashid_field import HashidAutoField
 from boldpredict.constants import *
@@ -7,6 +8,7 @@ class Experiment(models.Model):
     experiment_title = models.TextField('experiment_title', null=True, blank=True)
     authors = models.TextField('authors_name', null=True, blank=True)
     DOI = models.TextField('DOI', null=True, blank=True)
+    owner = models.ForeignKey(User, related_name='has_experiments', on_delete=models.CASCADE)
 
     stimuli_type = models.CharField(
         'Stimuli Type', choices=STIMULI_TYPE_CHOICE, max_length=20, default=WORD_LIST)
