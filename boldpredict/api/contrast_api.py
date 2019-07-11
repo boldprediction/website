@@ -26,13 +26,15 @@ def create_single_word_list_contrast(*args, **kwargs):
     title = kwargs.get('experiment_title', None)
     authors = kwargs.get('authors', None)
     DOI = kwargs.get('DOI', None)
+    owner = kwargs.get('owner', None)
     model_type = kwargs.get('model_type', ENG1000)
     stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
     coordinate_space = kwargs.get('coordinate_space', MNI)
     exp = Experiment.objects.create(experiment_title=title, authors=authors,
                                     DOI=DOI, model_type=model_type,
                                     stimuli_type=stimuli_type,
-                                    coordinate_space=coordinate_space)
+                                    coordinate_space=coordinate_space,
+                                    owner = owner)
 
     # create stimuli
     list1_name = kwargs.get('list1_name', None)

@@ -106,6 +106,8 @@ def word_list_start_contrast(request):
     params = request.POST.dict()
     params['baseline_choice'] = form.clean_baseline_choice()
     params['permutation_choice'] = form.clean_permutation_choice()
+    if request.user.is_authenticated:
+        params['owner'] = request.user
     contrast = contrast_api.create_single_word_list_contrast(**params)
     sqs_api.send_contrast_message(sqs_api.create_contrast_sqs_message(contrast),contrast.experiment.stimuli_type)
 
