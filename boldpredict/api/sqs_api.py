@@ -44,12 +44,14 @@ def create_contrast_sqs_word_list_message(contrast):
         condition_list = [ stimuli.stimuli_name for stimuli in condition.stimulus.all()]
         condition_name_str = 'condition' + str(i+1)
         conditions_dict[condition_name_str] = condition_list
+    conditions_dict['contrast_id'] = str(contrast.id)
 
     contrast_dict['contrast1'] = conditions_dict
     message_body['contrasts'] = contrast_dict
     message_body['do_perm']  = contrast.permutation_choice
     message_body['coordinate_space'] = contrast.experiment.coordinate_space
     message_body['DOI'] = contrast.experiment.DOI
+    message_body['model_type'] = contrast.experiment.model_type
     return message_body
 
 
