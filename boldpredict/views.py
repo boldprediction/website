@@ -389,6 +389,7 @@ def update_contrast(request):
             err_code=403, message="Forbidden Request"))
 
     received_data = json.loads(request.body)
+    # received_data = request.body
     # print("received_data = ", received_data)
     contrast_id = received_data['contrast_id']
     MNIstr = received_data['MNIstr']
