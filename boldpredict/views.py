@@ -369,6 +369,7 @@ def subj_view(request, contrast_id, subj_num):
 
 def contrast_view(request, contrast_id):
     contrast = contrast_api.get_contrast(contrast_id)
+    contrast['subject_num'] = settings.SUBJECT_NUM
     if contrast and contrast['stimuli_type'] == WORD_LIST:
         return render(request, 'boldpredict/word_list_contrast.html', contrast)
     return render(request, 'boldpredict/index.html', {})
