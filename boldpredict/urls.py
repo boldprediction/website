@@ -27,4 +27,5 @@ urlpatterns = [
     path('contrast_result/<slug:contrast_id>', views.contrast_view, name='contrast_view'),
     path('contrast_result/MNI/<slug:contrast_id>', views.MNI_view, name='MNI_view'),
     path('contrast_result/subj<int:subj_num>/<slug:contrast_id>', views.subj_view, name='subj_view'),
+    path('api/update_contrast', views.update_contrast, name='update_contrast'),
 ]

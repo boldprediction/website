@@ -80,6 +80,15 @@ def get_word_list_condition_text(condition):
     return text
 
 
+def update_contrast_str(contrast_id,mni_str,subj_str):
+    try :
+        contrast = Contrast.objects.get(id=contrast_id)
+        contrast.MNIstr = mni_str
+        contrast.subjstr = subj_str
+        contrast.save()
+    except e:
+        raise e
+
 def get_contrast(contrast_id):
     contrast = Contrast.objects.get(id=contrast_id)
     if contrast is not None and contrast.experiment.stimuli_type == WORD_LIST:
