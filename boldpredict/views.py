@@ -357,6 +357,7 @@ def refresh_contrast(request):
 
 def MNI_view(request, contrast_id):
     mni_str = contrast_api.get_contrast_mni_str(contrast_id)
+    mni_str['subject_url'] = settings.SUBJECTS_URL
     return render(request, 'boldpredict/MNI.html', mni_str)
 
 # subj_view to render the 8 different subjects
@@ -364,6 +365,7 @@ def MNI_view(request, contrast_id):
 
 def subj_view(request, contrast_id, subj_num):
     subj_str = contrast_api.get_contrast_subj_str(contrast_id, subj_num)
+    subj_str['subject_url'] = settings.SUBJECTS_URL
     return render(request, 'boldpredict/subj_{0}.html'.format(subj_num), subj_str)
 
 

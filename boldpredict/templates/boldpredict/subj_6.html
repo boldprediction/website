@@ -30965,8 +30965,9 @@ voxline_width: .01,
 default_2Dcmap: "RdBu_covar",
 
 };
+var subject_url = "{{ subject_url | safe }}"
 
-subjects = {"BGfs": "/static/boldpredict/subjects/BGfs_[inflated]_mg2_9d_['rois'].json"};
+subjects = {"BGfs": subject_url + "BGfs_[inflated]_mg2_9d_['rois'].json"};
 dataviews = dataset.fromJSON({% autoescape off %} {{ Cstr }} {% endautoescape %} );
 figure = new jsplot.W2Figure();
 

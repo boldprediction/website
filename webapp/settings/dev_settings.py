@@ -131,6 +131,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'images/')
 
+
 #Login in Url
 LOGIN_URL = '/login'
 
@@ -159,6 +160,10 @@ QUERY_URL = config.get('System', 'QUERY_URL')
 
 AWS_ACCESS_KEY = config.get('System', 'AWS_ACCESS_KEY')
 AWS_SECRET_KEY = config.get('System', 'AWS_SECRET_KEY')
+
+SUBJECTS_URL = '/static/boldpredict/subjects/'
+DATA_URL = '/static/boldpredict/data/'
+
 
 # load contrast configuration 
 # CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')

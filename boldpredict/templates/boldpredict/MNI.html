@@ -31006,7 +31006,9 @@
 	
 	};
 	
-	subjects = {"MNI": "/static/boldpredict/subjects/MNI_[inflated]_mg2_9d_['rois'].json"};
+	var subject_url = "{{ subject_url | safe }}"
+
+ 	subjects = {"MNI": subject_url + "MNI_[inflated]_mg2_9d_['rois'].json"};
 	dataviews = dataset.fromJSON({% autoescape off %} {{ Cstr }} {% endautoescape %} );
 	figure = new jsplot.W2Figure();
 	
