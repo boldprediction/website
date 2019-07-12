@@ -24,6 +24,9 @@ from boldpredict import constants
 
 from django.http import JsonResponse
 
+from django.views.decorators.csrf import csrf_exempt
+
+
 
 # Create your views here.
 def login_action(request):
@@ -379,13 +382,14 @@ def __get_response_json_dict(data={}, err_code=0, message="Success"):
     }
     return ret
 
-
+@csrf_exempt
 def update_contrast(request):
     if request.method != 'POST':
         JsonResponse(__get_response_json_dict(
             err_code=403, message="Forbidden Request"))
 
-    received_data = request.POST
+    received_data = json.loads(request.body)
+    # print("received_data = ", received_data)
     contrast_id = received_data['contrast_id']
     MNIstr = received_data['MNIstr']
     subjstr = received_data['subjstr']
