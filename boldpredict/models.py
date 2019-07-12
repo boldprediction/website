@@ -52,11 +52,11 @@ class Contrast(models.Model):
         Experiment, related_name="contrasts", on_delete=models.CASCADE)
     MNIstr = models.TextField('MNI res str', null=True,blank=True)
     subjstr = models.TextField('subject res str', null=True,blank=True)
+    pmaps = models.TextField('permutation result')
 
     # experiment_id = models.BigIntegerField('experiment if it exists',default=0)
     # figures_list = models.TextField('Enter name of Condition 1', default = '')
     # subjstr = models.TextField('model str')
-    # pmaps = models.TextField('model str')
     # replicated_figure = models.TextField('replicated_image',  default = '')
     # random_roi_file = models.TextField('random_roi_file',  default = '')
 
