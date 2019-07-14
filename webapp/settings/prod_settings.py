@@ -147,11 +147,18 @@ EMAIL_USE_TLS = True
 print('Email host:port = {host}:{port}, user={user}'.format(
         host=EMAIL_HOST, port=EMAIL_PORT, user=EMAIL_HOST_USER))
 
-
-SECRET_KEY = config.get('System', 'Secret_key')
 SECRET_KEY = config.get('System', 'SECRET_KEY')
-HOST_IP = config.get('System', 'HOST_IP')
-APPLICATION_PORT = config.get('System', 'APPLICATION_PORT')
+HOST_IP = '3.15.123.123'
+APPLICATION_PORT = '8000'
+SUBJECT_NUM = 3
+QUERY_URL = 'https://sqs.us-east-2.amazonaws.com/280175692519/bold_sqs'
+
+AWS_ACCESS_KEY = config.get('System', 'AWS_ACCESS_KEY')
+AWS_SECRET_KEY = config.get('System', 'AWS_SECRET_KEY')
+
+SUBJECTS_URL = '/staticfiles/boldpredict/subjects/'
+DATA_URL = '/staticfiles/boldpredict/data/'
+
 
 # load contrast configuration 
 # CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')
