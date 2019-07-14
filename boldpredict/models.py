@@ -43,7 +43,7 @@ class Contrast(models.Model):
         Experiment, related_name="contrasts", on_delete=models.CASCADE)
     MNIstr = models.TextField('MNI res str', null=True,blank=True)
     subjstr = models.TextField('subject res str', null=True,blank=True)
-    pmaps = models.TextField('permutation result')
+    pmaps = models.TextField('permutation result', null=True,blank=True)
     
     stimuli_type = models.CharField(
         'Stimuli Type', choices=STIMULI_TYPE_CHOICE, max_length=20, default=WORD_LIST)
