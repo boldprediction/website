@@ -117,7 +117,7 @@ def word_list_start_contrast(request):
         params['owner'] = request.user
     contrast = contrast_api.create_single_word_list_contrast(**params)
     sqs_api.send_contrast_message(sqs_api.create_contrast_sqs_message(
-        contrast), contrast.experiment.stimuli_type)
+        contrast), contrast.stimuli_type)
 
     context['contrast_id'] = contrast.id
     context['host_ip'] = settings.HOST_IP
@@ -397,11 +397,12 @@ def update_contrast(request):
     contrast_id = received_data['contrast_id']
     MNIstr = received_data['MNIstr']
     subjstr = received_data['subjstr']
+    pmaps = received_data['pmaps']
     response_data = {"contrast_id": contrast_id}
     try:
         # contrast_dict = contrast_api.get_contrast(contrast_id)
         # cache_api.update_contrast_record(contrast_dict,MNIstr,subjstr)
-        contrast_api.update_contrast_str(contrast_id, MNIstr, subjstr)
+        contrast_api.update_contrast_str(contrast_id, MNIstr, pmaps)
     except e:
         JsonResponse(__get_response_json_dict(
             err_code=400, message="Bad Request"))

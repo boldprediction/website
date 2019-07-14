@@ -8,16 +8,7 @@ class Experiment(models.Model):
     experiment_title = models.TextField('experiment_title', null=True, blank=True)
     authors = models.TextField('authors_name', null=True, blank=True)
     DOI = models.TextField('DOI', null=True, blank=True)
-    owner = models.ForeignKey(User, related_name='has_experiments', on_delete=models.CASCADE, null=True)
-
-    stimuli_type = models.CharField(
-        'Stimuli Type', choices=STIMULI_TYPE_CHOICE, max_length=20, default=WORD_LIST)
-
-    coordinate_space = models.CharField(
-        'Coordinate Space', choices=COORDINATE_SPACE_CHOICE, max_length=20, default=MNI)
-    
-    model_type = models.CharField(
-        'Model Type', choices=MODEL_TYPE_CHOICE, max_length=20, default=ENG1000)
+    creator = models.ForeignKey(User, related_name='has_experiments', on_delete=models.CASCADE, null=True)
     # contrasts_res = models.TextField('model str')
     # objects = ExpManager()
     # def __str__(self):
@@ -53,7 +44,17 @@ class Contrast(models.Model):
     MNIstr = models.TextField('MNI res str', null=True,blank=True)
     subjstr = models.TextField('subject res str', null=True,blank=True)
     pmaps = models.TextField('permutation result')
+    
+    stimuli_type = models.CharField(
+        'Stimuli Type', choices=STIMULI_TYPE_CHOICE, max_length=20, default=WORD_LIST)
+    
+    coordinate_space = models.CharField(
+        'Coordinate Space', choices=COORDINATE_SPACE_CHOICE, max_length=20, default=MNI)
+    
+    model_type = models.CharField(
+        'Model Type', choices=MODEL_TYPE_CHOICE, max_length=20, default=ENG1000)
 
+    creator = models.ForeignKey(User, related_name='has_contrasts', on_delete=models.CASCADE, null=True)
     # experiment_id = models.BigIntegerField('experiment if it exists',default=0)
     # figures_list = models.TextField('Enter name of Condition 1', default = '')
     # subjstr = models.TextField('model str')

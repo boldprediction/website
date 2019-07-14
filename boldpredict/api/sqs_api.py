@@ -49,14 +49,14 @@ def create_contrast_sqs_word_list_message(contrast):
     contrast_dict['contrast1'] = conditions_dict
     message_body['contrasts'] = contrast_dict
     message_body['do_perm']  = contrast.permutation_choice
-    message_body['coordinate_space'] = contrast.experiment.coordinate_space
+    message_body['coordinate_space'] = contrast.coordinate_space
     message_body['DOI'] = contrast.experiment.DOI
-    message_body['model_type'] = contrast.experiment.model_type
+    message_body['model_type'] = contrast.model_type
     return message_body
 
 
 def create_contrast_sqs_message(contrast):
-    stimuli_type  = contrast.experiment.stimuli_type
+    stimuli_type  = contrast.stimuli_type
     if stimuli_type == WORD_LIST:
         return create_contrast_sqs_word_list_message(contrast)
     else:

@@ -22,19 +22,18 @@ def create_word_list_stimuli(stimuli_type, name, text, exp):
 
 
 def create_single_word_list_contrast(*args, **kwargs):
+     
+    model_type = kwargs.get('model_type', ENG1000)
+    stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
+    coordinate_space = kwargs.get('coordinate_space', MNI)
+
     # experiment attributes
     title = kwargs.get('experiment_title', None)
     authors = kwargs.get('authors', None)
     DOI = kwargs.get('DOI', None)
     owner = kwargs.get('owner', None)
-    model_type = kwargs.get('model_type', ENG1000)
-    stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
-    coordinate_space = kwargs.get('coordinate_space', MNI)
     exp = Experiment.objects.create(experiment_title=title, authors=authors,
-                                    DOI=DOI, model_type=model_type,
-                                    stimuli_type=stimuli_type,
-                                    coordinate_space=coordinate_space,
-                                    owner = owner)
+                                    DOI=DOI, creator = owner)
 
     # create stimuli
     list1_name = kwargs.get('list1_name', None)
@@ -54,10 +53,11 @@ def create_single_word_list_contrast(*args, **kwargs):
         contrast_title = list1_name + '-' + list2_name
     baseline_choice = kwargs.get('baseline_choice', False)
     permutation_choice = kwargs.get('permutation_choice', False)
-    contrast = Contrast.objects.create(contrast_title=contrast_title,
-                                       experiment=exp, baseline_choice=baseline_choice,
-                                       permutation_choice=permutation_choice,
-                                       privacy_choice=contrast_type)
+    contrast = Contrast.objects.create(contrast_title=contrast_title, baseline_choice=baseline_choice,
+                                       permutation_choice=permutation_choice, experiment = exp,
+                                       privacy_choice=contrast_type, model_type=model_type,
+                                    stimuli_type=stimuli_type,
+                                    coordinate_space=coordinate_space, creator = owner )
 
     # create condition
     condition1 = Condition.objects.create(
@@ -80,18 +80,19 @@ def get_word_list_condition_text(condition):
     return text
 
 
-def update_contrast_str(contrast_id,mni_str,subj_str):
+def update_contrast_str(contrast_id,mni_str,subj_str,pmaps):
     try :
         contrast = Contrast.objects.get(id=contrast_id)
         contrast.MNIstr = mni_str
         contrast.subjstr = subj_str
+        contrast.pmaps = pmaps
         contrast.save()
     except e:
         raise e
 
 def get_contrast(contrast_id):
     contrast = Contrast.objects.get(id=contrast_id)
-    if contrast is not None and contrast.experiment.stimuli_type == WORD_LIST:
+    if contrast is not None and contrast.stimuli_type == WORD_LIST:
         return get_word_list_contrast(contrast)
     else:
         # for other types of stimuli
