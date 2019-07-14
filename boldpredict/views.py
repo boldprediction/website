@@ -74,7 +74,7 @@ def new_contrast(request):
         context['public'] = True
         context['model_type'] = model_type
         context['stimuli_type'] = stimuli_type
-        return render(request, 'boldpredict/contrast_filler.html', context)
+        return render(request, 'boldpredict/word_list_contrast_filler.html', context)
 
     return redirect(reverse('contrast'))
 

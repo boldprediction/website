@@ -79,7 +79,6 @@ def get_word_list_condition_text(condition):
     text = ','.join(word_lists)
     return text
 
-
 def update_contrast_str(contrast_id,mni_str,subj_str,pmaps):
     try :
         contrast = Contrast.objects.get(id=contrast_id)
