@@ -21,7 +21,7 @@ def send_contrast_message(message, stimuli_type):
         }
     )
 
-def create_contrast_sqs_word_list_message(contrast):
+def create_word_list_contrast_message(contrast):
     message_body = {}
     stimulus_dict = {}
     stimulus = contrast.experiment.stimulus.all()
@@ -54,10 +54,10 @@ def create_contrast_sqs_word_list_message(contrast):
     return message_body
 
 
-def create_contrast_sqs_message(contrast):
+def create_contrast_message(contrast):
     stimuli_type  = contrast.stimuli_type
     if stimuli_type == WORD_LIST:
-        return create_contrast_sqs_word_list_message(contrast)
+        return create_word_list_contrast_message(contrast)
     else:
         return {}
 

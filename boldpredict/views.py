@@ -116,7 +116,7 @@ def word_list_start_contrast(request):
     if request.user.is_authenticated:
         params['owner'] = request.user
     contrast = contrast_api.create_single_word_list_contrast(**params)
-    sqs_api.send_contrast_message(sqs_api.create_contrast_sqs_message(
+    sqs_api.send_contrast_message(sqs_api.create_contrast_message(
         contrast), contrast.stimuli_type)
 
     context['contrast_id'] = contrast.id
