@@ -5,7 +5,6 @@ from django.conf import settings
 from boldpredict.constants import *
 import json
 
-auto_client = boto3.client('autoscaling')
 sqs_client = boto3.client('sqs')
 
 
