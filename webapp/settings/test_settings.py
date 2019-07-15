@@ -151,7 +151,7 @@ SECRET_KEY = config.get('System', 'SECRET_KEY')
 HOST_IP = '3.13.100.240'
 APPLICATION_PORT = '8000'
 SUBJECT_NUM = 3
-QUERY_URL = 'https://sqs.us-east-2.amazonaws.com/280175692519/bold_sqs'
+SQS_QUERY_URL = 'https://sqs.us-east-2.amazonaws.com/280175692519/bold_sqs'
 
 AWS_ACCESS_KEY = config.get('System', 'AWS_ACCESS_KEY')
 AWS_SECRET_KEY = config.get('System', 'AWS_SECRET_KEY')

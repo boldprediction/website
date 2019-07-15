@@ -10,7 +10,7 @@ sqs_client = boto3.client('sqs')
 
 def send_contrast_message(message, stimuli_type):
     response = sqs_client.send_message(
-        QueueUrl=settings.QUERY_URL,
+        QueueUrl=settings.SQS_QUERY_URL,
         MessageBody = json.dumps(message),
         DelaySeconds=1,
         MessageAttributes={
