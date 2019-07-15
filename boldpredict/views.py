@@ -342,7 +342,7 @@ def refresh_contrast(request):
     if not request.GET.get('contrast_id', None):
         raise Http404
     contrast_id = request.GET['contrast_id']
-    contrast = contrast_api.get_contrast(contrast_id)
+    contrast = contrast_api.get_contrast_dict(contrast_id)
     if contrast is None:
         raise Http404
     mni_str = contrast['mni_str']
@@ -370,7 +370,7 @@ def subj_view(request, contrast_id, subj_num):
 
 
 def contrast_view(request, contrast_id):
-    contrast = contrast_api.get_contrast(contrast_id)
+    contrast = contrast_api.get_contrast_dict(contrast_id)
     contrast['subject_num'] = settings.SUBJECT_NUM
     if contrast and contrast['stimuli_type'] == WORD_LIST:
         return render(request, 'boldpredict/word_list_contrast.html', contrast)

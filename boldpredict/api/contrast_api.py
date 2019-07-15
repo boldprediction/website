@@ -89,16 +89,16 @@ def update_contrast_str(contrast_id,mni_str,subj_str,pmaps):
     except e:
         raise e
 
-def get_contrast(contrast_id):
+def get_contrast_dict(contrast_id):
     contrast = Contrast.objects.get(id=contrast_id)
     if contrast is not None and contrast.stimuli_type == WORD_LIST:
-        return get_word_list_contrast(contrast)
+        return get_word_list_contrast_dict(contrast)
     else:
         # for other types of stimuli
         return None
 
 
-def get_word_list_contrast(contrast):
+def get_word_list_contrast_dict(contrast):
     conditions = contrast.conditions.all()
     condition1, condition2 = None, None
     if len(conditions) == 2:
