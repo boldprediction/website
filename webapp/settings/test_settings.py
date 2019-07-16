@@ -155,6 +155,7 @@ SQS_QUERY_URL = 'https://sqs.us-east-2.amazonaws.com/280175692519/bold_sqs'
 
 AWS_ACCESS_KEY = config.get('System', 'AWS_ACCESS_KEY')
 AWS_SECRET_KEY = config.get('System', 'AWS_SECRET_KEY')
+REGION_NAME =  'us-east-2'
 
 SUBJECTS_URL = '/staticfiles/boldpredict/subjects/'
 DATA_URL = '/staticfiles/boldpredict/data/'
