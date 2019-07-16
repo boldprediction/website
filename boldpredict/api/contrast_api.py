@@ -33,7 +33,9 @@ def create_single_word_list_contrast(*args, **kwargs):
     DOI = kwargs.get('DOI', None)
     owner = kwargs.get('owner', None)
     exp = Experiment.objects.create(experiment_title=title, authors=authors,
-                                    DOI=DOI, creator = owner)
+                                    DOI=DOI, creator = owner, model_type=model_type,
+                                    stimuli_type=stimuli_type,
+                                    coordinate_space=coordinate_space)
 
     # create stimuli
     list1_name = kwargs.get('list1_name', None)
@@ -55,9 +57,7 @@ def create_single_word_list_contrast(*args, **kwargs):
     permutation_choice = kwargs.get('permutation_choice', False)
     contrast = Contrast.objects.create(contrast_title=contrast_title, baseline_choice=baseline_choice,
                                        permutation_choice=permutation_choice, experiment = exp,
-                                       privacy_choice=contrast_type, model_type=model_type,
-                                    stimuli_type=stimuli_type,
-                                    coordinate_space=coordinate_space, creator = owner )
+                                       privacy_choice=contrast_type, creator = owner )
 
     # create condition
     condition1 = Condition.objects.create(
@@ -91,7 +91,7 @@ def update_contrast_str(contrast_id,mni_str,subj_str,pmaps):
 
 def get_contrast_dict(contrast_id):
     contrast = Contrast.objects.get(id=contrast_id)
-    if contrast is not None and contrast.stimuli_type == WORD_LIST:
+    if contrast is not None and contrast.experiment.stimuli_type == WORD_LIST:
         return get_word_list_contrast_dict(contrast)
     else:
         # for other types of stimuli
@@ -123,6 +123,8 @@ def get_word_list_contrast_dict(contrast):
     contrast_dict['contrast_title'] = contrast.contrast_title
     contrast_dict['mni_str'] = contrast.MNIstr
     contrast_dict['stimuli_type'] = WORD_LIST
+    contrast_dict['coordinate_space'] = contrast.experiment.coordinate_space
+    contrast_dict['model_type'] = contrast.experiment.model_type
     subjstr = contrast.subjstr
     if subjstr and len(subjstr) > 0:
         jsonDec = json.decoder.JSONDecoder()

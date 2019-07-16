@@ -14,6 +14,14 @@ class Experiment(models.Model):
     # def __str__(self):
     #     return "stimuli_type = " + self.stimuli_type +  " coordinate_space = " + self.coordinate_space \
     #             + "model_type = " + self.model_type
+    stimuli_type = models.CharField(
+        'Stimuli Type', choices=STIMULI_TYPE_CHOICE, max_length=20, default=WORD_LIST)
+    
+    coordinate_space = models.CharField(
+        'Coordinate Space', choices=COORDINATE_SPACE_CHOICE, max_length=20, default=MNI)
+    
+    model_type = models.CharField(
+        'Model Type', choices=MODEL_TYPE_CHOICE, max_length=20, default=ENG1000)
 
 
 class Stimuli(models.Model):
@@ -44,15 +52,6 @@ class Contrast(models.Model):
     MNIstr = models.TextField('MNI res str', null=True,blank=True)
     subjstr = models.TextField('subject res str', null=True,blank=True)
     pmaps = models.TextField('permutation result', null=True,blank=True)
-    
-    stimuli_type = models.CharField(
-        'Stimuli Type', choices=STIMULI_TYPE_CHOICE, max_length=20, default=WORD_LIST)
-    
-    coordinate_space = models.CharField(
-        'Coordinate Space', choices=COORDINATE_SPACE_CHOICE, max_length=20, default=MNI)
-    
-    model_type = models.CharField(
-        'Model Type', choices=MODEL_TYPE_CHOICE, max_length=20, default=ENG1000)
 
     creator = models.ForeignKey(User, related_name='has_contrasts', on_delete=models.CASCADE, null=True)
     # experiment_id = models.BigIntegerField('experiment if it exists',default=0)

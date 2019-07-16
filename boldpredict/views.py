@@ -117,7 +117,7 @@ def word_list_start_contrast(request):
         params['owner'] = request.user
     contrast = contrast_api.create_single_word_list_contrast(**params)
     sqs_api.send_contrast_message(sqs_api.create_contrast_message(
-        contrast), contrast.stimuli_type)
+        contrast), stimuli_type)
 
     context['contrast_id'] = contrast.id
     context['host_ip'] = settings.HOST_IP
