@@ -17,7 +17,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import json
 from boldpredict.models import *
-from boldpredict.api import contrast_api, sqs_api
+from boldpredict.api import contrast_api, sqs_api, cache_api
 
 # constants
 from boldpredict import constants
@@ -25,6 +25,8 @@ from boldpredict import constants
 from django.http import JsonResponse
 
 from django.views.decorators.csrf import csrf_exempt
+import sys
+import hashlib
 
 
 
@@ -116,10 +118,30 @@ def word_list_start_contrast(request):
     if request.user.is_authenticated:
         params['owner'] = request.user
     contrast = contrast_api.create_single_word_list_contrast(**params)
-    sqs_api.send_contrast_message(sqs_api.create_contrast_message(
-        contrast), contrast.stimuli_type)
+    # sqs_api.send_contrast_message(sqs_api.create_contrast_message(
+    #     contrast), contrast.stimuli_type)
 
     context['contrast_id'] = contrast.id
+
+    #########################################################
+    #####This block is to experiment with the memcache#######
+    #########################################################
+    contrast_obj = contrast_api.get_contrast_dict(contrast.id)
+
+    print("COMBINED KEY",contrast_obj["list1"]+contrast_obj["list2"])
+    print("VALUE!",contrast_obj)
+    combined_key= contrast_obj["list1"]+contrast_obj["list2"]
+
+    #hashing the key 
+    hash224 = hashlib.sha224()
+    hash224.update(combined_key.encode('utf-8'))
+    print(hash224.digest())
+    print(sys.getsizeof(hash224.digest()))
+
+    cache_api.add_contrast_into_cache(hash224.digest(),contrast_obj)
+    print("Result",cache_api.check_contrast_in_cache(hash224.digest()))
+    #########################################################
+
     context['host_ip'] = settings.HOST_IP
     context['app_port'] = settings.APPLICATION_PORT
     return render(request, 'boldpredict/processing.html', context)
