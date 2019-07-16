@@ -34,24 +34,25 @@ def create_word_list_contrast_message(contrast):
         stimulus_dict[stimuli.stimuli_name] = stimuli_dict
     message_body['stimuli'] = stimulus_dict
 
-    contrast_dict = {} 
-    conditions_dict = {}
-    conditions_dict['figures'] = []
-    conditions_dict['coordinates'] = []
+    contrasts_dict = {} 
+
+    contrast_params_dict = {}
+    contrast_params_dict['figures'] = []
+    contrast_params_dict['coordinates'] = []
     conditions = contrast.conditions.all()
     for i in range(len(conditions)):
         condition = conditions[i]
         condition_list = [ stimuli.stimuli_name for stimuli in condition.stimulus.all()]
         condition_name_str = 'condition' + str(i+1)
-        conditions_dict[condition_name_str] = condition_list
-    conditions_dict['contrast_id'] = str(contrast.id)
-
-    contrast_dict['contrast1'] = conditions_dict
-    message_body['contrasts'] = contrast_dict
-    message_body['do_perm']  = contrast.permutation_choice
+        contrast_params_dict[condition_name_str] = condition_list
+    contrast_params_dict['do_perm']  = contrast.permutation_choice
+    contrast_params_dict['num_perm']  = 1000 if contrast.permutation_choice else 0
+    
+    contrasts_dict[str(contrast.id)] = contrast_params_dict
+    message_body['contrasts'] = contrasts_dict
     message_body['coordinate_space'] = contrast.experiment.coordinate_space
     message_body['DOI'] = contrast.experiment.DOI
-    message_body['model_type'] = contrast.experiment.model_type
+    message_body['semantic_model'] = contrast.experiment.model_type
     return message_body
 
 
