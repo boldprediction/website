@@ -357,7 +357,7 @@ def subj_result_view(request, subj_name, contrast_id):
     context['subject_url'] = settings.SUBJECTS_URL
     context['subject_cstr'] = subj_str
     context['subject_name'] = subj_name
-    context['subject_json_file'] = settings.SUBJECTS_JSON.get(subj_name,'')
+    context['subject_json_file'] = subj_name + constants.SUBJECT_JSON_SUFFIX
     return render(request, 'boldpredict/subject.html', context)
 
 def contrast_results_view(request, contrast_id):

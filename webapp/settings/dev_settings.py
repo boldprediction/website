@@ -165,15 +165,16 @@ REGION_NAME =  'us-east-2'
 SUBJECTS_URL = '/static/boldpredict/subjects/'
 DATA_URL = '/static/boldpredict/data/'
 
+SUBJECTS = ["JGfs", "MLfs2",  "AHfs"]
+SUBJECT_NUM = len(SUBJECTS)
 
 # load contrast configuration 
-CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')
-with open(CONTRAST_CONFIG_DIR, 'r') as f:
-    contrast_config = json.load(f)
+# CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')
+# with open(CONTRAST_CONFIG_DIR, 'r') as f:
+#     contrast_config = json.load(f)
 
-SUBJECTS = contrast_config.get('subjects',None)
-SUBJECT_NUM = len(SUBJECTS)
-SUBJECTS_JSON = contrast_config.get('subjects_json',None)
+# SUBJECTS = contrast_config.get('subjects',None)
+# SUBJECTS_JSON = contrast_config.get('subjects_json',None)
 
 # STIMULI_TYPES = contrast_config.get('stimuli_type',None)
 # MODEL_TYPES = contrast_config.get('model_type',None)

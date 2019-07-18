@@ -46,3 +46,5 @@ WORD_LIST_CONDITIONS = {
     "tools": "hammer, chisel, nail, saw, drill, scythe, screw, driver, nail, paintbrush, pliers, tongs, pincers, nippers",
     "animals": "sheep, cow, horse, bird, crow, dog, cat, spider, ant, bug, butterfly, chicken, turkey, lizard, slug, snail, goat, pig, donkey, bunny, rabbit, fly, lamb, kitten, puppy, monkey, ape, chimpanzee, gorilla, fish, salmon, bear, panda, doe, buck, fox, raccoon, skunk, squirrel, roach"
 }
+
+SUBJECT_JSON_SUFFIX = "_[inflated]_mg2_9d_['rois'].json"
