@@ -424,23 +424,25 @@ def update_contrast(request):
         JsonResponse(__get_response_json_dict(
             err_code=403, message="Forbidden Request"))
 
-    received_data = json.loads(request.body)
+    contrasts_results = json.loads(request.body)
     # received_data = request.body
     # print("received_data = ", received_data)
-    contrasts_results = received_data['contrast_results']
+    # contrasts_results = received_data['contrast_results']
+    response_data = {}
+    response_data['contrast_ids'] = []
     for contrast_result in contrasts_results:
         contrast_id = contrast_result['contrast_info']['id']
         group_analyses = contrast_result['group_analyses']
         subjects_analyses = contrast_result['subjects_analyses']
         try:
-            contrast_api.update_contrast_webgl_result(contrast_id, group_analyses, subjects_analyses)
-        except e:
+            contrast_api.update_contrast_result(contrast_id, group_analyses, subjects_analyses)
+            response_data['contrast_ids'].append(contrast_id)
+        except:
             JsonResponse(__get_response_json_dict( err_code=400, message="Bad Request"))
     
     # MNIstr = received_data['MNIstr']
     # subjstr = received_data['subjstr']
     # pmaps = received_data['pmaps']
-    # response_data = {"contrast_id": contrast_id}
     # try:
     #     # contrast_dict = contrast_api.get_contrast(contrast_id)
     #     # cache_api.update_contrast_record(contrast_dict,MNIstr,subjstr)
@@ -448,5 +450,4 @@ def update_contrast(request):
     # except e:
     #     JsonResponse(__get_response_json_dict(
     #         err_code=400, message="Bad Request"))
-
     return JsonResponse(__get_response_json_dict(data=response_data))

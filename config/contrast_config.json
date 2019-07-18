@@ -36,6 +36,7 @@
     "subjects_json": {
         "MNI":"MNI_[inflated]_mg2_9d_['rois'].json",
         "JGfs": "JGfs_[inflated]_mg2_9d_['rois'].json",
-        "MLfs2": "MLfs2_[inflated]_mg2_9d_['rois'].json"
+        "MLfs2": "MLfs2_[inflated]_mg2_9d_['rois'].json",
+        "AHfs": "AHfs_[inflated]_mg2_9d_['rois'].json"
     }
 }
