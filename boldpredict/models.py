@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from hashid_field import HashidAutoField
 from boldpredict.constants import *
+import json
 
 
 class Experiment(models.Model):
@@ -58,7 +59,7 @@ class Contrast(models.Model):
 
     def serialize_in_word_list(self):
         conditions = self.conditions.all()
-        condition1, condition2 = None, None
+        condition1, condition2 = None, None 
         if len(conditions) == 2:
             condition1 = conditions[0]
             condition2 = conditions[1]
@@ -86,6 +87,14 @@ class Contrast(models.Model):
         contrast_dict['stimuli_type'] = WORD_LIST
         contrast_dict['coordinate_space'] = self.experiment.coordinate_space
         contrast_dict['model_type'] = self.experiment.model_type
+        
+        # collect subjects result
+        subjects_dict = {}
+        subjects = self.subjects.all()
+        for subject in subjects:
+            subjects_dict[subject.name] = subject.serialize()
+        contrast_dict['subjects'] = subjects_dict
+        
         return contrast_dict
 
 
@@ -93,7 +102,14 @@ class Contrast(models.Model):
 class Subject_Result(models.Model):
     name = models.TextField('Subject Name', null=False, max_length=50)
     contrast = models.ForeignKey(
-        Contrast, related_name="subject_results", on_delete=models.CASCADE)
+        Contrast, related_name="subjects", on_delete=models.CASCADE)
+
+    def serialize(self):
+        subject_dict = {}
+        analyses = self.analyses.all()
+        for analysis in  analyses:
+            subject_dict[analysis.name] = analysis.result
+        return subject_dict
 
 
 class Analysis_Result(models.Model):

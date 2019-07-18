@@ -7,10 +7,10 @@ from boldpredict.constants import CACHE_EXPIRATION_TIME
 
 client = base.Client((settings.MAMCACHED_SERVER, settings.MAMCACHED_PORT))
 
-def add_contrast_into_cache(key, subject):
+def add_contrast_into_cache(key, value):
     # Connect to the client
     try:
-        result = client.set(key, json.dumps(subject), expire=CACHE_EXPIRATION_TIME)
+        result = client.set(key, value, expire=CACHE_EXPIRATION_TIME)
         return result
     except ConnectionRefusedError as cre:
         print("Please start your memcache ", cre)
@@ -46,7 +46,7 @@ def delete_contrast_in_cache(key):
 def update_contrast_in_cache(key, value):
     # Connect to the client
     try:
-        result = client.set(key, json.dumps(subject), expire=CACHE_EXPIRATION_TIME)
+        result = client.set(key, value, expire=CACHE_EXPIRATION_TIME)
         return result
     except ConnectionRefusedError as cre:
         print("Please start your memcache ", cre)

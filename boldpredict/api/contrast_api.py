@@ -98,10 +98,12 @@ def get_contrast_dict_by_hash_key(hash_key):
         return ext_contrast
     try:
         contrast = Contrast.objects.get(hash_key=hash_key)
-        return contrast.serialize()
+        contrast_dict = contrast.serialize()
+        cache_api.add_contrast_into_cache(contrast_dict['c_id'],contrast_dict)
+        cache_api.add_contrast_into_cache(contrast_dict['hash_key'],contrast_dict)
+        return contrast_dict
     except:
         return None
-
 
 def get_contrast_dict_by_id(contrast_id):
     ext_contrast = cache_api.check_contrast_in_cache(str(contrast_id))
@@ -109,22 +111,30 @@ def get_contrast_dict_by_id(contrast_id):
         return ext_contrast
     try:
         contrast = Contrast.objects.get(id=contrast_id)
-        return contrast.serialize()
+        contrast_dict = contrast.serialize()
+        print("contrast_dict =", contrast_dict)
+        cache_api.add_contrast_into_cache(contrast_dict['c_id'],contrast_dict)
+        cache_api.add_contrast_into_cache(contrast_dict['hash_key'],contrast_dict)
+        return contrast_dict
     except:
         return None
 
 
 def get_contrast_subj_webgl_strs(contrast_id, subj_name):
-    analysis = Analysis_Result.objects.filter( subject__contrast__id =  contrast_id).filter( subject__name = subj_name ).filter( name__startswith = 'webgl' ).all()
-    if analysis and len(analysis) > 0:
-        return analysis[0].result
-    return ""
-    
+    contrast_dict = get_contrast_dict_by_id(contrast_id)
+    if contrast_dict and contrast_dict['result_generated']:
+        analysis_result = contrast_dict['subjects'][subj_name]
+        if subj_name.lower() == MNI:
+            return analysis_result['webglgroup']
+        else:
+            return analysis_result['webgl']
+    else:
+        return ""
 
 def check_existing_contrast(*args, **kwargs):
     hash_key = utils.generate_hash_key(**kwargs)
     contrast_dict = get_contrast_dict_by_hash_key(hash_key)
     if contrast_dict:
         return contrast_dict['c_id'], True, hash_key
-    return None, False , hash_key
+    return None, False, hash_key
 
