@@ -38,6 +38,7 @@ class WordListStimuli(models.Model):
         Stimuli, related_name='word_list_stimuli', on_delete=models.CASCADE)
 
 
+
 # Create your models here.
 class Contrast(models.Model):
     id = HashidAutoField(primary_key=True)
@@ -51,8 +52,6 @@ class Contrast(models.Model):
         Experiment, related_name="contrasts", on_delete=models.CASCADE)
     MNIstr = models.TextField('MNI res str', null=True,blank=True)
     subjstr = models.TextField('subject res str', null=True,blank=True)
-    pmaps = models.TextField('permutation result', null=True,blank=True)
-
     creator = models.ForeignKey(User, related_name='has_contrasts', on_delete=models.CASCADE, null=True)
     # experiment_id = models.BigIntegerField('experiment if it exists',default=0)
     # figures_list = models.TextField('Enter name of Condition 1', default = '')
@@ -67,6 +66,18 @@ class Contrast(models.Model):
     # list1_text = models.TextField('Enter stimulus words separated by a comma')
     # list2_name = models.TextField('Enter name of Condition 2')
     # list2_text = models.TextField ('Enter stimulus words separated by a comma')
+
+class Subject_Result(models.Model):
+    name = models.TextField('Subject Name', null=False)
+    contrast = models.ForeignKey(
+        Contrast, related_name="subject_results", on_delete=models.CASCADE)
+
+
+class Analysis_Result(models.Model):
+    name = models.TextField('Analysis Name', null=False)
+    subject = models.ForeignKey(
+        Subject_Result, related_name="analyses", on_delete=models.CASCADE)
+    result = models.TextField('Analysis Name', null=False)
 
 # for coordinate analysis 
 # class Coordinates_holder(models.Model):

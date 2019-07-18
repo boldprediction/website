@@ -79,15 +79,18 @@ def get_word_list_condition_text(condition):
     text = ','.join(word_lists)
     return text
 
-def update_contrast_str(contrast_id,mni_str,subj_str,pmaps):
-    try :
-        contrast = Contrast.objects.get(id=contrast_id)
-        contrast.MNIstr = mni_str
-        contrast.subjstr = subj_str
-        contrast.pmaps = pmaps
-        contrast.save()
-    except e:
-        raise e
+def update_contrast_result(contrast_id,group_analyses,subjects):
+    contrast = Contrast.objects.get(id = contrast_id)
+    # create subject for mni - group result
+    mni_subject = Subject_Result.objects.create(name = 'mni',contrast = contrast)
+    for analysis_name, result in group_analyses.items():
+        analysis = Analysis_Result.objects.create(name = analysis_name, result = result, subject = mni_subject)
+    
+    # create subject for other subjects - group result
+    for subject_name, subject_analyses in subjects.items():
+        subject = Subject_Result.objects.create(name = subject_name,contrast = contrast)
+        for analysis_name, result in subject_analyses.items():
+            analysis = Analysis_Result.objects.create(name = analysis_name, result = result, subject = subject)
 
 def get_contrast_dict(contrast_id):
     contrast = Contrast.objects.get(id=contrast_id)
@@ -121,19 +124,19 @@ def get_word_list_contrast_dict(contrast):
     contrast_dict['do_perm'] = contrast.permutation_choice
     contrast_dict['c_id'] = str(contrast.id)
     contrast_dict['contrast_title'] = contrast.contrast_title
-    contrast_dict['mni_str'] = contrast.MNIstr
+    # contrast_dict['mni_str'] = contrast.MNIstr
     contrast_dict['stimuli_type'] = WORD_LIST
     contrast_dict['coordinate_space'] = contrast.experiment.coordinate_space
     contrast_dict['model_type'] = contrast.experiment.model_type
-    subjstr = contrast.subjstr
-    if subjstr and len(subjstr) > 0:
-        jsonDec = json.decoder.JSONDecoder()
-        subjects_str = []
-        for i in range(settings.SUBJECT_NUM):
-            subjects_str.append(jsonDec.decode(contrast.subjstr)[i])
-        contrast_dict['sub_strs'] = subjects_str
-    else:
-        contrast_dict['sub_str'] = ""
+    # subjstr = contrast.subjstr
+    # if subjstr and len(subjstr) > 0:
+    #     jsonDec = json.decoder.JSONDecoder()
+    #     subjects_str = []
+    #     for i in range(settings.SUBJECT_NUM):
+    #         subjects_str.append(jsonDec.decode(contrast.subjstr)[i])
+    #     contrast_dict['sub_strs'] = subjects_str
+    # else:
+        # contrast_dict['sub_str'] = ""
     return contrast_dict
 
 
@@ -155,3 +158,12 @@ def get_contrast_subj_str(contrast_id, subj_num):
     jsonDec = json.decoder.JSONDecoder()
     sub_dict['Cstr'] = jsonDec.decode(contrast.subjstr)[subj_num - 1]
     return sub_dict
+
+
+
+def get_contrast_subj_webgl_strs(contrast_id, subj_name):
+    # contrast = Contrast.objects.get(id = contrast_id)
+    # subject = contrast.
+    analysis = Analysis_Result.objects.filter( subject__contrast__id =  contrast_id).filter( subject__name = subj_name ).filter( name__startswith = 'webgl' ).all()
+    # analysis = Analysis_Result.objects.filter( subject__contrast__id =  contrast_id, subject__name = subj_name, name__startswith = 'webgl' ).all()
+    return analysis[0].result

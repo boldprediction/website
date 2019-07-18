@@ -377,6 +377,27 @@ def contrast_view(request, contrast_id):
     return render(request, 'boldpredict/index.html', {})
 
 
+def subj_result_view(request, subj_name, contrast_id):
+    context = {}
+    subj_str = contrast_api.get_contrast_subj_webgl_strs(contrast_id, subj_name)
+    context['subject_url'] = settings.SUBJECTS_URL
+    context['subject_cstr'] = subj_str
+    context['subject_name'] = subj_name
+    # setting
+    context['subject_json_file'] = settings.SUBJECTS_JSON.get(subj_name,'')
+    return render(request, 'boldpredict/subject.html', context)
+
+def contrast_results_view(request, contrast_id):
+    contrast = contrast_api.get_contrast_dict(contrast_id)
+    contrast['subject_num'] = settings.SUBJECT_NUM
+    for i in range(settings.SUBJECT_NUM):
+        subject_name = settings.SUBJECTS[i]
+        subject_key = "subject" + str(i+1)
+        contrast[subject_key] = subject_name
+    if contrast and contrast['stimuli_type'] == WORD_LIST:
+        return render(request, 'boldpredict/word_list_contrast_results.html', contrast)
+    return render(request, 'boldpredict/index.html', {})
+
 def __get_response_json_dict(data={}, err_code=0, message="Success"):
     ret = {
         'err_code': err_code,
@@ -394,17 +415,26 @@ def update_contrast(request):
     received_data = json.loads(request.body)
     # received_data = request.body
     # print("received_data = ", received_data)
-    contrast_id = received_data['contrast_id']
-    MNIstr = received_data['MNIstr']
-    subjstr = received_data['subjstr']
-    pmaps = received_data['pmaps']
-    response_data = {"contrast_id": contrast_id}
-    try:
-        # contrast_dict = contrast_api.get_contrast(contrast_id)
-        # cache_api.update_contrast_record(contrast_dict,MNIstr,subjstr)
-        contrast_api.update_contrast_str(contrast_id, MNIstr, pmaps)
-    except e:
-        JsonResponse(__get_response_json_dict(
-            err_code=400, message="Bad Request"))
+    contrasts_results = received_data['contrast_results']
+    for contrast_result in contrasts_results:
+        contrast_id = contrast_result['contrast_info']['id']
+        group_analyses = contrast_result['group_analyses']
+        subjects_analyses = contrast_result['subjects_analyses']
+        try:
+            contrast_api.update_contrast_webgl_result(contrast_id, group_analyses, subjects_analyses)
+        except e:
+            JsonResponse(__get_response_json_dict( err_code=400, message="Bad Request"))
+    
+    # MNIstr = received_data['MNIstr']
+    # subjstr = received_data['subjstr']
+    # pmaps = received_data['pmaps']
+    # response_data = {"contrast_id": contrast_id}
+    # try:
+    #     # contrast_dict = contrast_api.get_contrast(contrast_id)
+    #     # cache_api.update_contrast_record(contrast_dict,MNIstr,subjstr)
+    #     contrast_api.update_contrast_str(contrast_id, MNIstr, pmaps)
+    # except e:
+    #     JsonResponse(__get_response_json_dict(
+    #         err_code=400, message="Bad Request"))
 
     return JsonResponse(__get_response_json_dict(data=response_data))

@@ -31,5 +31,17 @@
         "place_words": "house, building, hotel, office, parking, lot, park, street, road, sidewalk, highway, path, field, mountain, forest, beach, cinema, restaurant, bistro, shop, store",
         "tools": "hammer, chisel, nail, saw, drill, scythe, screw, driver, nail, paintbrush, pliers, tongs, pincers, nippers",
         "animals": "sheep, cow, horse, bird, crow, dog, cat, spider, ant, bug, butterfly, chicken, turkey, lizard, slug, snail, goat, pig, donkey, bunny, rabbit, fly, lamb, kitten, puppy, monkey, ape, chimpanzee, gorilla, fish, salmon, bear, panda, doe, buck, fox, raccoon, skunk, squirrel, roach"
+    },
+    "subjects":["JGfs", "MLfs2",  "AHfs","DSfs","NNS0","Gfs","WHfs","ANfs"],
+    "subjects_json": {
+        "MNI":"MNI_[inflated]_mg2_9d_['rois'].json",
+        "JGfs": "JGfs_[inflated]_mg2_9d_['rois'].json",
+        "MLfs2": "MLfs2_[inflated]_mg2_9d_['rois'].json",
+        "AHfs": "AHfs_[inflated]_mg2_9d_['rois'].json",
+        "DSfs": "DSfs_[inflated]_mg2_9d_['rois'].json",
+        "NNS0": "NNS0_[inflated]_mg2_9d_['rois'].json",
+        "Gfs": "BGfs_[inflated]_mg2_9d_['rois'].json",
+        "WHfs": "WHfs_[inflated]_mg2_9d_['rois'].json",
+        "ANfs": "ANfs_[inflated]_mg2_9d_['rois'].json"
     }
 }
