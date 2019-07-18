@@ -67,19 +67,10 @@ def create_word_list_contrast(*args, **kwargs):
     combine2 = ConditionCombination.objects.create(
         stimuli=stimuli2, condition=condition2)
 
-    contrast_dict = get_word_list_contrast_dict(contrast)
-
-    cache_api.add_contrast_into_cache(hash_key,contrast_dict)
-    cache_api.add_contrast_into_cache(str(contrast.id),contrast_dict)
+    cache_api.add_contrast_into_cache(hash_key,contrast.serialize())
+    cache_api.add_contrast_into_cache(str(contrast.id),contrast.serialize())
     return contrast
 
-
-def get_word_list_condition_text(condition):
-    text = ""
-    stimulus = condition.stimulus.all()
-    word_lists = [stimuli.word_list_stimuli.word_list for stimuli in stimulus]
-    text = ','.join(word_lists)
-    return text
 
 def update_contrast_result(contrast_id,group_analyses,subjects):
     contrast = Contrast.objects.get(id = contrast_id)
@@ -97,10 +88,8 @@ def update_contrast_result(contrast_id,group_analyses,subjects):
     contrast.result_generated = True
     contrast.save()
 
-    contrast_dict = get_contrast_dict_by_id(contrast_id)
-    cache_api.update_contrast_in_cache(str(contrast.id),contrast_dict)
-    cache_api.update_contrast_in_cache(contrast.hash_key,contrast_dict)
-
+    cache_api.update_contrast_in_cache(str(contrast.id),contrast.serialize())
+    cache_api.update_contrast_in_cache(contrast.hash_key,contrast.serialize())
 
 
 def get_contrast_dict_by_hash_key(hash_key):
@@ -109,11 +98,7 @@ def get_contrast_dict_by_hash_key(hash_key):
         return ext_contrast
     try:
         contrast = Contrast.objects.get(hash_key=hash_key)
-        if contrast is not None and contrast.experiment.stimuli_type == WORD_LIST:
-            return get_word_list_contrast_dict(contrast)
-        else:
-            # for other types of stimuli
-            return None
+        return contrast.serialize()
     except:
         return None
 
@@ -122,43 +107,11 @@ def get_contrast_dict_by_id(contrast_id):
     ext_contrast = cache_api.check_contrast_in_cache(str(contrast_id))
     if ext_contrast :
         return ext_contrast
-
-    contrast = Contrast.objects.get(id=contrast_id)
-    if contrast is not None and contrast.experiment.stimuli_type == WORD_LIST:
-        return get_word_list_contrast_dict(contrast)
-    else:
-        # for other types of stimuli
+    try:
+        contrast = Contrast.objects.get(id=contrast_id)
+        return contrast.serialize()
+    except:
         return None
-
-
-def get_word_list_contrast_dict(contrast):
-    conditions = contrast.conditions.all()
-    condition1, condition2 = None, None
-    if len(conditions) == 2:
-        condition1 = conditions[0]
-        condition2 = conditions[1]
-    else:
-        # raise error message
-        return None
-    list1_name = condition1.condition_name
-    list2_name = condition2.condition_name
-    list1_text = get_word_list_condition_text(condition1)
-    list2_text = get_word_list_condition_text(condition2)
-
-    # construct contrast dict
-    contrast_dict = {}
-    contrast_dict['list1_name'] = list1_name
-    contrast_dict['list2_name'] = list2_name
-    contrast_dict['list1'] = list1_text
-    contrast_dict['list2'] = list2_text
-    contrast_dict['do_perm'] = contrast.permutation_choice
-    contrast_dict['c_id'] = str(contrast.id)
-    contrast_dict['contrast_title'] = contrast.contrast_title
-    contrast_dict['result_generated'] = contrast.result_generated
-    contrast_dict['stimuli_type'] = WORD_LIST
-    contrast_dict['coordinate_space'] = contrast.experiment.coordinate_space
-    contrast_dict['model_type'] = contrast.experiment.model_type
-    return contrast_dict
 
 
 def get_contrast_subj_webgl_strs(contrast_id, subj_name):

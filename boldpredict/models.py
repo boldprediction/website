@@ -65,10 +65,13 @@ class Contrast(models.Model):
         else:
             # raise error message
             return None
-        list1_name = condition1.condition_name
-        list2_name = condition2.condition_name
-        list1_text = get_word_list_condition_text(condition1)
-        list2_text = get_word_list_condition_text(condition2)
+
+        condition1_dict = condition1.serialize()
+        condition2_dict = condition2.serialize()
+        list1_name = condition1_dict['name']
+        list2_name = condition2_dict['name']
+        list1_text = condition1_dict['list_text']
+        list2_text = condition2_dict['list_text']
 
         # construct contrast dict
         contrast_dict = {}
@@ -76,13 +79,13 @@ class Contrast(models.Model):
         contrast_dict['list2_name'] = list2_name
         contrast_dict['list1'] = list1_text
         contrast_dict['list2'] = list2_text
-        contrast_dict['do_perm'] = contrast.permutation_choice
-        contrast_dict['c_id'] = str(contrast.id)
-        contrast_dict['contrast_title'] = contrast.contrast_title
-        contrast_dict['result_generated'] = contrast.result_generated
+        contrast_dict['do_perm'] = self.permutation_choice
+        contrast_dict['c_id'] = str(self.id)
+        contrast_dict['contrast_title'] =  self.contrast_title
+        contrast_dict['result_generated'] = self.result_generated
         contrast_dict['stimuli_type'] = WORD_LIST
-        contrast_dict['coordinate_space'] = contrast.experiment.coordinate_space
-        contrast_dict['model_type'] = contrast.experiment.model_type
+        contrast_dict['coordinate_space'] = self.experiment.coordinate_space
+        contrast_dict['model_type'] = self.experiment.model_type
         return contrast_dict
 
 
@@ -105,6 +108,20 @@ class Condition(models.Model):
                                       through_fields=('condition', 'stimuli'))
     contrast = models.ForeignKey(
         Contrast, related_name="conditions", on_delete=models.CASCADE)
+    
+    def serialize(self):
+        if self.contrast.experiment.stimuli_type == WORD_LIST:
+            return self.serialize_in_word_list()
+
+    def serialize_in_word_list(self):
+        condition_dict = {}
+        condition_dict['name'] = self.condition_name
+        text = ""
+        stimulus = self.stimulus.all()
+        word_lists = [stimuli.word_list_stimuli.word_list for stimuli in stimulus]
+        text = ','.join(word_lists)
+        condition_dict['list_text'] = text
+        return condition_dict
 
 
 class ConditionCombination(models.Model):
