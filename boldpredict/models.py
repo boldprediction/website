@@ -52,6 +52,40 @@ class Contrast(models.Model):
         User, related_name='has_contrasts', on_delete=models.CASCADE, null=True)
     hash_key = models.CharField('Hash Key', max_length=56)
 
+    def serialize(self):
+        if self.experiment.stimuli_type == WORD_LIST:
+            return self.serialize_in_word_list()
+
+    def serialize_in_word_list(self):
+        conditions = self.conditions.all()
+        condition1, condition2 = None, None
+        if len(conditions) == 2:
+            condition1 = conditions[0]
+            condition2 = conditions[1]
+        else:
+            # raise error message
+            return None
+        list1_name = condition1.condition_name
+        list2_name = condition2.condition_name
+        list1_text = get_word_list_condition_text(condition1)
+        list2_text = get_word_list_condition_text(condition2)
+
+        # construct contrast dict
+        contrast_dict = {}
+        contrast_dict['list1_name'] = list1_name
+        contrast_dict['list2_name'] = list2_name
+        contrast_dict['list1'] = list1_text
+        contrast_dict['list2'] = list2_text
+        contrast_dict['do_perm'] = contrast.permutation_choice
+        contrast_dict['c_id'] = str(contrast.id)
+        contrast_dict['contrast_title'] = contrast.contrast_title
+        contrast_dict['result_generated'] = contrast.result_generated
+        contrast_dict['stimuli_type'] = WORD_LIST
+        contrast_dict['coordinate_space'] = contrast.experiment.coordinate_space
+        contrast_dict['model_type'] = contrast.experiment.model_type
+        return contrast_dict
+
+
 
 class Subject_Result(models.Model):
     name = models.TextField('Subject Name', null=False, max_length=50)

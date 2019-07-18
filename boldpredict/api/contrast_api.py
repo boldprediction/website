@@ -18,7 +18,7 @@ def create_word_list_contrast(*args, **kwargs):
 
     hash_key = kwargs.get('hash_key', None)
     if hash_key is None:
-        hash_key = utils.generate_hash_key(kwargs)
+        hash_key = utils.generate_hash_key(**kwargs)
 
     model_type = kwargs.get('model_type', ENG1000)
     stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
@@ -70,7 +70,7 @@ def create_word_list_contrast(*args, **kwargs):
     contrast_dict = get_word_list_contrast_dict(contrast)
 
     cache_api.add_contrast_into_cache(hash_key,contrast_dict)
-    cache_api.add_contrast_into_cache(contrast.id,contrast_dict)
+    cache_api.add_contrast_into_cache(str(contrast.id),contrast_dict)
     return contrast
 
 
@@ -98,7 +98,7 @@ def update_contrast_result(contrast_id,group_analyses,subjects):
     contrast.save()
 
     contrast_dict = get_contrast_dict_by_id(contrast_id)
-    cache_api.update_contrast_in_cache(contrast.id,contrast_dict)
+    cache_api.update_contrast_in_cache(str(contrast.id),contrast_dict)
     cache_api.update_contrast_in_cache(contrast.hash_key,contrast_dict)
 
 
@@ -107,17 +107,19 @@ def get_contrast_dict_by_hash_key(hash_key):
     ext_contrast = cache_api.check_contrast_in_cache(hash_key)
     if ext_contrast :
         return ext_contrast
-
-    contrast = Contrast.objects.get(hash_key=hash_key)
-    if contrast is not None and contrast.experiment.stimuli_type == WORD_LIST:
-        return get_word_list_contrast_dict(contrast)
-    else:
-        # for other types of stimuli
+    try:
+        contrast = Contrast.objects.get(hash_key=hash_key)
+        if contrast is not None and contrast.experiment.stimuli_type == WORD_LIST:
+            return get_word_list_contrast_dict(contrast)
+        else:
+            # for other types of stimuli
+            return None
+    except:
         return None
 
 
 def get_contrast_dict_by_id(contrast_id):
-    ext_contrast = cache_api.check_contrast_in_cache(contrast_id)
+    ext_contrast = cache_api.check_contrast_in_cache(str(contrast_id))
     if ext_contrast :
         return ext_contrast
 
@@ -167,7 +169,7 @@ def get_contrast_subj_webgl_strs(contrast_id, subj_name):
     
 
 def check_existing_contrast(*args, **kwargs):
-    hash_key = utils.generate_hash_key(kwargs)
+    hash_key = utils.generate_hash_key(**kwargs)
     contrast_dict = get_contrast_dict_by_hash_key(hash_key)
     if contrast_dict:
         return contrast_dict['c_id'], True, hash_key
