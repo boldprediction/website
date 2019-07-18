@@ -115,7 +115,12 @@ def word_list_start_contrast(request):
     params['permutation_choice'] = form.clean_permutation_choice()
     if request.user.is_authenticated:
         params['owner'] = request.user
-    contrast = contrast_api.create_single_word_list_contrast(**params)
+    
+    c_id, find = contrast_api.check_existing_contrast(**params)
+    if find:
+        return redirect(reverse('contrast_results_view',kwargs={'contrast_id':c_id}))
+    
+    contrast = contrast_api.create_word_list_contrast(**params)
     sqs_api.send_contrast_message(sqs_api.create_contrast_message(
         contrast), stimuli_type)
 

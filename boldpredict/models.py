@@ -5,27 +5,24 @@ from boldpredict.constants import *
 
 
 class Experiment(models.Model):
-    experiment_title = models.TextField('experiment_title', null=True, blank=True)
+    experiment_title = models.TextField(
+        'experiment_title', null=True, blank=True)
     authors = models.TextField('authors_name', null=True, blank=True)
     DOI = models.TextField('DOI', null=True, blank=True)
-    creator = models.ForeignKey(User, related_name='has_experiments', on_delete=models.CASCADE, null=True)
-    # contrasts_res = models.TextField('model str')
-    # objects = ExpManager()
-    # def __str__(self):
-    #     return "stimuli_type = " + self.stimuli_type +  " coordinate_space = " + self.coordinate_space \
-    #             + "model_type = " + self.model_type
+    creator = models.ForeignKey(
+        User, related_name='has_experiments', on_delete=models.CASCADE, null=True)
     stimuli_type = models.CharField(
         'Stimuli Type', choices=STIMULI_TYPE_CHOICE, max_length=20, default=WORD_LIST)
-    
+
     coordinate_space = models.CharField(
         'Coordinate Space', choices=COORDINATE_SPACE_CHOICE, max_length=20, default=MNI)
-    
+
     model_type = models.CharField(
         'Model Type', choices=MODEL_TYPE_CHOICE, max_length=20, default=ENG1000)
 
 
 class Stimuli(models.Model):
-    stimuli_name = models.TextField('name of stimuli', max_length=200)
+    stimuli_name = models.TextField('name of stimuli', max_length=50)
     stimuli_type = models.CharField(
         'Stimuli Type', choices=STIMULI_TYPE_CHOICE, max_length=20, default=WORD_LIST)
     experiment = models.ForeignKey(
@@ -36,7 +33,6 @@ class WordListStimuli(models.Model):
     word_list = models.TextField(max_length=10000)
     parent_stimuli = models.OneToOneField(
         Stimuli, related_name='word_list_stimuli', on_delete=models.CASCADE)
-
 
 
 # Create your models here.
@@ -50,47 +46,29 @@ class Contrast(models.Model):
         'Run permutation/bootstrap test(needs more waiting time)', default=False)
     experiment = models.ForeignKey(
         Experiment, related_name="contrasts", on_delete=models.CASCADE)
-    result_generated =  models.BooleanField('Result generated or not', default=False)
-    creator = models.ForeignKey(User, related_name='has_contrasts', on_delete=models.CASCADE, null=True)
-    # experiment_id = models.BigIntegerField('experiment if it exists',default=0)
-    # figures_list = models.TextField('Enter name of Condition 1', default = '')
-    # subjstr = models.TextField('model str')
-    # replicated_figure = models.TextField('replicated_image',  default = '')
-    # random_roi_file = models.TextField('random_roi_file',  default = '')
+    result_generated = models.BooleanField(
+        'Result generated or not', default=False)
+    creator = models.ForeignKey(
+        User, related_name='has_contrasts', on_delete=models.CASCADE, null=True)
+    hash_key = models.CharField('Hash Key', max_length=56)
 
-    # pmaps = models.TextField('permutation parameter')
-    # replicated_figure = models.TextField('replicated_image',  default = '')
-    # random_roi_file = models.TextField('random_roi_file',  default = '')
-    # list1_name = models.TextField('Enter name of Condition 1')
-    # list1_text = models.TextField('Enter stimulus words separated by a comma')
-    # list2_name = models.TextField('Enter name of Condition 2')
-    # list2_text = models.TextField ('Enter stimulus words separated by a comma')
 
 class Subject_Result(models.Model):
-    name = models.TextField('Subject Name', null=False)
+    name = models.TextField('Subject Name', null=False, max_length=50)
     contrast = models.ForeignKey(
         Contrast, related_name="subject_results", on_delete=models.CASCADE)
 
 
 class Analysis_Result(models.Model):
-    name = models.TextField('Analysis Name', null=False)
+    name = models.TextField('Analysis Name', null=False, max_length=50)
     subject = models.ForeignKey(
         Subject_Result, related_name="analyses", on_delete=models.CASCADE)
     result = models.TextField('Analysis Result', null=False)
 
-# for coordinate analysis 
-# class Coordinates_holder(models.Model):
-#     title = models.TextField('', default = '')
-#     roi_image_filename = models.TextField('',  default = '')
-#     allmasks = models.TextField('',  default = '')
-#     contrast = models.ForeignKey(Contrast,on_delete=models.CASCADE)
-
-
 class Condition(models.Model):
-    condition_name = models.TextField('Condition name', max_length=200)
+    condition_name = models.TextField('Condition name', max_length=50)
     stimulus = models.ManyToManyField(Stimuli, through='ConditionCombination',
                                       through_fields=('condition', 'stimuli'))
-    # stimulus = models.ManyToManyField(Stimuli, related_name='conditions')
     contrast = models.ForeignKey(
         Contrast, related_name="conditions", on_delete=models.CASCADE)
 
@@ -101,15 +79,16 @@ class ConditionCombination(models.Model):
 
 
 class Coordinate(models.Model):
-    coordinate_name = models.TextField('roi name')
+    coordinate_name = models.TextField('roi name', max_length=50)
     x = models.IntegerField('x')
     y = models.IntegerField('y')
     z = models.IntegerField('z')
     contrast = models.ForeignKey(Contrast, on_delete=models.CASCADE)
     # coordinates_holder = models.ForeignKey(Coordinates_holder)
 
-# class Figures(models.Model):
-
-# class Author(models.Model):
-#     first_name = models.CharField(max_length=20)
-#     last_name = models.CharField(max_length=20)
+# for coordinate analysis
+# class Coordinates_holder(models.Model):
+#     title = models.TextField('', default = '')
+#     roi_image_filename = models.TextField('',  default = '')
+#     allmasks = models.TextField('',  default = '')
+#     contrast = models.ForeignKey(Contrast,on_delete=models.CASCADE)

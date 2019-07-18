@@ -2,13 +2,11 @@ from boldpredict.models import *
 from boldpredict.constants import *
 import json
 from django.conf import settings
+import cache_api
+import utils
 
 
 def create_contrast():
-    pass
-
-
-def create_condition():
     pass
 
 
@@ -20,8 +18,7 @@ def create_word_list_stimuli(stimuli_type, name, text, exp):
 
     return stimuli, word_list_stimuli
 
-
-def create_single_word_list_contrast(*args, **kwargs):
+def create_word_list_contrast(*args, **kwargs):
      
     model_type = kwargs.get('model_type', ENG1000)
     stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
@@ -95,6 +92,17 @@ def update_contrast_result(contrast_id,group_analyses,subjects):
     contrast.result_generated = True
     contrast.save()
 
+
+
+def get_contrast_dict_by_hash_key(hash_key):
+    contrast = Contrast.objects.get(hash_key=hash_key)
+    if contrast is not None and contrast.experiment.stimuli_type == WORD_LIST:
+        return get_word_list_contrast_dict(contrast)
+    else:
+        # for other types of stimuli
+        return None
+
+
 def get_contrast_dict(contrast_id):
     contrast = Contrast.objects.get(id=contrast_id)
     if contrast is not None and contrast.experiment.stimuli_type == WORD_LIST:
@@ -142,3 +150,13 @@ def get_contrast_subj_webgl_strs(contrast_id, subj_name):
         return analysis[0].result
     return ""
     
+
+def check_existing_contrast(*args, **kwargs):
+    hash_key = utils.generate_hash_key(kwargs)
+    contrast_dict = cache_api.check_contrast_in_cache(hash_key)
+    if contrast_dict:
+        return contrast_dict['c_id'], True
+    contrast_dict = get_contrast_dict_by_hash_key(hash_key)
+    if contrast_dict:
+        return contrast_dict['c_id'], True
+    return None, False
