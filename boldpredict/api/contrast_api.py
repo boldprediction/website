@@ -2,8 +2,8 @@ from boldpredict.models import *
 from boldpredict.constants import *
 import json
 from django.conf import settings
-import cache_api
-import utils
+from boldpredict.api import cache_api
+import boldpredict.utils as utils
 
 
 def create_word_list_stimuli(stimuli_type, name, text, exp):

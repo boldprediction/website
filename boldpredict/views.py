@@ -17,7 +17,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import json
 from boldpredict.models import *
-from boldpredict.api import contrast_api, sqs_api
+from boldpredict.api import contrast_api, sqs_api, cache_api
 
 # constants
 from boldpredict import constants

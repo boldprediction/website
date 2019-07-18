@@ -1,11 +1,11 @@
 from pymemcache.client import base
 import json
-from settings import MAMCACHED_SERVER,MAMCACHED_PORT
-from constants import CACHE_EXPIRATION_TIME
+from django.conf import settings
+from boldpredict.constants import CACHE_EXPIRATION_TIME
 # Add's a key value pair into the memcache. If the key already exists,
 # it returns false, else returns true when successfully added.
 
-client = base.Client((MAMCACHED_SERVER, MAMCACHED_PORT))
+client = base.Client((settings.MAMCACHED_SERVER, settings.MAMCACHED_PORT))
 
 def add_contrast_into_cache(key, subject):
     # Connect to the client
