@@ -351,40 +351,6 @@ def refresh_contrast(request):
         json_msg = '{ "success": "true" }'
     return HttpResponse(json_msg, content_type='application/json')
 
-# MNI_view to render the brain image
-
-
-def MNI_view(request, contrast_id):
-    mni_str = contrast_api.get_contrast_mni_str(contrast_id)
-    mni_str['subject_url'] = settings.SUBJECTS_URL
-    return render(request, 'boldpredict/MNI.html', mni_str)
-
-# subj_view to render the 8 different subjects
-
-
-def subj_view(request, contrast_id, subj_num):
-    subj_str = contrast_api.get_contrast_subj_str(contrast_id, subj_num)
-    subj_str['subject_url'] = settings.SUBJECTS_URL
-    return render(request, 'boldpredict/subj_{0}.html'.format(subj_num), subj_str)
-
-
-def contrast_view(request, contrast_id):
-    contrast = contrast_api.get_contrast_dict(contrast_id)
-    contrast['subject_num'] = settings.SUBJECT_NUM
-    if contrast and contrast['stimuli_type'] == WORD_LIST:
-        return render(request, 'boldpredict/word_list_contrast.html', contrast)
-    return render(request, 'boldpredict/index.html', {})
-
-
-# def subj_result_view(request, subj_name, contrast_id):
-#     context = contrast_api.get_contrast_subj_webgl_strs(contrast_id, subj_name)
-#     context['subject_url'] = settings.SUBJECTS_URL
-#     # context['subject_cstr'] = subj_str
-#     # context['subject_name'] = subj_name
-#     # setting
-#     context['subject_json_file'] = settings.SUBJECTS_JSON.get(subj_name,'')
-#     return render(request, 'boldpredict/subject.html', context)
-
 def subj_result_view(request, subj_name, contrast_id):
     context = {}
     subj_str = contrast_api.get_contrast_subj_webgl_strs(contrast_id, subj_name)
@@ -424,9 +390,6 @@ def update_contrast(request):
             err_code=403, message="Forbidden Request"))
 
     contrasts_results = json.loads(request.body)
-    # received_data = request.body
-    # print("received_data = ", received_data)
-    # contrasts_results = received_data['contrast_results']
     response_data = {}
     response_data['contrast_ids'] = []
     for contrast_result in contrasts_results:
@@ -439,14 +402,4 @@ def update_contrast(request):
         except:
             JsonResponse(__get_response_json_dict( err_code=400, message="Bad Request"))
     
-    # MNIstr = received_data['MNIstr']
-    # subjstr = received_data['subjstr']
-    # pmaps = received_data['pmaps']
-    # try:
-    #     # contrast_dict = contrast_api.get_contrast(contrast_id)
-    #     # cache_api.update_contrast_record(contrast_dict,MNIstr,subjstr)
-    #     contrast_api.update_contrast_str(contrast_id, MNIstr, pmaps)
-    # except e:
-    #     JsonResponse(__get_response_json_dict(
-    #         err_code=400, message="Bad Request"))
     return JsonResponse(__get_response_json_dict(data=response_data))

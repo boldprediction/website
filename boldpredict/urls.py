@@ -19,16 +19,9 @@ urlpatterns = [
     path('forget_password',views.forget,name='forget_password'),
     path('resend_activation',views.resend,name='resend_activation'),
     path('reset_password',views.reset,name='reset_password'),
-    # path('MNI.html',views.MNI_view,name='mni_view'),
-    # path('<int:c_id>/contrast/<int:subj_num>', views.subj_view, name='subj'),
-    # path('subj/<int:subj_num>', views.subj_view, name='subj'),
     path('confirm-reset/<slug:username>/<slug:token>',
         views.confirmreset_action, name='confirmreset'),
-    path('contrast_result/<slug:contrast_id>', views.contrast_view, name='contrast_view'),
-    path('contrast_result/MNI/<slug:contrast_id>', views.MNI_view, name='MNI_view'),
-    path('contrast_result/subj<int:subj_num>/<slug:contrast_id>', views.subj_view, name='subj_view'),
     path('api/update_contrast', views.update_contrast, name='update_contrast'),
-    # test refactor result
     path('contrast_results/<slug:subj_name>/<slug:contrast_id>', views.subj_result_view, name='subj_result_view'),
     path('contrast_results/<slug:contrast_id>', views.contrast_results_view, name='contrast_results_view'),
 ]

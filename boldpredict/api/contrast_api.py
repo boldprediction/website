@@ -127,53 +127,18 @@ def get_word_list_contrast_dict(contrast):
     contrast_dict['do_perm'] = contrast.permutation_choice
     contrast_dict['c_id'] = str(contrast.id)
     contrast_dict['contrast_title'] = contrast.contrast_title
-    # contrast_dict['mni_str'] = contrast.MNIstr
     contrast_dict['result_generated'] = contrast.result_generated
     contrast_dict['stimuli_type'] = WORD_LIST
     contrast_dict['coordinate_space'] = contrast.experiment.coordinate_space
     contrast_dict['model_type'] = contrast.experiment.model_type
-    # subjstr = contrast.subjstr
-    # if subjstr and len(subjstr) > 0:
-    #     jsonDec = json.decoder.JSONDecoder()
-    #     subjects_str = []
-    #     for i in range(settings.SUBJECT_NUM):
-    #         subjects_str.append(jsonDec.decode(contrast.subjstr)[i])
-    #     contrast_dict['sub_strs'] = subjects_str
-    # else:
-        # contrast_dict['sub_str'] = ""
     return contrast_dict
-
-
-def get_contrast_mni_str(contrast_id):
-    contrast = Contrast.objects.get(id=contrast_id)
-    mni_dict = {}
-    mni_dict['Cstr'] = contrast.MNIstr
-    mni_dict['c_id'] = str(contrast.id)
-    return mni_dict
-
-
-def get_contrast_subj_str(contrast_id, subj_num):
-    contrast = Contrast.objects.get(id=contrast_id)
-    sub_dict = {}
-    sub_dict['c_id'] = str(contrast.id)
-    if not contrast.subjstr or len(contrast.subjstr) == 0:
-        sub_dict['Cstr'] = contrast.subjstr
-        return sub_dict
-    jsonDec = json.decoder.JSONDecoder()
-    sub_dict['Cstr'] = jsonDec.decode(contrast.subjstr)[subj_num - 1]
-    return sub_dict
-
 
 
 def get_contrast_subj_webgl_strs(contrast_id, subj_name):
     # contrast = Contrast.objects.get(id = contrast_id)
     # subject = contrast.
     analysis = Analysis_Result.objects.filter( subject__contrast__id =  contrast_id).filter( subject__name = subj_name ).filter( name__startswith = 'webgl' ).all()
-    # sub_dict = {}
-    # sub_dict['subject_cstr'] = analysis[0].result
-    # sub_dict['subject_name'] = subj_name
-    # return sub_dict
-    return analysis[0].result
-    # analysis = Analysis_Result.objects.filter( subject__contrast__id =  contrast_id, subject__name = subj_name, name__startswith = 'webgl' ).all()
-    # return jsonDec.decode(analysis[0].result)
+    if analysis and len(analysis) > 0:
+        return analysis[0].result
+    return ""
     
