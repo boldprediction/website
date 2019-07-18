@@ -1,0 +1,13 @@
+{
+    "subjects_json": {
+        "MNI":"MNI_[inflated]_mg2_9d_['rois'].json",
+        "JGfs": "JGfs_[inflated]_mg2_9d_['rois'].json",
+        "MLfs2": "MLfs2_[inflated]_mg2_9d_['rois'].json",
+        "AHfs": "AHfs_[inflated]_mg2_9d_['rois'].json",
+        "DSfs": "DSfs_[inflated]_mg2_9d_['rois'].json",
+        "NNS0": "NNS0_[inflated]_mg2_9d_['rois'].json",
+        "Gfs": "BGfs_[inflated]_mg2_9d_['rois'].json",
+        "WHfs": "WHfs_[inflated]_mg2_9d_['rois'].json",
+        "ANfs": "ANfs_[inflated]_mg2_9d_['rois'].json"
+    }
+}
