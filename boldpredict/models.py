@@ -77,7 +77,7 @@ class Analysis_Result(models.Model):
     name = models.TextField('Analysis Name', null=False)
     subject = models.ForeignKey(
         Subject_Result, related_name="analyses", on_delete=models.CASCADE)
-    result = models.TextField('Analysis Name', null=False)
+    result = models.TextField('Analysis Result', null=False)
 
 # for coordinate analysis 
 # class Coordinates_holder(models.Model):

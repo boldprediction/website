@@ -82,7 +82,7 @@ def get_word_list_condition_text(condition):
 def update_contrast_result(contrast_id,group_analyses,subjects):
     contrast = Contrast.objects.get(id = contrast_id)
     # create subject for mni - group result
-    mni_subject = Subject_Result.objects.create(name = 'mni',contrast = contrast)
+    mni_subject = Subject_Result.objects.create(name = 'MNI',contrast = contrast)
     for analysis_name, result in group_analyses.items():
         analysis = Analysis_Result.objects.create(name = analysis_name, result = result, subject = mni_subject)
     
@@ -165,5 +165,11 @@ def get_contrast_subj_webgl_strs(contrast_id, subj_name):
     # contrast = Contrast.objects.get(id = contrast_id)
     # subject = contrast.
     analysis = Analysis_Result.objects.filter( subject__contrast__id =  contrast_id).filter( subject__name = subj_name ).filter( name__startswith = 'webgl' ).all()
-    # analysis = Analysis_Result.objects.filter( subject__contrast__id =  contrast_id, subject__name = subj_name, name__startswith = 'webgl' ).all()
+    # sub_dict = {}
+    # sub_dict['subject_cstr'] = analysis[0].result
+    # sub_dict['subject_name'] = subj_name
+    # return sub_dict
     return analysis[0].result
+    # analysis = Analysis_Result.objects.filter( subject__contrast__id =  contrast_id, subject__name = subj_name, name__startswith = 'webgl' ).all()
+    # return jsonDec.decode(analysis[0].result)
+    

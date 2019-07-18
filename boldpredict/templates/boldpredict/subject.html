@@ -31007,10 +31007,9 @@
 	};
 	
 	var subject_url = "{{ subject_url | safe }}" + "{{subject_json_file | safe }}"
-	var subject_name = "{{subject_name | safe}} "
 
- 	subjects = { subject_name : subject_url };
-	dataviews = dataset.fromJSON({% autoescape off %} {{ subject_cstr }} {% endautoescape %} );
+ 	subjects = { "{{subject_name | safe}}" : subject_url };
+	dataviews = dataset.fromJSON({% autoescape off %} {{subject_cstr}} {% endautoescape %} );
 	figure = new jsplot.W2Figure();
 	
 	viewers = figure.add(mriview.MultiView, "main", true, 1, 1, dataviews);

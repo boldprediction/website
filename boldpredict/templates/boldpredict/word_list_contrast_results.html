@@ -165,19 +165,19 @@
 
             if (subject_num >= 1) {
                 document.getElementById("iframe_pos_1_name").innerHTML = "<h4> <center> Subject 1 <a target=_blank href={% url 'subj_result_view' subject1 c_id  %} ><span class=\"glyphicon glyphicon-new-window\"></span></a> </center> </h4>"
-                $("#iframe_pos_1").attr("src", "{% url 'subj_view' 1 c_id  %}");
+                $("#iframe_pos_1").attr("src", "{% url 'subj_result_view' subject1 c_id  %}");
             }
             if (subject_num >= 2) {
                 document.getElementById("iframe_pos_2_name").innerHTML = "<h4> <center> Subject 2 <a target=_blank href={% url 'subj_result_view' subject2 c_id  %}><span class=\"glyphicon glyphicon-new-window\"></span></a></center> </h4>"
-                $("#iframe_pos_2").attr("src", "{% url 'subj_view' 2 c_id  %}");
+                $("#iframe_pos_2").attr("src", "{% url 'subj_result_view' subject2 c_id  %}");
             }
             if (subject_num >= 3) {
                 document.getElementById("iframe_pos_3_name").innerHTML = "<h4>  <center> Subject 3 <a target=_blank href={% url 'subj_result_view' subject3 c_id  %}><span class=\"glyphicon glyphicon-new-window\"></span></a></center></h4>"
-                $("#iframe_pos_3").attr("src", "{% url 'subj_view' 3 c_id  %}");
+                $("#iframe_pos_3").attr("src", "{% url 'subj_result_view' subject3 c_id  %}");
             }
             if (subject_num >= 4) {
                 document.getElementById("iframe_pos_4_name").innerHTML = "<h4> <center> Subject 4 <a target=_blank href={% url 'subj_result_view' subject4 c_id  %}><span class=\"glyphicon glyphicon-new-window\"></span></a></center> </h4>"
-                $("#iframe_pos_4").attr("src", "{% url 'subj_view' 4 c_id  %}");
+                $("#iframe_pos_4").attr("src", "{% url 'subj_result_view' subject4 c_id  %}");
             }
             $('iframe').contents().find('#roislabelshow').trigger("click");
         });
@@ -191,19 +191,19 @@
 
             if (subject_num >= 5) {
                 document.getElementById("iframe_pos_1_name").innerHTML = "<h4> <center> Subject 5 <a target=_blank href={% url 'subj_result_view' subject5 c_id  %}><span class=\"glyphicon glyphicon-new-window\"></span></a> </center> </h4>"
-                $("#iframe_pos_1").attr("src", "{% url 'subj_view' 5 c_id  %}");
+                $("#iframe_pos_1").attr("src", "{% url 'subj_result_view' subject5 c_id  %}");
             }
             if (subject_num >= 6) {
                 document.getElementById("iframe_pos_2_name").innerHTML = "<h4> <center> Subject 6 <a target=_blank href={% url 'subj_result_view' subject6 c_id  %}><span class=\"glyphicon glyphicon-new-window\"></span></a></center> </h4>"
-                $("#iframe_pos_2").attr("src", "{% url 'subj_view' 6 c_id  %}");
+                $("#iframe_pos_2").attr("src", "{% url 'subj_result_view' subject6 c_id  %}");
             }
             if (subject_num >= 7) {
                 document.getElementById("iframe_pos_3_name").innerHTML = "<h4>  <center> Subject 7 <a target=_blank href={% url 'subj_result_view' subject7 c_id  %}><span class=\"glyphicon glyphicon-new-window\"></span></a></center></h4>"
-                $("#iframe_pos_3").attr("src", "{% url 'subj_view' 7 c_id  %}");
+                $("#iframe_pos_3").attr("src", "{% url 'subj_result_view' subject7 c_id  %}");
             }
             if (subject_num >= 8) {
                 document.getElementById("iframe_pos_4_name").innerHTML = "<h4> <center> Subject 8 <a target=_blank href={% url 'subj_result_view' subject8 c_id  %}><span class=\"glyphicon glyphicon-new-window\"></span></a></center> </h4>"
-                $("#iframe_pos_4").attr("src", "{% url 'subj_view' 8 c_id  %}");
+                $("#iframe_pos_4").attr("src", "{% url 'subj_result_view' subject8 c_id  %}");
             }
             $('iframe').contents().find('#roislabelshow').trigger("click");
         });

@@ -377,23 +377,35 @@ def contrast_view(request, contrast_id):
     return render(request, 'boldpredict/index.html', {})
 
 
+# def subj_result_view(request, subj_name, contrast_id):
+#     context = contrast_api.get_contrast_subj_webgl_strs(contrast_id, subj_name)
+#     context['subject_url'] = settings.SUBJECTS_URL
+#     # context['subject_cstr'] = subj_str
+#     # context['subject_name'] = subj_name
+#     # setting
+#     context['subject_json_file'] = settings.SUBJECTS_JSON.get(subj_name,'')
+#     return render(request, 'boldpredict/subject.html', context)
+
 def subj_result_view(request, subj_name, contrast_id):
     context = {}
     subj_str = contrast_api.get_contrast_subj_webgl_strs(contrast_id, subj_name)
     context['subject_url'] = settings.SUBJECTS_URL
     context['subject_cstr'] = subj_str
     context['subject_name'] = subj_name
-    # setting
     context['subject_json_file'] = settings.SUBJECTS_JSON.get(subj_name,'')
     return render(request, 'boldpredict/subject.html', context)
 
 def contrast_results_view(request, contrast_id):
     contrast = contrast_api.get_contrast_dict(contrast_id)
     contrast['subject_num'] = settings.SUBJECT_NUM
-    for i in range(settings.SUBJECT_NUM):
-        subject_name = settings.SUBJECTS[i]
+    for i in range(8):
         subject_key = "subject" + str(i+1)
-        contrast[subject_key] = subject_name
+        if i < settings.SUBJECT_NUM:
+            subject_name = settings.SUBJECTS[i]
+            contrast[subject_key] = subject_name
+        else:
+            contrast[subject_key] = "dummy"
+
     if contrast and contrast['stimuli_type'] == WORD_LIST:
         return render(request, 'boldpredict/word_list_contrast_results.html', contrast)
     return render(request, 'boldpredict/index.html', {})
