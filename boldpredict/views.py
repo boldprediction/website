@@ -116,10 +116,11 @@ def word_list_start_contrast(request):
     if request.user.is_authenticated:
         params['owner'] = request.user
     
-    c_id, find = contrast_api.check_existing_contrast(**params)
+    c_id, find,hash_key = contrast_api.check_existing_contrast(**params)
     if find:
         return redirect(reverse('contrast_results_view',kwargs={'contrast_id':c_id}))
     
+    params['hash_key'] = hash_key
     contrast = contrast_api.create_word_list_contrast(**params)
     sqs_api.send_contrast_message(sqs_api.create_contrast_message(
         contrast), stimuli_type)
@@ -347,7 +348,7 @@ def refresh_contrast(request):
     if not request.GET.get('contrast_id', None):
         raise Http404
     contrast_id = request.GET['contrast_id']
-    contrast = contrast_api.get_contrast_dict(contrast_id)
+    contrast = contrast_api.get_contrast_dict_by_id(contrast_id)
     if contrast is None:
         raise Http404
     if not contrast['result_generated']:
@@ -366,7 +367,7 @@ def subj_result_view(request, subj_name, contrast_id):
     return render(request, 'boldpredict/subject.html', context)
 
 def contrast_results_view(request, contrast_id):
-    contrast = contrast_api.get_contrast_dict(contrast_id)
+    contrast = contrast_api.get_contrast_dict_by_id(contrast_id)
     contrast['subject_num'] = settings.SUBJECT_NUM
     for i in range(8):
         subject_key = "subject" + str(i+1)

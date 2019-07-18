@@ -6,10 +6,6 @@ import cache_api
 import utils
 
 
-def create_contrast():
-    pass
-
-
 def create_word_list_stimuli(stimuli_type, name, text, exp):
     stimuli = Stimuli.objects.create(stimuli_name=name, stimuli_type=stimuli_type,
                                      experiment=exp)
@@ -19,7 +15,11 @@ def create_word_list_stimuli(stimuli_type, name, text, exp):
     return stimuli, word_list_stimuli
 
 def create_word_list_contrast(*args, **kwargs):
-     
+
+    hash_key = kwargs.get('hash_key', None)
+    if hash_key is None:
+        hash_key = utils.generate_hash_key(kwargs)
+
     model_type = kwargs.get('model_type', ENG1000)
     stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
     coordinate_space = kwargs.get('coordinate_space', MNI)
@@ -54,7 +54,8 @@ def create_word_list_contrast(*args, **kwargs):
     permutation_choice = kwargs.get('permutation_choice', False)
     contrast = Contrast.objects.create(contrast_title=contrast_title, baseline_choice=baseline_choice,
                                        permutation_choice=permutation_choice, experiment = exp,
-                                       privacy_choice=contrast_type, creator = owner )
+                                       privacy_choice=contrast_type, creator = owner,
+                                       hash_key = hash_key )
 
     # create condition
     condition1 = Condition.objects.create(
@@ -66,6 +67,10 @@ def create_word_list_contrast(*args, **kwargs):
     combine2 = ConditionCombination.objects.create(
         stimuli=stimuli2, condition=condition2)
 
+    contrast_dict = get_word_list_contrast_dict(contrast)
+
+    cache_api.add_contrast_into_cache(hash_key,contrast_dict)
+    cache_api.add_contrast_into_cache(contrast.id,contrast_dict)
     return contrast
 
 
@@ -92,9 +97,17 @@ def update_contrast_result(contrast_id,group_analyses,subjects):
     contrast.result_generated = True
     contrast.save()
 
+    contrast_dict = get_contrast_dict_by_id(contrast_id)
+    cache_api.update_contrast_in_cache(contrast.id,contrast_dict)
+    cache_api.update_contrast_in_cache(contrast.hash_key,contrast_dict)
+
 
 
 def get_contrast_dict_by_hash_key(hash_key):
+    ext_contrast = cache_api.check_contrast_in_cache(hash_key)
+    if ext_contrast :
+        return ext_contrast
+
     contrast = Contrast.objects.get(hash_key=hash_key)
     if contrast is not None and contrast.experiment.stimuli_type == WORD_LIST:
         return get_word_list_contrast_dict(contrast)
@@ -103,7 +116,11 @@ def get_contrast_dict_by_hash_key(hash_key):
         return None
 
 
-def get_contrast_dict(contrast_id):
+def get_contrast_dict_by_id(contrast_id):
+    ext_contrast = cache_api.check_contrast_in_cache(contrast_id)
+    if ext_contrast :
+        return ext_contrast
+
     contrast = Contrast.objects.get(id=contrast_id)
     if contrast is not None and contrast.experiment.stimuli_type == WORD_LIST:
         return get_word_list_contrast_dict(contrast)
@@ -143,8 +160,6 @@ def get_word_list_contrast_dict(contrast):
 
 
 def get_contrast_subj_webgl_strs(contrast_id, subj_name):
-    # contrast = Contrast.objects.get(id = contrast_id)
-    # subject = contrast.
     analysis = Analysis_Result.objects.filter( subject__contrast__id =  contrast_id).filter( subject__name = subj_name ).filter( name__startswith = 'webgl' ).all()
     if analysis and len(analysis) > 0:
         return analysis[0].result
@@ -153,10 +168,8 @@ def get_contrast_subj_webgl_strs(contrast_id, subj_name):
 
 def check_existing_contrast(*args, **kwargs):
     hash_key = utils.generate_hash_key(kwargs)
-    contrast_dict = cache_api.check_contrast_in_cache(hash_key)
-    if contrast_dict:
-        return contrast_dict['c_id'], True
     contrast_dict = get_contrast_dict_by_hash_key(hash_key)
     if contrast_dict:
-        return contrast_dict['c_id'], True
-    return None, False
+        return contrast_dict['c_id'], True, hash_key
+    return None, False , hash_key
+

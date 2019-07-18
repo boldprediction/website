@@ -48,3 +48,5 @@ WORD_LIST_CONDITIONS = {
 }
 
 SUBJECT_JSON_SUFFIX = "_[inflated]_mg2_9d_['rois'].json"
+
+CACHE_EXPIRATION_TIME = 86400
