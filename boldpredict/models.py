@@ -50,7 +50,7 @@ class Contrast(models.Model):
         'Result generated or not', default=False)
     creator = models.ForeignKey(
         User, related_name='has_contrasts', on_delete=models.CASCADE, null=True)
-    hash_key = models.CharField('Hash Key', max_length=56)
+    hash_key = models.CharField('Hash Key', max_length=56,db_index=True)
 
     def serialize(self):
         if self.experiment.stimuli_type == WORD_LIST:
