@@ -1,5 +1,5 @@
 interval_time = 1000;
-time_out_time = 10000;
+time_out_time = 50000;
 
 var ip_address = 'http://' + host_ip + ':' + app_port + '/'
 

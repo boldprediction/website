@@ -52,6 +52,7 @@ class Contrast(models.Model):
         Experiment, related_name="contrasts", on_delete=models.CASCADE)
     MNIstr = models.TextField('MNI res str', null=True,blank=True)
     subjstr = models.TextField('subject res str', null=True,blank=True)
+    result_generated =  models.BooleanField('Result generated or not', default=False)
     creator = models.ForeignKey(User, related_name='has_contrasts', on_delete=models.CASCADE, null=True)
     # experiment_id = models.BigIntegerField('experiment if it exists',default=0)
     # figures_list = models.TextField('Enter name of Condition 1', default = '')

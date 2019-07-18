@@ -345,8 +345,7 @@ def refresh_contrast(request):
     contrast = contrast_api.get_contrast_dict(contrast_id)
     if contrast is None:
         raise Http404
-    mni_str = contrast['mni_str']
-    if not mni_str or len(mni_str) == 0:
+    if not contrast['result_generated']:
         json_msg = '{ "success": "false" }'
     else:
         json_msg = '{ "success": "true" }'

@@ -91,6 +91,9 @@ def update_contrast_result(contrast_id,group_analyses,subjects):
         subject = Subject_Result.objects.create(name = subject_name,contrast = contrast)
         for analysis_name, result in subject_analyses.items():
             analysis = Analysis_Result.objects.create(name = analysis_name, result = result, subject = subject)
+    
+    contrast.result_generated = True
+    contrast.save()
 
 def get_contrast_dict(contrast_id):
     contrast = Contrast.objects.get(id=contrast_id)
@@ -125,6 +128,7 @@ def get_word_list_contrast_dict(contrast):
     contrast_dict['c_id'] = str(contrast.id)
     contrast_dict['contrast_title'] = contrast.contrast_title
     # contrast_dict['mni_str'] = contrast.MNIstr
+    contrast_dict['result_generated'] = contrast.result_generated
     contrast_dict['stimuli_type'] = WORD_LIST
     contrast_dict['coordinate_space'] = contrast.experiment.coordinate_space
     contrast_dict['model_type'] = contrast.experiment.model_type
