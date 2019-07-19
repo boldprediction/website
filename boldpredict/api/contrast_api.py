@@ -112,7 +112,6 @@ def get_contrast_dict_by_id(contrast_id):
     try:
         contrast = Contrast.objects.get(id=contrast_id)
         contrast_dict = contrast.serialize()
-        print("contrast_dict =", contrast_dict)
         cache_api.add_contrast_into_cache(contrast_dict['c_id'],contrast_dict)
         cache_api.add_contrast_into_cache(contrast_dict['hash_key'],contrast_dict)
         return contrast_dict
