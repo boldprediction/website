@@ -97,6 +97,31 @@ class RegistrationForm(forms.Form):
 
         return cleaned_data
 
+class WordListForm(forms.ModelForm):
+    class Meta:
+        model = Contrast
+        fields = ['contrast_title','list1_name', 'list1_text', 'baseline_choice', 'list2_name', 'list2_text', 'permutation_choice']
+        widgets = {
+            'contrast_title': forms.Textarea(attrs ={'cols':50, 'rows':1}),
+            'list1_name': forms.Textarea(attrs ={'cols':50, 'rows':1}),
+            'list2_name': forms.Textarea(attrs ={'cols':50, 'rows':1}),
+            'list1_text': forms.Textarea(attrs ={'cols':50, 'rows':10}),
+            'list2_text': forms.Textarea(attrs ={'cols':50, 'rows':10}),
+            # 'privacy_choice':forms.RadioSelect(),
+        }
+
+    def clean(self):
+        cleaned_data = super(WordListForm,self).clean()
+        list1_text = cleaned_data.get('list1_text')
+        list2_text = cleaned_data.get('list2_text')
+        list2_name = cleaned_data.get('list2_name')
+        
+        if not all([x.isdigit() or x.isalpha() or x == ',' or x == ' ' for x in list1_text]):
+            raise forms.ValidationError("Please enter words for condition 1")
+        if list2_name != 'baseline'and not all([x.isdigit() or x.isalpha() or x == ',' or x == ' ' for x in list2_text]):
+            raise forms.ValidationError("Please enter words for condition 2")
+        return cleaned_data
+
 class ForgotForm(forms.Form):
     email = forms.CharField(max_length = 30,
                         label = 'E-mail',

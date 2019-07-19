@@ -1,405 +1,858 @@
-/* refer to http://sc.chinaz.com/mobandemo.aspx?downloadid=4201724528270 */
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:700,400);
-body {
-	color:#FFF;
-	font-family:'Open Sans', sans-serif;
-	min-width:960px;
-	top:0;
-	left:0;
-	position:absolute;
-	height:100%;
-	width:100%;
-	margin:0;
-	color: #fff;
-	background-size:cover;
-	/* background:url('../images/swirl_pattern.png') top left repeat; */
-	background: #212121;
-}
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: #d9d9d9;
-}
-::-moz-placeholder { /* Firefox 19+ */
-  color: #d9d9d9;
-}
-:-ms-input-placeholder { /* IE 10+ */
-  color: #d9d9d9;
-}
-:-moz-placeholder { /* Firefox 18- */
-  color: #d9d9d9;
-}
-.ie body {
-	filter: dropshadow(color=#000000, offx=0, offy=1);	
-}
-h1 {
-	font-size:50px;
-	font-weight:bold;
-	letter-spacing:-2px;
-	/* line-height:40px; */
-	/* text-align:center; */
-}
-.ie h1 {
-	filter: dropshadow(color=#000000, offx=0, offy=3);
-	padding-bottom:12px;	
-}
-h2 { 
-}
-.ie h2 {
-	filter: dropshadow(color=#000000, offx=0, offy=3);
-}
-h3 {font-size: 22px;margin: 0.2em 0;text-align: center;color: #f9f9f9;padding: 0 0 29px;}
-.ie h3 {
-	filter: dropshadow(color=#000000, offx=0, offy=3);
-}
-h4 {
-	margin-bottom:5px;	
-}
-p, pre {
-	margin:0 0 10px 0;
-	font-size: 14px;
-}
-code {
-	text-transform:uppercase !important;
-	color:#EEE;	
-	border-bottom:1px dotted #666;
-}
-small {
-	background:url(../images/alpha.png);
-	background:rgba(0, 0, 0, 0.8) url();	
-	border:1px solid #111;
-	font-size:15px;
-	padding:0 5px;
-}
-strong{
-text-align: center;
-display: block; 
-font-size: 28px;
-font-weight: normal;
-color:#646464;
-}
-a {
-	color:gray;
-	text-decoration:none;	
-}
-a:hover {
-	color:#BBB;	
-} 
-.topSection{ 
-}
-.spacing{
-padding:30px 0;
-}
-#Header { 
-position: relative;
-width: 100%; 
-z-index: 1;
-padding-top: 10px
-}
-.logo{width: auto;margin: 0 auto;padding: 16px;border-radius: 30px;padding-bottom: 10px;}
-.logo h1{color: #ffffff;font-weight:600;}
-.logo img {width: 60px;height: 60px;/*text-align: center;display: block;*/margin: 0 auto 10px;}
-.wrapper {
-margin: 0 auto;
-position: relative;
-width: 100%;
-z-index: 1;
-}
-#socialIcons {
-display:block;
-}
-#socialIcons ul {
-margin:40px 0 0 0px; 
-padding:0px;
-text-align: center;
-}
-#socialIcons ul li {margin-right: 19px;list-style-type: none;display: inline-block;background: #212121;padding: 10px;border: 1px solid #424242;}
-#socialIcons ul li a{width:34px;height: 28px;display: inline-block;}
-.twitterIcon, .facebookIcon, .linkedInIcon, .pintrestIcon{
-background: url('../images/social-icons.png') -74px 0px;
-}
-.twitterIcon:hover, .facebookIcon:hover, .linkedInIcon:hover, .pintrestIcon:hover{
-background-position-y: -33px;
-}
-.facebookIcon{
-background-position: 10px 0px;
-}
-.linkedInIcon{
-background-position: -245px 0px;
-}
-.pintrestIcon{
-background-position: -331px 0px;
-}
-.tempBy{display:block;text-align:center;padding: 18px;background: #212121;color: #8A8A8A;font-size: 12px;}
-#Content h2 {margin: 0px;padding: 0px;text-align: center;font-size: 28px;font-weight: 300;color: #ffffff;margin-bottom:40px;text-transform: capitalize;line-height: 38px;}
-#WindowSlide {
-margin: 0 auto;
-position: relative;
-width: 634px;
-height: 170px;
-display: block;
-overflow: hidden;
-}
-#Mail {
-position: absolute;
-width: 634px;
-top: 0px;
-left: 0px;
-}
-#Content h3 {
-text-align: center;
-font-size: 24px;
-font-weight: normal;
-display: block;
-clear: both;
-}
-.callback,
-.simple {
-  font-size: 20px;
-  background: #27ae60;
-  padding: 0.5em 0.7em;
-  color: #ecf0f1;
-  margin-bottom: 50px;
-  -webkit-transition: background 0.5s ease-out;
-  transition: background 0.5s ease-out;
-}
-.callback{
-  cursor: pointer;
-}
-.ended {
-  background: #c0392b;
-}
-.countdown {text-align: center;margin-top: 30px;background: #5381E4;padding: 60px 0;background-size: cover;background: url(../images/bg.jpg) top left repeat;} 
-.styled div {
-  display: inline-block;
-  margin-left: 10px;
-  font-size: 70px;
-  font-weight: normal; 
-  text-align: center;
-  margin:0 15px; 
-  padding:0 30px;   
-  color:#fff;  
-  text-shadow:none;
-  vertical-align: middle;  
-}
-
-#overlay{
-background: rgba(0, 0, 0, 0.56) url(../images/overlays/01.png) top left repeat;
-position: fixed;
-top: 0px;
-width: 100%;
-bottom: 0px;
-opacity:0.8;
-}
-/* IE7 inline-block hack */
-*+html .styled div{
-  display: inline;
-  zoom: 1;
-}
-.styled div:first-child {
-  margin-left: 0;
-}
-.styled div span {
-  display: block;
-  padding-top: 3px;
-  font-size: 19px;
-  font-weight: normal;
-  text-align: center;
-  text-transform: uppercase;
-}
-footer{
-width:100%;
-height:30px;
-background:rgba(0, 0, 0, 0.64);
-position:absolute;
-bottom:0px;
-}
-footer span{
-float:right;
-margin:10px;
-}
-
-@media(max-width:768px){
-	body {
-	min-width: initial !important;
-	}
-	.wrapper{width:100%;}
-	.styled div {
-	  margin-bottom:10px; 
-	}
-}
-
-/* refer to http://sc.chinaz.com/mobandemo.aspx?downloadid=4201724528270 */
-
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:700,400);
-#register p{
-text-align:center;
-}
-#register input {/* background: rgba(255, 255, 255, 0.52); */color: #212121;vertical-align: middle;width: 280px;border: 1px solid #212121;padding: 10px;font-size: 14px;}
-#register input[type="button"]{
-background: rgba(255, 255, 255, 1);
-width: auto;
-padding: 10px 25px;
-cursor: pointer;
-margin: 0 0 0 -6px;
-font-weight: bold;
-font-size: 14px;
-color: #888;
-}
-
-#register input[type="button"]:hover{
-background:#1e7ccd;
-color:#fff;
-border:1px solid #1e7ccd;
-}
-#register input[type="submit"] {
-    width: 132px;
-    margin-left: -1px;
-    background: #f05b5d;
-    border: 1px #f05b5d solid;
-    color: #fff;
-}
-.callback,
-.simple {
-  font-size: 20px;
-  background: #27ae60;
-  padding: 0.5em 0.7em;
-  color: #ecf0f1;
-  margin-bottom: 50px;
-  -webkit-transition: background 0.5s ease-out;
-  transition: background 0.5s ease-out;
-}
-.callback{
-  cursor: pointer;
-}
-.ended {
-  background: #c0392b;
-}
-.countdown {text-align: center;margin-top: 30px;background: #5381E4;padding: 60px 0;background-size: cover;background: url(../images/bg.jpg) top left repeat;} 
-.styled div {
-  display: inline-block;
-  margin-left: 10px;
-  font-size: 70px;
-  font-weight: normal; 
-  text-align: center;
-  margin:0 15px; 
-  padding:0 30px;   
-  color:#fff;  
-  text-shadow:none;
-  vertical-align: middle;  
-}
-
-#overlay{
-background: rgba(0, 0, 0, 0.56) url(../images/overlays/01.png) top left repeat;
-position: fixed;
-top: 0px;
-width: 100%;
-bottom: 0px;
-opacity:0.8;
-}
-/* IE7 inline-block hack */
-*+html .styled div{
-  display: inline;
-  zoom: 1;
-}
-.styled div:first-child {
-  margin-left: 0;
-}
-.styled div span {
-  display: block;
-  padding-top: 3px;
-  font-size: 19px;
-  font-weight: normal;
-  text-align: center;
-  text-transform: uppercase;
-}
-footer{
-width:100%;
-height:30px;
-background:rgba(0, 0, 0, 0.64);
-position:absolute;
-bottom:0px;
-}
-footer span{
-float:right;
-margin:10px;
-}
-.register {background: #212121;}
-/* .login{background: #e44f51;} */
-.login{background: #212121;}
-.login h2 {
-padding: 0 0 30px 0;
-}
-.login h4 {margin: 0px 0 10px 0;font-weight: bold;}
-.loginPro{
-margin-bottom:30px;
-float:left;
-}
-.loginPro{font-size:15px;color: #ffeaea;}
-.loginPro .icon {
-    font-size: 34px;
-}
-@media(max-width:768px){
-	body {
-	min-width: initial !important;
-	}
-	.wrapper{width:100%;}
-	.styled div {
-	  margin-bottom:10px; 
-	}
-}
-@media(max-width:420px){
-	h1{
-	float:initial;
-	text-align: center;
-	margin-left:0px;
-	margin-bottom:0px;
-	}
-	.styled div {
-	  margin-bottom:10px;
-	  font-size: 40px;
-	  font-weight: normal; 
-	  text-align: center;
-	  width:50px;  
-	  height:70px;  
-	}
-	#Content h2 {
-	margin: 0px 0px 0px 0px;
-	padding: 0px;
-	text-align: center;
-	font-size: 29px;
-	font-weight: 300;
-	}
-	.styled {
-	margin-bottom: 30px;
-	}
-	#register input[type="button"]{
-	margin-top:10px;
-	}
-	#register input{
-	width:80%;
-	}
-	.loginPro img {
-width: 100%;
-}
-	footer{
-	position:relative !important;
-	}
-}
-
-input[type="submit"] {
-	width: 132px;
-	margin-left: -1px;
-	background: #f05b5d;
-	border: 1px #f05b5d solid;
-	color: #fff;
-}
-button[type="submit"] {
-	width: 132px;
-	margin-left: -1px;
-	background: #f05b5d;
-	border: 1px #f05b5d solid;
-	color: #fff;
-}
-
-.submit_button{
-	text-align:center;
-}
+    /* refer to http://sc.chinaz.com/mobandemo.aspx?downloadid=4201724528270 */
+    
+    html {
+        min-height: 600px;
+    }
+    
+    @import url(http://fonts.googleapis.com/css?family=Open+Sans:700,400);
+    body {
+        color: #FFF;
+        font-family: 'Open Sans', sans-serif;
+        min-width: 960px;
+        min-height: 100%;
+        top: 0;
+        left: 0;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background-size: cover;
+        background: #212121;
+    }
+    
+     ::-webkit-input-placeholder {
+        /* Chrome/Opera/Safari */
+        color: #d9d9d9;
+    }
+    
+     ::-moz-placeholder {
+        /* Firefox 19+ */
+        color: #d9d9d9;
+    }
+    
+     :-ms-input-placeholder {
+        /* IE 10+ */
+        color: #d9d9d9;
+    }
+    
+     :-moz-placeholder {
+        /* Firefox 18- */
+        color: #d9d9d9;
+    }
+    
+    .ie body {
+        filter: dropshadow(color=#000000, offx=0, offy=1);
+    }
+    
+    h1 {
+        font-size: 50px;
+        font-weight: bold;
+        letter-spacing: -2px;
+        /* line-height:40px; */
+        /* text-align:center; */
+    }
+    
+    .ie h1 {
+        filter: dropshadow(color=#000000, offx=0, offy=3);
+        padding-bottom: 12px;
+    }
+    
+    h2 {}
+    
+    .ie h2 {
+        filter: dropshadow(color=#000000, offx=0, offy=3);
+    }
+    
+    h3 {
+        font-size: 22px;
+        margin: 0.2em 0;
+        text-align: center;
+        color: #f9f9f9;
+        padding: 0 0 29px;
+    }
+    
+    .ie h3 {
+        filter: dropshadow(color=#000000, offx=0, offy=3);
+    }
+    
+    h4 {
+        margin-bottom: 5px;
+    }
+    
+    p,
+    pre {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+    }
+    
+    code {
+        text-transform: uppercase !important;
+        color: #EEE;
+        border-bottom: 1px dotted #666;
+    }
+    
+    small {
+        background: url(../images/alpha.png);
+        background: rgba(0, 0, 0, 0.8) url();
+        border: 1px solid #111;
+        font-size: 15px;
+        padding: 0 5px;
+    }
+    
+    strong {
+        text-align: center;
+        display: block;
+        font-size: 28px;
+        font-weight: normal;
+        color: #646464;
+    }
+    
+    a {
+        color: gray;
+        text-decoration: none;
+    }
+    
+    a:hover {
+        color: #BBB;
+    }
+    
+    .topSection {}
+    
+    .spacing {
+        padding: 30px 0;
+    }
+    
+    #Header {
+        position: relative;
+        width: 100%;
+        z-index: 1;
+        padding-top: 10px
+    }
+    
+    #Header h2 {
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        font-size: 28px;
+        font-weight: 300;
+        color: #ffffff;
+        margin-bottom: 40px;
+        text-transform: capitalize;
+        line-height: 38px;
+    }
+    
+    .logo {
+        width: auto;
+        margin: 0 auto;
+        padding: 16px;
+        border-radius: 30px;
+        padding-bottom: 10px;
+    }
+    
+    .logo h1 {
+        color: #ffffff;
+        font-weight: 600;
+    }
+    
+    .logo img {
+        width: 60px;
+        height: 60px;
+        /*text-align: center;display: block;*/
+        margin: 0 auto 10px;
+    }
+    
+    .wrapper {
+        margin: 0 auto;
+        position: relative;
+        width: 100%;
+        z-index: 1;
+    }
+    
+    .tempBy {
+        display: block;
+        text-align: center;
+        padding: 18px;
+        background: #212121;
+        color: #8A8A8A;
+        font-size: 12px;
+    }
+    
+    #Content h2 {
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        font-size: 28px;
+        font-weight: 300;
+        color: #ffffff;
+        margin-bottom: 40px;
+        text-transform: capitalize;
+        line-height: 38px;
+    }
+    
+    #WindowSlide {
+        margin: 0 auto;
+        position: relative;
+        width: 634px;
+        height: 170px;
+        display: block;
+        overflow: hidden;
+    }
+    
+    #Mail {
+        position: absolute;
+        width: 634px;
+        top: 0px;
+        left: 0px;
+    }
+    
+    #Content h3 {
+        text-align: center;
+        font-size: 24px;
+        font-weight: normal;
+        display: block;
+        clear: both;
+    }
+    
+    .callback,
+    .simple {
+        font-size: 20px;
+        background: #27ae60;
+        padding: 0.5em 0.7em;
+        color: #ecf0f1;
+        margin-bottom: 50px;
+        -webkit-transition: background 0.5s ease-out;
+        transition: background 0.5s ease-out;
+    }
+    
+    .callback {
+        cursor: pointer;
+    }
+    
+    .ended {
+        background: #c0392b;
+    }
+    
+    .countdown {
+        text-align: center;
+        margin-top: 30px;
+        background: #5381E4;
+        padding: 60px 0;
+        background-size: cover;
+        background: url(../images/bg.jpg) top left repeat;
+    }
+    
+    .styled div {
+        display: inline-block;
+        margin-left: 10px;
+        font-size: 70px;
+        font-weight: normal;
+        text-align: center;
+        margin: 0 15px;
+        padding: 0 30px;
+        color: #fff;
+        text-shadow: none;
+        vertical-align: middle;
+    }
+    
+    #overlay {
+        background: rgba(0, 0, 0, 0.56) url(../images/overlays/01.png) top left repeat;
+        position: fixed;
+        top: 0px;
+        width: 100%;
+        bottom: 0px;
+        opacity: 0.8;
+    }
+    /* IE7 inline-block hack */
+    
+    *+html .styled div {
+        display: inline;
+        zoom: 1;
+    }
+    
+    .styled div:first-child {
+        margin-left: 0;
+    }
+    
+    .styled div span {
+        display: block;
+        padding-top: 3px;
+        font-size: 19px;
+        font-weight: normal;
+        text-align: center;
+        text-transform: uppercase;
+    }
+    
+    footer {
+        width: 100%;
+        height: 30px;
+        background: rgba(0, 0, 0, 0.64);
+        position: absolute;
+        bottom: 0px;
+    }
+    
+    footer span {
+        float: right;
+        margin: 10px;
+    }
+    
+    @media(max-width:768px) {
+        body {
+            min-width: initial !important;
+        }
+        .wrapper {
+            width: 100%;
+        }
+        .styled div {
+            margin-bottom: 10px;
+        }
+    }
+    /* refer to http://sc.chinaz.com/mobandemo.aspx?downloadid=4201724528270 */
+    
+    @import url(http://fonts.googleapis.com/css?family=Open+Sans:700,400);
+    #register p {
+        text-align: center;
+    }
+    
+    #register input {
+        /* background: rgba(255, 255, 255, 0.52); */
+        color: #212121;
+        vertical-align: middle;
+        width: 280px;
+        border: 1px solid #212121;
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    #register input[type="button"] {
+        background: rgba(255, 255, 255, 1);
+        width: auto;
+        padding: 10px 25px;
+        cursor: pointer;
+        margin: 0 0 0 -6px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #888;
+    }
+    
+    #register input[type="button"]:hover {
+        background: #1e7ccd;
+        color: #fff;
+        border: 1px solid #1e7ccd;
+    }
+    
+    #register input[type="submit"] {
+        width: 132px;
+        margin-left: -1px;
+        background: #f05b5d;
+        border: 1px #f05b5d solid;
+        color: #fff;
+    }
+    
+    .callback,
+    .simple {
+        font-size: 20px;
+        background: #27ae60;
+        padding: 0.5em 0.7em;
+        color: #ecf0f1;
+        margin-bottom: 50px;
+        -webkit-transition: background 0.5s ease-out;
+        transition: background 0.5s ease-out;
+    }
+    
+    .callback {
+        cursor: pointer;
+    }
+    
+    .ended {
+        background: #c0392b;
+    }
+    
+    .countdown {
+        text-align: center;
+        margin-top: 30px;
+        background: #5381E4;
+        padding: 60px 0;
+        background-size: cover;
+        background: url(../images/bg.jpg) top left repeat;
+    }
+    
+    .styled div {
+        display: inline-block;
+        margin-left: 10px;
+        font-size: 70px;
+        font-weight: normal;
+        text-align: center;
+        margin: 0 15px;
+        padding: 0 30px;
+        color: #fff;
+        text-shadow: none;
+        vertical-align: middle;
+    }
+    
+    #overlay {
+        background: rgba(0, 0, 0, 0.56) url(../images/overlays/01.png) top left repeat;
+        position: fixed;
+        top: 0px;
+        width: 100%;
+        bottom: 0px;
+        opacity: 0.8;
+    }
+    
+    .register {
+        background: #212121;
+    }
+    /* .login{background: #e44f51;} */
+    
+    .login {
+        background: #212121;
+    }
+    
+    .login h2 {
+        padding: 0 0 30px 0;
+    }
+    
+    .login h4 {
+        margin: 0px 0 10px 0;
+        font-weight: bold;
+    }
+    
+    .loginPro {
+        margin-bottom: 30px;
+        float: left;
+    }
+    
+    .loginPro {
+        font-size: 15px;
+        color: #ffeaea;
+    }
+    
+    .loginPro .icon {
+        font-size: 34px;
+    }
+    
+    @media(max-width:768px) {
+        body {
+            min-width: initial !important;
+        }
+        .wrapper {
+            width: 100%;
+        }
+        .styled div {
+            margin-bottom: 10px;
+        }
+    }
+    
+    @media(max-width:420px) {
+        h1 {
+            float: initial;
+            text-align: center;
+            margin-left: 0px;
+            margin-bottom: 0px;
+        }
+        .styled div {
+            margin-bottom: 10px;
+            font-size: 40px;
+            font-weight: normal;
+            text-align: center;
+            width: 50px;
+            height: 70px;
+        }
+        #Content h2 {
+            margin: 0px 0px 0px 0px;
+            padding: 0px;
+            text-align: center;
+            font-size: 29px;
+            font-weight: 300;
+        }
+        .styled {
+            margin-bottom: 30px;
+        }
+        #register input[type="button"] {
+            margin-top: 10px;
+        }
+        #register input {
+            width: 80%;
+        }
+        .loginPro img {
+            width: 100%;
+        }
+        footer {
+            position: relative !important;
+        }
+    }
+    
+    input[type="submit"] {
+        width: 132px;
+        margin-left: -1px;
+        background: #f05b5d;
+        border: 1px #f05b5d solid;
+        color: #fff;
+    }
+    
+    button[type="submit"] {
+        width: 132px;
+        margin-left: -1px;
+        background: #f05b5d;
+        border: 1px #f05b5d solid;
+        color: #fff;
+    }
+    
+    .submit_button {
+        text-align: center;
+    }
+    
+    .radio_button {
+        text-align: center;
+        font-size: 20px;
+    }
+    /* below for loading css */
+    /* Start the loader code, first, let's align it the center of screen */
+    /* Refer to https://github.com/SparksFly8/Tools.git */
+    .loader {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -mos-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        text-align: center;
+        /* disable selection and cursor changes */
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor: default;
+        min-width: 33.25em;
+    }
+    
+    .loader div {
+        position: relative;
+        width: 2.5em;
+        height: 2.5em;
+        background: #fff;
+        -webkit-border-radius: 100%;
+        -moz-border-radius: 100%;
+        border-radius: 100%;
+        margin: 0 5px;
+        float: left;
+        font-size: 1.65em;
+        line-height: 2.5em;
+        -webkit-animation: bounce 1.5s infinite ease-in-out;
+        -moz-animation: bounce 1.5s infinite ease-in-out;
+        -mos-animation: bounce 1.5s infinite ease-in-out;
+        -o-animation: bounce 1.5s infinite ease-in-out;
+        animation: bounce 1.5s infinite ease-in-out;
+    }
+    
+    .loader div:after {
+        content: '';
+        position: absolute;
+        bottom: -2em;
+        left: 0.35em;
+        width: 1.8em;
+        height: 0.5em;
+        background: #322b27;
+        -webkit-border-radius: 100%;
+        -moz-border-radius: 100%;
+        border-radius: 100%;
+    }
+    
+    .loader div:nth-child(1) {
+        -webkit-animation: bouncefirst 1.5s infinite ease-in-out;
+        -moz-animation: bouncefirst 1.5s infinite ease-in-out;
+        -mos-animation: bouncefirst 1.5s infinite ease-in-out;
+        -o-animation: bouncefirst 1.5s infinite ease-in-out;
+        animation: bouncefirst 1.5s infinite ease-in-out;
+        -webkit-animation-delay: 0ms;
+        -moz-animation-delay: 0ms;
+        -ms-animation-delay: 0ms;
+        -o-animation-delay: 0ms;
+        animation-delay: 0ms;
+        background: #DB2F00;
+        color: #fff;
+    }
+    
+    .loader div:nth-child(2) {
+        -webkit-animation-delay: 50ms;
+        -moz-animation-delay: 50ms;
+        -ms-animation-delay: 50ms;
+        -o-animation-delay: 50ms;
+        animation-delay: 50ms;
+        background: #ff6d37;
+        color: #fff;
+    }
+    
+    .loader div:nth-child(3) {
+        -webkit-animation-delay: 100ms;
+        -moz-animation-delay: 100ms;
+        -ms-animation-delay: 100ms;
+        -o-animation-delay: 100ms;
+        animation-delay: 100m;
+        background: #ffa489;
+        color: #fff;
+    }
+    
+    .loader div:nth-child(4) {
+        -webkit-animation-delay: 150ms;
+        -moz-animation-delay: 150ms;
+        -ms-animation-delay: 150ms;
+        -o-animation-delay: 150ms;
+        animation-delay: 150ms;
+        background: #f2f2f2;
+        color: #555;
+    }
+    
+    .loader div:nth-child(5) {
+        -webkit-animation-delay: 200ms;
+        -moz-animation-delay: 200ms;
+        -ms-animation-delay: 200ms;
+        -o-animation-delay: 200ms;
+        animation-delay: 200ms;
+        background: #99d3d4;
+        color: #fff;
+    }
+    
+    .loader div:nth-child(6) {
+        -webkit-animation-delay: 250ms;
+        -moz-animation-delay: 250ms;
+        -ms-animation-delay: 250ms;
+        -o-animation-delay: 250ms;
+        animation-delay: 250ms;
+        background: #56bebf;
+        color: #fff;
+    }
+    
+    .loader div:nth-child(7) {
+        -webkit-animation-delay: 300ms;
+        -moz-animation-delay: 300ms;
+        -ms-animation-delay: 300ms;
+        -o-animation-delay: 300ms;
+        animation-delay: 300ms;
+        color: #fff;
+        background: #13A3A5;
+    }
+    
+    .loader div:nth-child(8) {
+        -webkit-animation-delay: 350ms;
+        -moz-animation-delay: 350ms;
+        -ms-animation-delay: 350ms;
+        -o-animation-delay: 350ms;
+        animation-delay: 350ms;
+        color: #fff;
+        background: rgb(16, 142, 145);
+    }
+    
+    .loader div:nth-child(9) {
+        -webkit-animation-delay: 400ms;
+        -moz-animation-delay: 400ms;
+        -ms-animation-delay: 400ms;
+        -o-animation-delay: 400ms;
+        animation-delay: 400ms;
+        color: #fff;
+        background: rgb(14, 124, 126);
+    }
+    
+    .loader div:nth-child(10) {
+        -webkit-animation-delay: 450ms;
+        -moz-animation-delay: 450ms;
+        -ms-animation-delay: 450ms;
+        -o-animation-delay: 450ms;
+        animation-delay: 450ms;
+        color: #fff;
+        background: rgb(12, 104, 105);
+    }
+    
+    @-webkit-keyframes bouncefirst {
+        0% {
+            -webkit-transform: translateX(0px);
+        }
+        20% {
+            -webkit-transform: translateX(-50px);
+        }
+        25% {
+            -webkit-transform: translateX(-50px);
+        }
+        50% {
+            -webkit-transform: translateX(100px);
+        }
+        80%,
+        100% {
+            -webkit-transform: translateX(0px);
+        }
+    }
+    
+    @-moz-keyframes bouncefirst {
+        0% {
+            -moz-transform: translateX(0px);
+        }
+        20% {
+            -moz-transform: translateX(-50px);
+        }
+        25% {
+            -moz-transform: translateX(-50px);
+        }
+        50% {
+            -moz-transform: translateX(100px);
+        }
+        80%,
+        100% {
+            -moz-transform: translateX(0px);
+        }
+    }
+    
+    @-mos-keyframes bouncefirst {
+        0% {
+            -mos-transform: translateX(0px);
+        }
+        20% {
+            -mos-transform: translateX(-50px);
+        }
+        25% {
+            -mos-transform: translateX(-50px);
+        }
+        50% {
+            -mos-transform: translateX(100px);
+        }
+        80%,
+        100% {
+            -mos-transform: translateX(0px);
+        }
+    }
+    
+    @-o-keyframes bouncefirst {
+        0% {
+            -o-transform: translateX(0px);
+        }
+        20% {
+            -o-transform: translateX(-50px);
+        }
+        25% {
+            -o-transform: translateX(-50px);
+        }
+        50% {
+            -o-transform: translateX(100px);
+        }
+        80%,
+        100% {
+            -o-transform: translateX(0px);
+        }
+    }
+    
+    @keyframes bouncefirst {
+        0% {
+            transform: translateX(0px);
+        }
+        20% {
+            transform: translateX(-50px);
+        }
+        25% {
+            transform: translateX(-50px);
+        }
+        50% {
+            transform: translateX(100px);
+        }
+        80%,
+        100% {
+            transform: translateX(0px);
+        }
+    }
+    
+    @-webkit-keyframes bounce {
+        0% {
+            -webkit-transform: translateX(0px);
+        }
+        20% {
+            -webkit-transform: translateX(0px);
+        }
+        28% {
+            -webkit-transform: translateX(0px);
+        }
+        50% {
+            -webkit-transform: translateX(100px);
+        }
+        80%,
+        100% {
+            -webkit-transform: translateX(0px);
+        }
+    }
+    
+    @-moz-keyframes bounce {
+        0% {
+            -moz-transform: translateX(0px);
+        }
+        20% {
+            -moz-transform: translateX(0px);
+        }
+        28% {
+            -moz-transform: translateX(0px);
+        }
+        50% {
+            -moz-transform: translateX(100px);
+        }
+        80%,
+        100% {
+            -moz-transform: translateX(0px);
+        }
+    }
+    
+    @-mos-keyframes bounce {
+        0% {
+            -mos-transform: translateX(0px);
+        }
+        20% {
+            -mos-transform: translateX(0px);
+        }
+        28% {
+            -mos-transform: translateX(0px);
+        }
+        50% {
+            -mos-transform: translateX(100px);
+        }
+        80%,
+        100% {
+            -mos-transform: translateX(0px);
+        }
+    }
+    
+    @-o-keyframes bounce {
+        0% {
+            -o-transform: translateX(0px);
+        }
+        20% {
+            -o-transform: translateX(0px);
+        }
+        28% {
+            -o-transform: translateX(0px);
+        }
+        50% {
+            -o-transform: translateX(100px);
+        }
+        80%,
+        100% {
+            -o-transform: translateX(0px);
+        }
+    }
+    
+    @keyframes bounce {
+        0% {
+            transform: translateX(0px);
+        }
+        20% {
+            transform: translateX(0px);
+        }
+        28% {
+            transform: translateX(0px);
+        }
+        50% {
+            transform: translateX(100px);
+        }
+        80%,
+        100% {
+            transform: translateX(0px);
+        }
+    }
