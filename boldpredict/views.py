@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from boldpredict.forms import RegistrationForm, LoginForm, ForgotForm, ResetForm
+from boldpredict.forms import RegistrationForm, LoginForm, ForgotForm, ResetForm, WordListForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
@@ -9,9 +9,19 @@ from django.http import Http404
 # Used to generate a one-time-use token to verify a user's email address
 from django.contrib.auth.tokens import default_token_generator
 from django import forms
+from django.http import HttpResponse,Http404
 
 # Used to send mail from within Django
 from django.core.mail import send_mail
+from django.conf import settings
+import json
+from boldpredict.models import *
+
+# stimuli type constant strings
+WORD_LIST = "word_list"
+IMAGE = "image"
+SENTENCE = "sentence"
+
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -26,7 +36,73 @@ def logout_action(request):
     return redirect(reverse('login')) 
 
 def contrast_action(request):
-    return render(request, 'boldpredict/index.html', {})
+    stimuli_types = settings.STIMULI_TYPES
+    model_types = settings.MODEL_TYPES
+    context = {}
+    context['stimulis'] = stimuli_types
+    context['model_types'] = model_types
+    return render(request, 'boldpredict/contrast_type.html', context)
+
+
+def new_contrast(request):
+    context = {}
+    if request.method != 'GET':
+        raise Http404
+    if  not request.GET.get('stimuli_type',None) or not request.GET.get('model_type',None):
+        context['stimulis'] = settings.STIMULI_TYPES
+        context['model_types'] = settings.MODEL_TYPES
+        context['error'] = "Please choose both stimuli type and model type!"
+        return render(request, 'boldpredict/contrast_type.html', context)
+
+    stimuli_type = request.GET['stimuli_type']
+    model_type = request.GET['model_type']
+    if stimuli_type == WORD_LIST:
+        context['word_list_suggestions'] = json.dumps(settings.WORD_LIST_CONDITIONS)
+        context['conditions'] = []
+        for condition_key,condition_value in settings.WORD_LIST_CONDITIONS.items():
+            condition = {}
+            condition['name'] = condition_key
+            condition['brief_part1'] = condition_value[:25]
+            condition['brief_part2'] = condition_value[25:50]
+            context['conditions'].append(condition)
+        context['form'] = WordListForm()
+        context['public'] = True
+        return render(request, 'boldpredict/contrast_filler.html', context)
+    
+    return redirect(reverse('contrast'))
+        
+def word_list_start_contrast(request):
+    context = {}
+    if request.method != 'POST':
+        raise Http404
+    
+    form = WordListForm(request.POST)
+    contrast_type = request.POST['contrast_type']
+    model_type = request.POST['model_type']
+    stimuli_type = request.POST['stimuli_type']
+
+    if contrast_type == 'Private':
+        context['public'] = False
+    else:
+        context['public'] = True
+
+    context['form'] = form
+    
+    if not form.is_valid():
+        context['model_type'] = model_type
+        context['stimili_type'] = stimuli_type
+        context['word_list_suggestions'] = json.dumps(settings.WORD_LIST_CONDITIONS)
+        context['conditions'] = []
+        for condition_key,condition_value in settings.WORD_LIST_CONDITIONS.items():
+            condition = {}
+            condition['name'] = condition_key
+            condition['brief_part1'] = condition_value[:25]
+            condition['brief_part2'] = condition_value[25:50]
+            context['conditions'].append(condition)
+        return render(request, 'boldpredict/contrast_filler.html', context)
+
+    return render(request, 'boldpredict/processing.html', {})
+
 
 def index(request):
     return render(request, 'boldpredict/index.html', {})
@@ -86,7 +162,7 @@ def register_action(request):
               recipient_list=[new_user.email])
 
     context['email'] = form.cleaned_data['email']
-    return render(request, 'boldpredict/needs-confirmation.html', context)
+    return render(request, 'boldpredict/needs_confirmation.html', context)
 
 
 
@@ -156,7 +232,7 @@ def resend(request):
         form = LoginForm(request.POST)
         context={}
         context['email'] = request.POST['email']
-        return render(request, 'boldpredict/needs-confirmation.html', context)
+        return render(request, 'boldpredict/needs_confirmation.html', context)
 
     except ObjectDoesNotExist:
         messages.error("account not found")
@@ -272,5 +348,8 @@ def forget(request):
 #         messages.append("User does not exist with username")
 #         return render(request, 'boldpredict/forget_password.html', context)
 ############-------------------------------------------------------#############
-
+def refresh_contrast(request):
+    contrast_id = request.GET['contrast_id']
+    json_msg = '{ "success": "false" }'
+    return HttpResponse(json_msg, content_type='application/json')
 

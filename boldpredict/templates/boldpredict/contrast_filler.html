@@ -1,0 +1,140 @@
+{% extends "boldpredict/base.html" %}
+
+
+{% block staticfiles %}
+{% load staticfiles %}
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'boldpredict/js/new_contrast.js' %}" type="text/javascript"></script>
+<style type="text/css">
+    .btn {
+        width: 33%;
+        border-radius: 0px;
+    }
+
+    .btn button:hover {
+        color: white;
+    }
+</style>
+<script>
+    var word_list_suggestions = '{{ word_list_suggestions | safe}}';
+    // model_types_setting = model_types_setting.replace(/'/gi, '"').toString();
+    var word_list_suggest_obj = JSON.parse(word_list_suggestions);
+        // var model_types_setting = JSON.parse("{{ model_types}}");
+</script>
+{% endblock %}
+
+
+{% block header %}
+<section>
+    <div class="wrapper topSection">
+        <div id="Header">
+            <h2>Input Contrast Stimuli</h2>
+        </div>
+    </div>
+</section>
+{% endblock%}
+
+
+{% block content %}
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                {% for error in form.non_field_errors %}
+                <span style="color: red">
+                    {{error}}
+                </span>
+                {% endfor %}
+                <form method="post" action="{% url 'word_list_start_contrast' %}">
+                    <div class="form-group" style="color: black">
+                        <div>
+                            <label style="color: white">
+                                Contrast Privacy Settings
+                            </label>
+                            <br>
+                            <br>
+                            <div class="col-md-3" style="color: white">
+                                {% if not public %}
+                                <input class="radio_button" type="radio" name="contrast_type" value="Public" /> Public
+                                <br />
+                                {% else %}
+                                <input class="radio_button" type="radio" name="contrast_type" value="Public" checked />
+                                Public
+                                <br />
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3" style="color: white">
+                                {% if user.is_authenticated %}
+                                {% if not public %}
+                                <input class="radio_button" type="radio" name="contrast_type" value="Private" checked />
+                                Private
+                                {% else %}
+                                <input class="radio_button" type="radio" name="contrast_type" value="Private" /> Private
+                                {% endif %}
+                                <br />
+                                {% else %}
+                                <input class="radio_button" type="radio" name="contrast_type" value="Private"
+                                    disabled />
+                                Private
+                                <br />
+                                {% endif %}
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        {% for field in form.visible_fields %}
+                        <div>
+                            <label style="color: white">
+                                {{field.label_tag}}
+                            </label>
+                            {{ field }}
+                        </div>
+                        <br>
+                        {% endfor %}
+                        <button type="submit" class="submit_button">Submit</button>
+                        {% csrf_token%}
+                    </div>
+                    <input class="hidden" name="stimuli_type" value={{model_type}} />
+                    <input class="hidden" name="model_type" value={{stimuli_type}} />
+                </form>
+            </div>
+            <div class="col-md-7">
+                <br>
+                <br>
+                <h3>
+                    Suggestions for first condition
+                </h3>
+                <div class="btn-group" id='first_cond'>
+                    {% for condition in conditions %}
+                    <button class="save btn btn-inverse" id="id_first_bnt_{{condition.name}}" style="color: grey"
+                        onclick="chooseSuggestion('1','{{condition.name}}')">
+                        <h6>{{condition.name}}</h6> {{condition.brief_part1}} <br>{{condition.brief_part2}} ...
+                    </button>
+                    {% endfor %}
+                </div>
+                <br>
+                <br>
+                <br>
+                <h3>
+                    Suggestions for second condition
+                </h3>
+                <div class="btn-group" id='second_cond'>
+                    {% for condition in conditions %}
+                    <button class="save btn btn-inverse" id="id_second_bnt_{{condition.name}}" style="color: grey"
+                        onclick="chooseSuggestion('2','{{condition.name}}')">
+                        <h6>{{condition.name}}</h6> {{condition.brief_part1}} <br>{{condition.brief_part2}} ..."
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+{% endblock%}
