@@ -171,6 +171,8 @@ SUBJECT_NUM = len(SUBJECTS)
 MAMCACHED_SERVER = 'localhost'
 MAMCACHED_PORT = 11211
 
+CACHE_EXPIRATION_TIME = 86400
+
 # load contrast configuration 
 # CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')
 # with open(CONTRAST_CONFIG_DIR, 'r') as f:

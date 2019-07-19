@@ -1,7 +1,6 @@
 from pymemcache.client import base
 import json
 from django.conf import settings
-from boldpredict.constants import CACHE_EXPIRATION_TIME
 # Add's a key value pair into the memcache. If the key already exists,
 # it returns false, else returns true when successfully added.
 
@@ -11,8 +10,8 @@ def set_contrast_in_cache(id_key,hash_key,contrast_dict):
     # Connect to the client
     try:
         value = json.dumps(contrast_dict)
-        result = client.set(id_key, value, expire=CACHE_EXPIRATION_TIME)
-        result = client.set(hash_key, value, expire=CACHE_EXPIRATION_TIME)
+        result = client.set(id_key, value, expire=settings.CACHE_EXPIRATION_TIME)
+        result = client.set(hash_key, value, expire=settings.CACHE_EXPIRATION_TIME)
         return result
     except ConnectionRefusedError as cre:
         print("Please start your memcache ", cre)
