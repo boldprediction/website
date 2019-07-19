@@ -87,6 +87,7 @@ class Contrast(models.Model):
         contrast_dict['stimuli_type'] = WORD_LIST
         contrast_dict['coordinate_space'] = self.experiment.coordinate_space
         contrast_dict['model_type'] = self.experiment.model_type
+        contrast_dict['hash_key'] = self.hash_key
         
         # collect subjects result
         subjects_dict = {}

@@ -7,7 +7,7 @@ from boldpredict.constants import CACHE_EXPIRATION_TIME
 
 client = base.Client((settings.MAMCACHED_SERVER, settings.MAMCACHED_PORT))
 
-def set_contrast_in_cache(id_key,hash_key contrast_dict):
+def set_contrast_in_cache(id_key,hash_key,contrast_dict):
     # Connect to the client
     try:
         value = json.dumps(contrast_dict)
