@@ -67,13 +67,17 @@ def create_word_list_contrast(*args, **kwargs):
     combine2 = ConditionCombination.objects.create(
         stimuli=stimuli2, condition=condition2)
 
-    cache_api.add_contrast_into_cache(hash_key,contrast.serialize())
-    cache_api.add_contrast_into_cache(str(contrast.id),contrast.serialize())
+    contrast_dict = contrast.serialize()
+    cache_api.set_contrast_in_cache(contrast_dict['c_id'],contrast_dict['hash_key'],contrast_dict)
+
     return contrast
 
 
 def update_contrast_result(contrast_id,group_analyses,subjects):
     contrast = Contrast.objects.get(id = contrast_id)
+
+    cache_api.delete_contrast_in_cache(contrast_id,contrast.hash_key)
+    
     # create subject for mni - group result
     mni_subject = Subject_Result.objects.create(name = 'MNI',contrast = contrast)
     for analysis_name, result in group_analyses.items():
@@ -88,8 +92,9 @@ def update_contrast_result(contrast_id,group_analyses,subjects):
     contrast.result_generated = True
     contrast.save()
 
-    cache_api.update_contrast_in_cache(str(contrast.id),contrast.serialize())
-    cache_api.update_contrast_in_cache(contrast.hash_key,contrast.serialize())
+    contrast_dict = contrast.serialize()
+    cache_api.set_contrast_in_cache(contrast_dict['c_id'],contrast_dict['hash_key'],contrast_dict)
+
 
 
 def get_contrast_dict_by_hash_key(hash_key):
@@ -99,8 +104,7 @@ def get_contrast_dict_by_hash_key(hash_key):
     try:
         contrast = Contrast.objects.get(hash_key=hash_key)
         contrast_dict = contrast.serialize()
-        cache_api.add_contrast_into_cache(contrast_dict['c_id'],contrast_dict)
-        cache_api.add_contrast_into_cache(contrast_dict['hash_key'],contrast_dict)
+        cache_api.set_contrast_in_cache(contrast_dict['c_id'],contrast_dict['hash_key'],contrast_dict)
         return contrast_dict
     except:
         return None
@@ -112,8 +116,7 @@ def get_contrast_dict_by_id(contrast_id):
     try:
         contrast = Contrast.objects.get(id=contrast_id)
         contrast_dict = contrast.serialize()
-        cache_api.add_contrast_into_cache(contrast_dict['c_id'],contrast_dict)
-        cache_api.add_contrast_into_cache(contrast_dict['hash_key'],contrast_dict)
+        cache_api.set_contrast_in_cache(contrast_dict['c_id'],contrast_dict['hash_key'],contrast_dict)
         return contrast_dict
     except:
         return None
