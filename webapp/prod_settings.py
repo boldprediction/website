@@ -162,7 +162,7 @@ DATA_URL = os.path.join(STATIC_ROOT, 'boldpredict/data/')
 SUBJECTS = ["JGfs", "MLfs2", "AHfs","DSfs","NNS0","Gfs","WHfs","ANfs"]
 SUBJECT_NUM = len(SUBJECTS)
 
-MAMCACHED_SERVER = '3.15.123.123'
+MAMCACHED_SERVER = 'localhost'
 MAMCACHED_PORT = 11211
 
 CACHE_EXPIRATION_TIME = 86400
