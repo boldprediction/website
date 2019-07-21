@@ -150,21 +150,19 @@ print('Email host:port = {host}:{port}, user={user}'.format(
 SECRET_KEY = config.get('System', 'SECRET_KEY')
 HOST_IP = '3.13.100.240'
 APPLICATION_PORT = '8000'
-SUBJECT_NUM = 3
 SQS_QUERY_URL = 'https://sqs.us-east-2.amazonaws.com/280175692519/bold_sqs'
 
 AWS_ACCESS_KEY = config.get('System', 'AWS_ACCESS_KEY')
 AWS_SECRET_KEY = config.get('System', 'AWS_SECRET_KEY')
 REGION_NAME =  'us-east-2'
 
-SUBJECTS_URL = '/staticfiles/boldpredict/subjects/'
-DATA_URL = '/staticfiles/boldpredict/data/'
+SUBJECTS_URL = os.path.join(STATIC_ROOT, 'boldpredict/subjects/')
+DATA_URL = os.path.join(STATIC_ROOT, 'boldpredict/data/')
 
-# load contrast configuration 
-# CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')
-# with open(CONTRAST_CONFIG_DIR, 'r') as f:
-#     contrast_config = json.load(f)
+SUBJECTS = ["JGfs", "MLfs2", "AHfs","DSfs","NNS0","Gfs","WHfs","ANfs"]
+SUBJECT_NUM = len(SUBJECTS)
 
-# STIMULI_TYPES = contrast_config.get('stimuli_type',None)
-# MODEL_TYPES = contrast_config.get('model_type',None)
-# WORD_LIST_CONDITIONS = contrast_config.get('word_list_conditions',None)
+MAMCACHED_SERVER = '3.13.100.240'
+MAMCACHED_PORT = 11211
+
+CACHE_EXPIRATION_TIME = 86400
