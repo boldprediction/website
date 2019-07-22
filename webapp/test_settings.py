@@ -157,7 +157,7 @@ AWS_SECRET_KEY = config.get('System', 'AWS_SECRET_KEY')
 REGION_NAME =  'us-east-2'
 
 SUBJECTS_URL = '/static/boldpredict/subjects/'
-DATA_URL = os.path.join(STATIC_ROOT, 'boldpredict/data/')
+DATA_URL = '/static/outputs/'
 
 SUBJECTS = ["JGfs", "MLfs2", "AHfs","DSfs","NNS0","Gfs","WHfs","ANfs"]
 SUBJECT_NUM = len(SUBJECTS)
