@@ -183,6 +183,7 @@
         });
 
         $("#second_group").click(function () {
+            var subject_num = "{{ subject_num | safe }}"
             $("#roi_labels").attr('style', "visibility:visible");
             $("#fiducial").attr('style', "visibility:visible");
             $("#inflated").attr('style', "visibility:visible");
