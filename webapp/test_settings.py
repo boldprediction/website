@@ -159,7 +159,7 @@ REGION_NAME =  'us-east-2'
 SUBJECTS_URL = '/static/boldpredict/subjects/'
 DATA_URL = '/static/outputs/'
 
-SUBJECTS = ["JGfs", "MLfs2", "AHfs","DSfs","NNS0","Gfs","WHfs","ANfs"]
+SUBJECTS = ["JGfs", "MLfs2", "AHfs","DSfs","NNS0","BGfs","WHfs","ANfs"]
 SUBJECT_NUM = len(SUBJECTS)
 
 MAMCACHED_SERVER = 'localhost'
