@@ -130,7 +130,7 @@ LOGGING = {
 			'class': 'logging.StreamHandler',
 		},
         'file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filters': ['require_debug_false'],
             'filename': LOG_FILE,
@@ -149,7 +149,7 @@ LOGGING = {
 	'loggers': {
 		'django': {
 			'handlers': ['console', 'file'],
-			'level': 'DEBUG',
+			'level': 'INFO',
 		},
 		'django.server': {
 			'handlers': ['django.server'],
