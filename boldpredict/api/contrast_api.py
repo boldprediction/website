@@ -4,6 +4,7 @@ import json
 from django.conf import settings
 from boldpredict.api import cache_api
 import boldpredict.utils as utils
+from django.utils import timezone
 
 
 def create_word_list_stimuli(stimuli_type, name, text, exp):
@@ -78,7 +79,7 @@ def create_contrast(*args, **kwargs):
     if stimuli_type == WORD_LIST:
         return create_word_list_contrast(*args,**kwargs)
 
-        
+
 def update_contrast_result(contrast_id,group_analyses,subjects):
     contrast = Contrast.objects.get(id = contrast_id)
 
@@ -96,6 +97,7 @@ def update_contrast_result(contrast_id,group_analyses,subjects):
             analysis = Analysis_Result.objects.create(name = analysis_name, result = result, subject = subject)
     
     contrast.result_generated = True
+    contrast.result_generated_at = timezone.now
     contrast.save()
 
     contrast_dict = contrast.serialize()

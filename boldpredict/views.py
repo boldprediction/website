@@ -353,11 +353,13 @@ def refresh_contrast(request):
     contrast = contrast_api.get_contrast_dict_by_id(contrast_id)
     if contrast is None:
         raise Http404
-    if not contrast['result_generated']:
-        json_msg = '{ "result_generated": "false" }'
-    else:
-        json_msg = '{ "result_generated": "true" }'
-    return HttpResponse(json_msg, content_type='application/json')
+    # response = {}
+    # if not contrast['result_generated']:
+    #     response["result_generated"] = False
+    # else:
+    #     response["result_generated"] = True
+    #     response["result_generated_at"] = contrast['result_generated_at']
+    return HttpResponse(json.dumps(contrast), content_type='application/json')
 
 def subj_result_view(request, subj_name, contrast_id):
     context = {}
