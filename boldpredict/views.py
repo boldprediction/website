@@ -353,12 +353,6 @@ def refresh_contrast(request):
     contrast = contrast_api.get_contrast_dict_by_id(contrast_id)
     if contrast is None:
         raise Http404
-    # response = {}
-    # if not contrast['result_generated']:
-    #     response["result_generated"] = False
-    # else:
-    #     response["result_generated"] = True
-    #     response["result_generated_at"] = contrast['result_generated_at']
     return HttpResponse(json.dumps(contrast), content_type='application/json')
 
 def subj_result_view(request, subj_name, contrast_id):
@@ -385,13 +379,6 @@ def contrast_results_view(request, contrast_id):
         return render(request, 'boldpredict/word_list_contrast_results.html', contrast)
     return render(request, 'boldpredict/index.html', {})
 
-def __get_response_json_dict(data={}, err_code=0, message="Success"):
-    ret = {
-        'err_code': err_code,
-        'message': message,
-        'data': data
-    }
-    return ret
 
 @csrf_exempt
 def update_contrast(request):
@@ -412,7 +399,6 @@ def update_contrast(request):
             raise HttpResponseBadRequest
 
     return HttpResponse(json.dumps(response_data), content_type='application/json')
-    # return JsonResponse(__get_response_json_dict(data=response_data))
 
 
 def create_contrast(request):
@@ -424,7 +410,6 @@ def create_contrast(request):
     c_id, find,hash_key = contrast_api.check_existing_contrast(**params)
     if find:
         return HttpResponse(json.dumps({'contrast_id':c_id}), content_type='application/json')
-        # return JsonResponse(__get_response_json_dict(data={'contrast_id':c_id}))
     
     params['hash_key'] = hash_key
     contrast = contrast_api.create_contrast(**params)
@@ -432,4 +417,3 @@ def create_contrast(request):
         contrast), params['stimuli_type'])
     
     return HttpResponse(json.dumps({'contrast_id':str(contrast.id)}), content_type='application/json')
-    # return JsonResponse(__get_response_json_dict(data={'contrast_id':str(contrast.id)}))

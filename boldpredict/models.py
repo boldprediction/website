@@ -91,8 +91,8 @@ class Contrast(models.Model):
         contrast_dict['coordinate_space'] = self.experiment.coordinate_space
         contrast_dict['model_type'] = self.experiment.model_type
         contrast_dict['hash_key'] = self.hash_key
-        contrast_dict['created_at'] = self.created_at
-        contrast_dict['result_generated_at'] = self.result_generated_at
+        contrast_dict['created_at'] = str(self.created_at)
+        contrast_dict['result_generated_at'] = str(self.result_generated_at)
         
         # collect subjects result
         subjects_dict = {}
