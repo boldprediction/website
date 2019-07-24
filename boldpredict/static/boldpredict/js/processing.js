@@ -6,18 +6,17 @@ var ip_address = 'http://' + host_ip + ':' + app_port + '/'
 
 function processing_contrast() {
     var contrast_id = document.getElementById("contrastId").value;
-    // contrast_id = "1";
     console.log("contrast_id = ", contrast_id);
     $.ajax({
-        url: "/refresh_contrast?contrast_id=" + contrast_id,
+        url: "/api/refresh_contrast?contrast_id=" + contrast_id,
         dataType: "json",
         success: updatePage
     });
 }
 
 function updatePage(response) {
-    var success = response['success'];
-    if (success === "true") {
+    var result_generated = response['result_generated'];
+    if (result_generated === "true") {
         var contrast_id = document.getElementById("contrastId").value;
         var contrast_link =  'contrast_results/' + contrast_id
         window.location.replace(ip_address + contrast_link);

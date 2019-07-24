@@ -352,9 +352,9 @@ def refresh_contrast(request):
     if contrast is None:
         raise Http404
     if not contrast['result_generated']:
-        json_msg = '{ "success": "false" }'
+        json_msg = '{ "result_generated": "false" }'
     else:
-        json_msg = '{ "success": "true" }'
+        json_msg = '{ "result_generated": "true" }'
     return HttpResponse(json_msg, content_type='application/json')
 
 def subj_result_view(request, subj_name, contrast_id):

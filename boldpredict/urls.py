@@ -10,7 +10,6 @@ urlpatterns = [
     path('contrast', views.contrast_action, name='contrast'),
     path('new_contrast', views.new_contrast, name='new_contrast'),
     path('word_list_start_contrast', views.word_list_start_contrast, name='word_list_start_contrast'),
-    path('refresh_contrast', views.refresh_contrast, name='refresh_contrast'),
     path('experiment', views.experiment_action, name='experiment'),
     path('my_profile', views.my_profile_action, name='my_profile'),
     path('register', views.register_action, name='register'),
@@ -23,6 +22,7 @@ urlpatterns = [
         views.confirmreset_action, name='confirmreset'),
     path('api/update_contrast', views.update_contrast, name='update_contrast'),
     path('api/create_contrast', views.create_contrast, name='create_contrast'),
+    path('api/refresh_contrast', views.refresh_contrast, name='refresh_contrast'),
     path('contrast_results/<slug:subj_name>/<slug:contrast_id>', views.subj_result_view, name='subj_result_view'),
     path('contrast_results/<slug:contrast_id>', views.contrast_results_view, name='contrast_results_view'),
 ]
