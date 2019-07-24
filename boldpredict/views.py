@@ -128,6 +128,8 @@ def word_list_start_contrast(request):
     context['contrast_id'] = contrast.id
     context['host_ip'] = settings.HOST_IP
     context['app_port'] = settings.APPLICATION_PORT
+    context['timeout_interval'] = settings.TIMEOUT_INTERVAL
+    context['refresh_interval'] = settings.REFRESH_INTERVAL
     return render(request, 'boldpredict/processing.html', context)
 
 

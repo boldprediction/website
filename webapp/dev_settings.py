@@ -172,6 +172,9 @@ MAMCACHED_PORT = 11211
 
 CACHE_EXPIRATION_TIME = 86400
 
+REFRESH_INTERVAL = 1000
+TIMEOUT_INTERVAL = 50000
+
 # load contrast configuration 
 # CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')
 # with open(CONTRAST_CONFIG_DIR, 'r') as f:
