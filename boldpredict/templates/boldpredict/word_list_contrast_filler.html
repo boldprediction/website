@@ -18,9 +18,7 @@
 </style>
 <script>
     var word_list_suggestions = '{{ word_list_suggestions | safe}}';
-    // model_types_setting = model_types_setting.replace(/'/gi, '"').toString();
     var word_list_suggest_obj = JSON.parse(word_list_suggestions);
-        // var model_types_setting = JSON.parse("{{ model_types}}");
 </script>
 {% endblock %}
 
