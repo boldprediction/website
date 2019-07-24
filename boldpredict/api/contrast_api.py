@@ -73,6 +73,12 @@ def create_word_list_contrast(*args, **kwargs):
     return contrast
 
 
+def create_contrast(*args, **kwargs):
+    stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
+    if stimuli_type == WORD_LIST:
+        return create_word_list_contrast(*args,**kwargs)
+
+        
 def update_contrast_result(contrast_id,group_analyses,subjects):
     contrast = Contrast.objects.get(id = contrast_id)
 

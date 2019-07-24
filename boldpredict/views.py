@@ -423,8 +423,8 @@ def create_contrast(request):
         return JsonResponse(__get_response_json_dict(data={'contrast_id':c_id}))
     
     params['hash_key'] = hash_key
-    contrast = contrast_api.create_word_list_contrast(**params)
+    contrast = contrast_api.create_contrast(**params)
     sqs_api.send_contrast_message(sqs_api.create_contrast_message(
         contrast), params['stimuli_type'])
 
-    return JsonResponse(__get_response_json_dict(data={'contrast_id':contrast.id}))
+    return JsonResponse(__get_response_json_dict(data={'contrast_id':str(contrast.id)}))
