@@ -10,7 +10,7 @@ from django.http import Http404
 # Used to generate a one-time-use token to verify a user's email address
 from django.contrib.auth.tokens import default_token_generator
 from django import forms
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseBadRequest
 
 # Used to send mail from within Django
 from django.core.mail import send_mail
@@ -396,8 +396,7 @@ def __get_response_json_dict(data={}, err_code=0, message="Success"):
 @csrf_exempt
 def update_contrast(request):
     if request.method != 'POST':
-        JsonResponse(__get_response_json_dict(
-            err_code=403, message="Forbidden Request"))
+        raise Http404
 
     contrasts_results = json.loads(request.body)
     response_data = {}
@@ -410,25 +409,27 @@ def update_contrast(request):
             contrast_api.update_contrast_result(contrast_id, group_analyses, subjects_analyses)
             response_data['contrast_ids'].append(contrast_id)
         except:
-            JsonResponse(__get_response_json_dict( err_code=400, message="Bad Request"))
-    
-    return JsonResponse(__get_response_json_dict(data=response_data))
+            raise HttpResponseBadRequest
+
+    return HttpResponse(json.dumps(response_data), content_type='application/json')
+    # return JsonResponse(__get_response_json_dict(data=response_data))
 
 
 def create_contrast(request):
     if request.method != 'POST':
-        JsonResponse(__get_response_json_dict(
-            err_code=403, message="Forbidden Request"))
+        raise Http404
 
     params = json.loads(request.body)
 
     c_id, find,hash_key = contrast_api.check_existing_contrast(**params)
     if find:
-        return JsonResponse(__get_response_json_dict(data={'contrast_id':c_id}))
+        return HttpResponse(json.dumps({'contrast_id':c_id}), content_type='application/json')
+        # return JsonResponse(__get_response_json_dict(data={'contrast_id':c_id}))
     
     params['hash_key'] = hash_key
     contrast = contrast_api.create_contrast(**params)
     sqs_api.send_contrast_message(sqs_api.create_contrast_message(
         contrast), params['stimuli_type'])
-
-    return JsonResponse(__get_response_json_dict(data={'contrast_id':str(contrast.id)}))
+    
+    return HttpResponse(json.dumps({'contrast_id':str(contrast.id)}), content_type='application/json')
+    # return JsonResponse(__get_response_json_dict(data={'contrast_id':str(contrast.id)}))
