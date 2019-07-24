@@ -346,7 +346,7 @@ def forget(request):
         return render(request, 'boldpredict/forget_password.html', forgot_context)
 
 
-def refresh_contrast(request):
+def get_contrast(request):
     if not request.GET.get('contrast_id', None):
         raise Http404
     contrast_id = request.GET['contrast_id']

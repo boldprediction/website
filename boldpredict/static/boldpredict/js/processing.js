@@ -5,7 +5,7 @@ function processing_contrast() {
     var contrast_id = document.getElementById("contrastId").value;
     console.log("contrast_id = ", contrast_id);
     $.ajax({
-        url: "/api/refresh_contrast?contrast_id=" + contrast_id,
+        url: "/api/get_contrast?contrast_id=" + contrast_id,
         dataType: "json",
         success: updatePage
     });
