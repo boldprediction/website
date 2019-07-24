@@ -116,3 +116,6 @@ venv.bak/
 
 # configuration file
 *.ini
+
+#logs
+*.log
