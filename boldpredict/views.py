@@ -409,3 +409,22 @@ def update_contrast(request):
             JsonResponse(__get_response_json_dict( err_code=400, message="Bad Request"))
     
     return JsonResponse(__get_response_json_dict(data=response_data))
+
+
+def create_contrast(request):
+    if request.method != 'POST':
+        JsonResponse(__get_response_json_dict(
+            err_code=403, message="Forbidden Request"))
+
+    params = json.loads(request.body)
+
+    c_id, find,hash_key = contrast_api.check_existing_contrast(**params)
+    if find:
+        return JsonResponse(__get_response_json_dict(data={'contrast_id':c_id}))
+    
+    params['hash_key'] = hash_key
+    contrast = contrast_api.create_word_list_contrast(**params)
+    sqs_api.send_contrast_message(sqs_api.create_contrast_message(
+        contrast), stimuli_type)
+
+    return JsonResponse(__get_response_json_dict(data={'contrast_id':contrast.id}))
