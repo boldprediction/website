@@ -97,7 +97,7 @@ def update_contrast_result(contrast_id,group_analyses,subjects):
             analysis = Analysis_Result.objects.create(name = analysis_name, result = result, subject = subject)
     
     contrast.result_generated = True
-    contrast.result_generated_at = timezone.now
+    contrast.result_generated_at = timezone.now()
     contrast.save()
 
     contrast_dict = contrast.serialize()
