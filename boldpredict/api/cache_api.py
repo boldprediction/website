@@ -14,9 +14,9 @@ def set_contrast_in_cache(key1,key2,contrast_dict):
     try:
         value = json.dumps(contrast_dict)
         result = client.set(key1, value, expire=settings.CACHE_EXPIRATION_TIME)
-        logger.info('set cache with key' + key1 )
+        logger.info('set cache with key ' + key1 )
         result = client.set(key2, value, expire=settings.CACHE_EXPIRATION_TIME)
-        logger.info('set cache with key' + key2 )
+        logger.info('set cache with key ' + key2 )
         return result
     except ConnectionRefusedError as cre:
         logger.error('Memcache connection error, cache did not start' )
@@ -28,7 +28,7 @@ def set_contrast_in_cache(key1,key2,contrast_dict):
 def check_contrast_in_cache(key):
     # Connect to the client
     try:
-        logger.info('try to get record with key' + key + ' from Memcache' )
+        logger.info('try to get record with key ' + key + ' from Memcache' )
         result = client.get(key)
         if result is None:
             return None
@@ -45,7 +45,9 @@ def delete_contrast_in_cache(id_key,hash_key):
     # Connect to the client
     try:
         result = client.delete(id_key)
+        logger.info('Delete record with key ' + id_key + ' from Memcache' )
         result = client.delete(hash_key)
+        logger.info('Delete record with key ' + hash_key + ' from Memcache' )
         return result
     except ConnectionRefusedError as cre:
         logger.error('Memcache connection error, cache did not start' )
