@@ -400,7 +400,7 @@ def update_contrast(request):
 
     return HttpResponse(json.dumps(response_data), content_type='application/json')
 
-
+@csrf_exempt
 def create_contrast(request):
     if request.method != 'POST':
         raise Http404
