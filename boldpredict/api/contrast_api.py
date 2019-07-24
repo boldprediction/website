@@ -118,7 +118,7 @@ def get_contrast_dict_by_hash_key(hash_key):
         return None
 
 def get_contrast_dict_by_id(contrast_id):
-    ext_contrast = cache_api.check_contrast_in_cache(str(contrast_id))
+    ext_contrast = cache_api.check_contrast_in_cache(contrast_id)
     if ext_contrast :
         return ext_contrast
     try:
