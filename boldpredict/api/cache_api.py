@@ -6,7 +6,7 @@ import logging
 # it returns false, else returns true when successfully added.
 
 client = base.Client((settings.MAMCACHED_SERVER, settings.MAMCACHED_PORT))
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("django")
 
 
 def set_contrast_in_cache(key1,key2,contrast_dict):
