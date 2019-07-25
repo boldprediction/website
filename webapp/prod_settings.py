@@ -105,6 +105,59 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOG_FILE =  os.path.join(BASE_DIR, 'logs/website.log')
+ 
+LOGGING = {
+	'version': 1,
+	'disable_existing_loggers': False,
+	'filters': {
+		'require_debug_false': {
+			'()': 'django.utils.log.RequireDebugFalse',
+		},
+		'require_debug_true': {
+			'()': 'django.utils.log.RequireDebugTrue',
+		},
+	},
+	'formatters': {
+		'django.server': {
+			'()': 'django.utils.log.ServerFormatter',
+			'format': '[%(server_time)s] %(message)s',
+		}
+	},
+	'handlers': {
+		'console': {
+			'level': 'INFO',
+			'class': 'logging.StreamHandler',
+		},
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filters': ['require_debug_false'],
+            'filename': LOG_FILE,
+        },
+		'django.server': {
+			'level': 'INFO',
+			'class': 'logging.StreamHandler',
+			'formatter': 'django.server',
+		},
+		'mail_admins': {
+			'level': 'ERROR',
+			'filters': ['require_debug_false'],
+			'class': 'django.utils.log.AdminEmailHandler'
+		}
+	},
+	'loggers': {
+		'django': {
+			'handlers': ['console', 'file'],
+			'level': 'INFO',
+		},
+		'django.server': {
+			'handlers': ['django.server'],
+			'level': 'INFO',
+			'propagate': False,
+		}
+	}
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -150,7 +203,7 @@ print('Email host:port = {host}:{port}, user={user}'.format(
 SECRET_KEY = config.get('System', 'SECRET_KEY')
 HOST_IP = '3.15.123.123'
 APPLICATION_PORT = '8000'
-SQS_QUERY_URL = 'https://sqs.us-east-2.amazonaws.com/280175692519/bold_sqs'
+SQS_QUERY_URL = 'https://sqs.us-east-2.amazonaws.com/280175692519/sqs_bold_prod'
 
 AWS_ACCESS_KEY = config.get('System', 'AWS_ACCESS_KEY')
 AWS_SECRET_KEY = config.get('System', 'AWS_SECRET_KEY')
@@ -169,12 +222,3 @@ CACHE_EXPIRATION_TIME = 86400
 
 REFRESH_INTERVAL = 1000
 TIMEOUT_INTERVAL = 50000
-
-# load contrast configuration 
-# CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')
-# with open(CONTRAST_CONFIG_DIR, 'r') as f:
-#     contrast_config = json.load(f)
-
-# STIMULI_TYPES = contrast_config.get('stimuli_type',None)
-# MODEL_TYPES = contrast_config.get('model_type',None)
-# WORD_LIST_CONDITIONS = contrast_config.get('word_list_conditions',None)
