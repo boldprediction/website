@@ -228,15 +228,3 @@ CACHE_EXPIRATION_TIME = 86400
 
 REFRESH_INTERVAL = 1000
 TIMEOUT_INTERVAL = 50000
-
-# load contrast configuration 
-# CONTRAST_CONFIG_DIR = os.path.join(BASE_DIR, '../config/contrast_config.json')
-# with open(CONTRAST_CONFIG_DIR, 'r') as f:
-#     contrast_config = json.load(f)
-
-# SUBJECTS = contrast_config.get('subjects',None)
-# SUBJECTS_JSON = contrast_config.get('subjects_json',None)
-
-# STIMULI_TYPES = contrast_config.get('stimuli_type',None)
-# MODEL_TYPES = contrast_config.get('model_type',None)
-# WORD_LIST_CONDITIONS = contrast_config.get('word_list_conditions',None)
