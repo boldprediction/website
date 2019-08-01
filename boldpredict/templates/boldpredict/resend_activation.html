@@ -4,7 +4,7 @@
 <section>
 	<div id="Content" class="wrapper topSection">
 			<div id="Header">
-				<h2>ResetPassword</h2> 
+				<h2>Resend Activation Link</h2> 
 			</div>
 	</div>
 </section>
@@ -39,7 +39,7 @@
 				 <form role="form" method="post" action="{% url 'resend_activation' %}">
 					<div id="login">
                         <input type="hidden" name="email" value="{{email}}">
-						<p class="login-input">
+						<p class="submit_button">
 							<input type="submit" value="Resend" name="Submit">
 						</p> 
 					</div>

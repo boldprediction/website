@@ -80,7 +80,7 @@ def create_contrast(*args, **kwargs):
         return create_word_list_contrast(*args,**kwargs)
 
 
-def update_contrast_result(contrast_id,group_analyses,subjects):
+def update_contrast_result(contrast_id,group_analyses,subjects_analyses):
     contrast = Contrast.objects.get(id = contrast_id)
 
     cache_api.delete_contrast_in_cache(contrast_id,contrast.hash_key)
@@ -91,7 +91,7 @@ def update_contrast_result(contrast_id,group_analyses,subjects):
         analysis = Analysis_Result.objects.create(name = analysis_name, result = result, subject = mni_subject)
     
     # create subject for other subjects - group result
-    for subject_name, subject_analyses in subjects.items():
+    for subject_name, subject_analyses in subjects_analyses.items():
         subject = Subject_Result.objects.create(name = subject_name,contrast = contrast)
         for analysis_name, result in subject_analyses.items():
             analysis = Analysis_Result.objects.create(name = analysis_name, result = result, subject = subject)
