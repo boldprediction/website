@@ -1,0 +1,45 @@
+{% extends "boldpredict/base.html" %}
+
+{% block staticfiles %}
+{% load staticfiles %}
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+{% endblock %}
+
+
+{% block header %}
+<section>
+    <div class="wrapper topSection">
+        <div id="Header">
+            <h2>Published Experiments</h2>
+        </div>
+    </div>
+</section>
+{% endblock%}
+
+
+{% block content %}
+<section>
+    <div class="container">
+        <div class = "row">
+            <div class="col-md-9" ></div>
+            <input class="btn" type="submit" value="New Experiment" name="create_experiment">
+        </div>
+        <div class = "row">
+            <div class="col-md-2" ></div>
+            <div class="col-md-8">
+                <ul>
+                    {{ txt | safe  }}
+                </ul>
+            </div>
+            <div class="col-md-2">
+            </div>
+        </div>
+    </div>
+</section>
+<br>
+<br>
+<br>
+<br>
+<br>
+{% endblock%}
