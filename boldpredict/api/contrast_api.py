@@ -2,7 +2,7 @@ from boldpredict.models import *
 from boldpredict.constants import *
 import json
 from django.conf import settings
-from boldpredict.api import cache_api
+from boldpredict.api import cache_api, experiment_api
 import boldpredict.utils as utils
 from django.utils import timezone
 
@@ -34,6 +34,7 @@ def create_word_list_contrast(*args, **kwargs):
                                     DOI=DOI, creator = owner, model_type=model_type,
                                     stimuli_type=stimuli_type,
                                     coordinate_space=coordinate_space)
+
 
     # create stimuli
     list1_name = kwargs.get('list1_name', None)

@@ -17,7 +17,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import json
 from boldpredict.models import *
-from boldpredict.api import contrast_api, sqs_api, cache_api
+from boldpredict.api import contrast_api, sqs_api, cache_api, experiment_api
 
 # constants
 from boldpredict import constants
@@ -155,7 +155,7 @@ def experiment_detail(request,exp_id):
     return render(request, 'boldpredict/experiment.html', {'title':exp.experiment_title,
                                                         'DOI':exp.DOI, 'authors':exp.authors,
                                                         'txt':txt})
-
+@login_required
 def new_experiment(request):
     stimuli_types = constants.STIMULI_TYPES
     model_types = constants.MODEL_TYPES
@@ -166,9 +166,49 @@ def new_experiment(request):
     context['coordinate_types'] = coordinate_types    
     return render(request, 'boldpredict/new_experiment.html', context)
 
+@login_required
 def experiment_step2(request):
-    pass
-
+    if request.method != 'POST':
+        raise Http404
+    stimuli_types = constants.STIMULI_TYPES
+    model_types = constants.MODEL_TYPES
+    coordinate_types = constants.COORDINATE_TYPES
+    error_context = {}
+    error_context['stimulis'] = stimuli_types
+    error_context['model_types'] = model_types
+    error_context['coordinate_types'] = coordinate_types   
+    if 'experiment_title' not in request.POST or not len(request.POST['experiment_title']):
+        error_context['error']= "Please input experiment title"
+        return render(request, 'boldpredict/new_experiment.html', error_context)
+    
+    if 'authors' not in request.POST or not len(request.POST['authors']):
+        error_context['error']= "Please input authors"
+        return render(request, 'boldpredict/new_experiment.html', error_context)
+    
+    if 'DOI' not in request.POST  or not len(request.POST['DOI']):
+        error_context['error']= "Please input DOI"
+        return render(request, 'boldpredict/new_experiment.html', error_context)
+    
+    if 'coordinate_space' not in request.POST:
+        error_context['error']= "Please choose a coordinate space"
+        return render(request, 'boldpredict/new_experiment.html', error_context)
+    
+    if 'stimuli_type' not in request.POST:
+        error_context['error']= "Please choose a type of stimulus"
+        return render(request, 'boldpredict/new_experiment.html', error_context)
+    
+    if 'model_type' not in request.POST:
+        error_context['error']= "Please choose a model type"
+        return render(request, 'boldpredict/new_experiment.html', error_context)
+    
+    params = request.POST.dict()
+    if request.user.is_authenticated:
+        params['creator'] = request.user
+    params['is_published'] = True
+    
+    exp_dict = experiment_api.create_experiment(**params)
+    return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp_dict['id']})
+    
 
 @login_required
 def my_profile_action(request):
