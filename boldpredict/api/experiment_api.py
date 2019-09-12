@@ -14,7 +14,8 @@ def create_experiment(*args, **kwargs):
     exp = Experiment.objects.create(experiment_title=title, authors=authors,
                                     DOI=DOI, creator = creator, model_type=model_type,
                                     stimuli_type=stimuli_type,
-                                    coordinate_space=coordinate_space)
+                                    coordinate_space=coordinate_space,
+                                    is_published = is_published)
     
     return exp.serialize()
 
