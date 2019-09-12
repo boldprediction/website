@@ -21,7 +21,8 @@ class Experiment(models.Model):
 
     model_type = models.CharField(
         'Model Type', choices=MODEL_TYPE_CHOICE, max_length=20, default=ENG1000)
-
+        
+    is_published = models.BooleanField('Is this a published experiment', default=False)
 
 class Stimuli(models.Model):
     stimuli_name = models.TextField('name of stimuli', max_length=50)

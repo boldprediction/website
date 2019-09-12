@@ -138,9 +138,23 @@ def index(request):
 
 
 def experiment_action(request):
-    # return render(request, 'boldpredict/MNI_Test.html', {})
-    return render(request, 'boldpredict/index.html', {})
+    published_exps = Experiment.objects.filter(is_published = True)
+    txt = ''
+    template = '<br> <h4> <li> <a  href={0}> {1} </a> </li> </h4> <br> '
+    for exp in published_exps:
+        txt += template.format('/experiment/{0}'.format(exp.id),exp.experiment_title)
+    return render(request, 'boldpredict/experiment_list.html', {'txt':txt})
 
+def experiment_detail(request,exp_id):
+    exp = Experiment.objects.get(pk=exp_id)
+    template = '<br> <h4>  <li> <a target="_parent" href={0}> {1} </a> </li> </h4> '
+    txt = ''
+    contrasts = exp.contrasts.all() 
+    for contrast in contrasts:
+        txt+= template.format('/contrast_results/{0}'.format(contrast.id),contrast.contrast_title)
+    return render(request, 'boldpredict/experiment.html', {'title':exp.experiment_title,
+                                                        'DOI':exp.DOI, 'authors':exp.authors,
+                                                        'txt':txt})
 
 @login_required
 def my_profile_action(request):
