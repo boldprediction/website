@@ -12,6 +12,7 @@ urlpatterns = [
     path('word_list_start_contrast', views.word_list_start_contrast, name='word_list_start_contrast'),
     path('experiment', views.experiment_action, name='experiment'),
     path('experiment/<int:exp_id>', views.experiment_detail, name='experiment_detail'),
+    path('new_experiment', views.new_experiment, name='new_experiment'),
     path('my_profile', views.my_profile_action, name='my_profile'),
     path('register', views.register_action, name='register'),
     path('confirm-registration/<slug:username>/<slug:token>',

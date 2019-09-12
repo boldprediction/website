@@ -156,6 +156,9 @@ def experiment_detail(request,exp_id):
                                                         'DOI':exp.DOI, 'authors':exp.authors,
                                                         'txt':txt})
 
+def new_experiment(request):
+    return render(request, 'boldpredict/new_experiment.html', {})
+
 @login_required
 def my_profile_action(request):
     if request.method != 'GET':
