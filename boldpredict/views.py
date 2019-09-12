@@ -206,8 +206,8 @@ def experiment_step2(request):
         params['creator'] = request.user
     params['is_published'] = True
     
-    exp_dict = experiment_api.create_experiment(**params)
-    return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp_dict['id']})
+    exp = experiment_api.create_experiment(**params)
+    return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp.id})
     
 
 @login_required

@@ -26,15 +26,9 @@ def create_word_list_contrast(*args, **kwargs):
     coordinate_space = kwargs.get('coordinate_space', MNI)
 
     # experiment attributes
-    title = kwargs.get('experiment_title', None)
-    authors = kwargs.get('authors', None)
-    DOI = kwargs.get('DOI', None)
     owner = kwargs.get('owner', None)
-    exp = Experiment.objects.create(experiment_title=title, authors=authors,
-                                    DOI=DOI, creator = owner, model_type=model_type,
-                                    stimuli_type=stimuli_type,
-                                    coordinate_space=coordinate_space)
-
+    kwargs['creator'] = owner
+    exp = experiment_api.create_experiment(**kwargs)
 
     # create stimuli
     list1_name = kwargs.get('list1_name', None)

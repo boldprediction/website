@@ -17,7 +17,7 @@ def create_experiment(*args, **kwargs):
                                     coordinate_space=coordinate_space,
                                     is_published = is_published)
     
-    return exp.serialize()
+    return exp
 
 def get_experiment(exp_id):
     pass
