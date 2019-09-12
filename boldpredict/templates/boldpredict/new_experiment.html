@@ -1,1 +1,116 @@
 {% extends "boldpredict/base.html" %}
+
+{% block staticfiles %}
+{% load staticfiles %}
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script>
+    var model_types_setting = "{{ model_types | safe}}";
+    model_types_setting = model_types_setting.replace(/'/gi, '"').toString();
+    var model_type_obj = JSON.parse(model_types_setting);
+    // var model_types_setting = JSON.parse("{{ model_types}}");
+</script>
+<script src="{% static 'boldpredict/js/new_contrast.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+
+{% block header %}
+<section>
+    <div class="wrapper topSection">
+        <div id="Header">
+            <h2>New published Experiment</h2>
+        </div>
+    </div>
+</section>
+{% endblock%}
+
+
+
+{% block content %}
+<section>
+    <div class="container">
+        <form method="get" action="{% url 'new_contrast' %}">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <h3> Coordinate Space
+                        </h3>
+                    </div>
+                    <div class="row" id="id_coordinate_space">
+                        <div class="col-md-3">
+                            <input class="radio_button" type="radio" name="mni_space" value="mni" /> MNI <br />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="radio_button" type="radio" name="mni_space" value="tala" /> talairach <br />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <h3> Select stimuli Type
+                        </h3>
+                    </div>
+                    <div class="row" id="id_stimuli_types">
+                        {% for stimuli_key,stimuli_value in stimulis.items %}
+                        <div class="col-md-3">
+                            <input class="radio_button" type="radio" name="stimuli_type" value="{{stimuli_key}}"
+                                onclick="chooseStimuli('{{stimuli_key}}')" /> {{stimuli_value}} <br />
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <br>
+                    <div class="row">
+                        <h3>
+                            Select model Type
+                        </h3>
+                    </div>
+                    <div class="row" id="id_model_types">
+                    </div>
+                    <br>
+                    <br />
+                    <br />
+                </div>
+
+                <div class="col-md-5">
+                    <div class="row">
+                        {% if error %}
+                        <span style="color: red">
+                            {{error}}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="row"></div>
+                    <div class="row">
+                        <h5> Experiment Title
+                        </h5>
+                        <input type="text" class="form-control" name="experiment_title" value="{{experiment_title}}">
+                    </div>
+                    <div class="row"></div>
+                    <div class="row">
+                        <h5> Authors
+                        </h5>
+                        <input class="form-control" type="input" name="authors" value="{{authors}}">
+                    </div>
+                    <div class="row"></div>
+                    <div class="row">
+                        <h5> DOI
+                        </h5>
+                        <input class="form-control" type="input" name="doi" value="{{doi}}">
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <div class="row">
+                        <input class="btn" type="submit" value="Next">
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</section>
+<br>
+<br>
+<br>
+<br>
+{% endblock%}

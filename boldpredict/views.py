@@ -157,7 +157,12 @@ def experiment_detail(request,exp_id):
                                                         'txt':txt})
 
 def new_experiment(request):
-    return render(request, 'boldpredict/new_experiment.html', {})
+    stimuli_types = constants.STIMULI_TYPES
+    model_types = constants.MODEL_TYPES
+    context = {}
+    context['stimulis'] = stimuli_types
+    context['model_types'] = model_types    
+    return render(request, 'boldpredict/new_experiment.html', context)
 
 @login_required
 def my_profile_action(request):
