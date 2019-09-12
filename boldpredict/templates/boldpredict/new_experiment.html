@@ -37,12 +37,11 @@
                         </h3>
                     </div>
                     <div class="row" id="id_coordinate_space">
+                        {% for coordinate_key,coordinate_value in coordinate_types.items %}
                         <div class="col-md-3">
-                            <input class="radio_button" type="radio" name="mni_space" value="mni" /> MNI <br />
+                            <input class="radio_button" type="radio" name="space_type" value="{{coordinate_key}}" /> {{coordinate_value}} <br />
                         </div>
-                        <div class="col-md-3">
-                            <input class="radio_button" type="radio" name="mni_space" value="tala" /> talairach <br />
-                        </div>
+                        {% endfor %}
                     </div>
                     <br>
                     <div class="row">

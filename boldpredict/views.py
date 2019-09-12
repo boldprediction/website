@@ -159,10 +159,16 @@ def experiment_detail(request,exp_id):
 def new_experiment(request):
     stimuli_types = constants.STIMULI_TYPES
     model_types = constants.MODEL_TYPES
+    coordinate_types = constants.COORDINATE_TYPES
     context = {}
     context['stimulis'] = stimuli_types
-    context['model_types'] = model_types    
+    context['model_types'] = model_types
+    context['coordinate_types'] = coordinate_types    
     return render(request, 'boldpredict/new_experiment.html', context)
+
+def experiment_step2(request):
+    pass
+
 
 @login_required
 def my_profile_action(request):

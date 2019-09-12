@@ -13,6 +13,7 @@ urlpatterns = [
     path('experiment', views.experiment_action, name='experiment'),
     path('experiment/<int:exp_id>', views.experiment_detail, name='experiment_detail'),
     path('new_experiment', views.new_experiment, name='new_experiment'),
+    path('experiment_step2', views.experiment_step2, name='experiment_step2'),
     path('my_profile', views.my_profile_action, name='my_profile'),
     path('register', views.register_action, name='register'),
     path('confirm-registration/<slug:username>/<slug:token>',
