@@ -166,10 +166,17 @@ def new_experiment(request):
     context['coordinate_types'] = coordinate_types    
     return render(request, 'boldpredict/new_experiment.html', context)
 
+
+
 @login_required
-def experiment_step2(request):
-    if request.method != 'POST':
-        raise Http404
+def save_stimuli(request):
+    return render(request, 'boldpredict/index.html', {})
+
+
+@login_required
+def save_experiment(request):
+    # if request.method != 'POST':
+        # raise Http404
     stimuli_types = constants.STIMULI_TYPES
     model_types = constants.MODEL_TYPES
     coordinate_types = constants.COORDINATE_TYPES
@@ -207,7 +214,7 @@ def experiment_step2(request):
     params['is_published'] = True
     
     exp = experiment_api.create_experiment(**params)
-    return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp.id})
+    return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp.id, 'stimuli_type':params['stimuli_type']})
     
 
 @login_required

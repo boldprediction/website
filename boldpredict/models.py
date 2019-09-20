@@ -46,12 +46,18 @@ class Stimuli(models.Model):
     experiment = models.ForeignKey(
         Experiment, related_name="stimulus", on_delete=models.CASCADE)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "stimuli_type": self.stimuli_type,
+            "stimuli_name": self.parent_stimuli.stimuli_name,
+            "stimuli_content": self.word_list_stimuli.word_list if self.stimuli_type == WORD_LIST  else ""
+        }
 
 class WordListStimuli(models.Model):
     word_list = models.TextField(max_length=10000)
     parent_stimuli = models.OneToOneField(
         Stimuli, related_name='word_list_stimuli', on_delete=models.CASCADE)
-
 
 # Create your models here.
 class Contrast(models.Model):

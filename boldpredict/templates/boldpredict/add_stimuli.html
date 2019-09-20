@@ -1,1 +1,108 @@
 {% extends "boldpredict/base.html" %}
+
+{% block staticfiles %}
+{% load staticfiles %}
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'boldpredict/js/add_stimuli.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+
+{% block header %}
+<section>
+    <div class="wrapper topSection">
+        <div id="Header">
+            <h2>Add Stimuli</h2>
+        </div>
+    </div>
+</section>
+{% endblock%}
+
+{% block content %}
+<section>
+    <div class="container">
+        <!-- <form method="get">  -->
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-4">
+                <h5>
+                    Name of Stimuli
+                </h5>
+                <input type="text" class="form-control" name="stimuli_name" value="{{stimuli_name}}"
+                    id="id_stimuli_name">
+            </div>
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-3">
+                <h5>
+                    Stimili Type
+                </h5>
+                <input type="text" class="form-control" name="stimuli_type" value="{{stimuli_type}}"
+                    id="id_stimuli_type" disabled>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8">
+                <h5>
+                    Enter Stimuli (use comma to seperate words)
+                </h5>
+                <textarea rows="5" cols="8" type="text" class="form-control" name="stimuli_content"
+                    id="id_stimuli_content" value="{{stimuli_content}}">
+                    </textarea>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-8">
+            </div>
+            <input class="btn" type="submit" value="Add" onclick="saveStimuli()">
+        </div>
+        <!-- {% csrf_token%} -->
+        <!-- </form> -->
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8">
+                <table class="table tab-dark table-bordered">
+                    <thead>
+                        <tr class="table-dark">
+                            <th scope="col">#</th>
+                            <th scope="col">Stimuli Name</th>
+                            <th scope="col">Stimuli Type</th>
+                            <th scope="col">Deletion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td><button type="button" class="btn btn-warning">Delete</button></td>
+                        </tr>
+                        {% for stimuli in stimulis %}
+                        <tr>
+                            <th scope="row">stimuli.index</th>
+                            <td>stimuli.name</td>
+                            <td>stimuli.type</td>
+                            <td><button type="button" class="btn btn-warning">Delete</button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-2">
+            </div>
+        </div>
+    </div>
+</section>
+<br>
+<br>
+<br>
+<br>
+{% endblock%}
