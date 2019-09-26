@@ -33,7 +33,9 @@ function saveStimuli() {
         data: JSON.stringify(postData),
         dataType: 'json',
         contentType: 'application/json',
-        success: updateStimuli()
+        success: function(result){
+            updateStimuli()
+        }
     });
 }
 
@@ -74,6 +76,8 @@ function deleteStimuli(stimuli_id) {
         data: JSON.stringify(postData),
         dataType: 'json',
         contentType: 'application/json',
-        success: updateStimuli()
+        success: function(result){
+            updateStimuli()
+        }
     });
 }
