@@ -31,4 +31,5 @@ urlpatterns = [
     path('contrast_results/<slug:contrast_id>', views.contrast_results_view, name='contrast_results_view'),
     path('api/stimuli', views.stimuli_list),
     path('api/experiment/<int:exp_id>', views.experiment_details),
+    path('api/stimuli/<int:stimuli_id>', views.stimuli_details),
 ]

@@ -17,7 +17,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import json
 from boldpredict.models import *
-from boldpredict.api import contrast_api, sqs_api, cache_api, experiment_api
+from boldpredict.api import contrast_api, sqs_api, cache_api, experiment_api,stimuli_api
 
 # constants
 from boldpredict import constants
@@ -26,7 +26,6 @@ from django.http import JsonResponse
 
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
-from boldpredict.serializers import *
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -506,12 +505,10 @@ def stimuli_list(request):
     List all snippets, or create a new snippet.
     """
     if request.method == 'POST':
-        request_data = request.data.dict()
-        print("request_data = ", request_data)
+        request_data = request.data
         if 'stimuli_name' in request_data and 'stimuli_type' in request_data   \
             and  'stimuli_content' in request_data and 'exp_id' in request_data:
             stimuli = stimuli_api.create_stimuli(**request_data)
-            # stimuli = serializer.save()
             return Response(stimuli.serialize(), status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -524,3 +521,11 @@ def experiment_details(request,exp_id):
 
     if request.method == 'GET':
         return Response(experiment.serialize())
+
+@api_view(['DELETE'])
+def stimuli_details(request,stimuli_id):
+    stimuli = Stimuli.objects.get(id=stimuli_id)
+    if stimuli is None:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    stimuli.delete()
+    return Response({'id':stimuli_id })

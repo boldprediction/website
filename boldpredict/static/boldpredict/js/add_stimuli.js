@@ -33,31 +33,47 @@ function saveStimuli() {
         data: JSON.stringify(postData),
         dataType: 'json',
         contentType: 'application/json',
-        success: function (data) {
-            // alert("New stimuli saved");
-        }
+        success: updateStimuli()
     });
-    updateStimuli();
 }
 
 function updateStimuli() {
-    exp_id = $('#id_experiment_id').val()  //document.getElementById('id_experiment_id');
+    exp_id = $('#id_experiment_id').val()  
     $.ajax({
         type: "GET",
-        url: "/api/experiment/" + exp_id + "/stimuli",
+        url: "/api/experiment/" + exp_id,
         dataType: 'json',
-        success: updateStimuliTable(data)
+        success: function(result){
+            updateStimuliTable(result)
+        } 
     });
 }
 
 function updateStimuliTable(data) {
-
-
+    stimuli = data["stimuli"];
+    tbody = $('#id_stimuli_table_body');
+    text = "";
+    for (var i = 0; i < stimuli.length; i++) {
+        text += '<tr>' +
+        '<th scope="row">' + (i+1).toString() + '</th>' +
+        '<td>'+ stimuli[i]["stimuli_name"] + '</td>'+
+        '<td>'+ stimuli[i]["stimuli_type"] + '</td>'+
+        '<td>'+ stimuli[i]["stimuli_content"] + '</td>'+
+        '<td><button type="button" class="btn btn-warning" onclick="deleteStimuli( ' + stimuli[i]['id']  + ' )" >Delete</button></td>'+
+        '</tr>';
+    }
+    tbody.html(text);
 }
 
 function deleteStimuli(stimuli_id) {
-
-
+    csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: "DELETE",
+        url: "/api/stimuli/" + stimuli_id,
+        headers: { "X-CSRFToken": csrftoken },
+        data: JSON.stringify(postData),
+        dataType: 'json',
+        contentType: 'application/json',
+        success: updateStimuli()
+    });
 }
-
-window.onload = updateStimuli();
