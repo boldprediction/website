@@ -25,6 +25,12 @@ from boldpredict import constants
 from django.http import JsonResponse
 
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from boldpredict.serializers import *
+from rest_framework.response import Response
+from rest_framework import status
+
+
 
 
 
@@ -492,3 +498,29 @@ def create_contrast(request):
         contrast), params['stimuli_type'])
     
     return HttpResponse(json.dumps({'contrast_id':str(contrast.id)}), content_type='application/json')
+
+
+@api_view(['POST'])
+def stimuli_list(request):
+    """ 
+    List all snippets, or create a new snippet.
+    """
+    if request.method == 'POST':
+        request_data = request.data.dict()
+        print("request_data = ", request_data)
+        if 'stimuli_name' in request_data and 'stimuli_type' in request_data   \
+            and  'stimuli_content' in request_data and 'exp_id' in request_data:
+            stimuli = stimuli_api.create_stimuli(**request_data)
+            # stimuli = serializer.save()
+            return Response(stimuli.serialize(), status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def experiment_details(request,exp_id):
+    experiment = experiment_api.get_experiment(exp_id)
+    if experiment is None:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        return Response(experiment.serialize())

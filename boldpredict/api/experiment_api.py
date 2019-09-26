@@ -20,4 +20,8 @@ def create_experiment(*args, **kwargs):
     return exp
 
 def get_experiment(exp_id):
-    pass
+    try:
+        experiment = Experiment.objects.get(pk=exp_id)
+        return experiment
+    except Experiment.DoesNotExist:
+        return None

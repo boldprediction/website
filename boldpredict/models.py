@@ -35,7 +35,8 @@ class Experiment(models.Model):
             "stimuli_type": self.stimuli_type,
             "coordinate_space": self.coordinate_space,
             "model_type": self.model_type,
-            "is_published": self.is_published
+            "is_published": self.is_published,
+            "stimuli": [ stimuli.serialize() for stimuli in self.stimulus.all() ]
         }
 
 
@@ -50,8 +51,8 @@ class Stimuli(models.Model):
         return {
             "id": self.id,
             "stimuli_type": self.stimuli_type,
-            "stimuli_name": self.parent_stimuli.stimuli_name,
-            "stimuli_content": self.word_list_stimuli.word_list if self.stimuli_type == WORD_LIST  else ""
+            "stimuli_name": self.stimuli_name,
+            "stimuli_content": self.word_list_stimuli.word_list if self.stimuli_type == WORD_LIST and hasattr(self,'word_list_stimuli') else ""
         }
 
 class WordListStimuli(models.Model):
