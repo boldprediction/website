@@ -15,6 +15,8 @@ urlpatterns = [
     path('new_experiment', views.new_experiment, name='new_experiment'),
     path('save_experiment', views.save_experiment, name='save_experiment'),
     path('save_stimuli', views.save_stimuli, name='save_stimuli'),
+    path('add_contrast', views.add_contrast, name="add_contrast"),
+    path('upload_images', views.upload_images, name="upload_images"),
     path('my_profile', views.my_profile_action, name='my_profile'),
     path('register', views.register_action, name='register'),
     path('confirm-registration/<slug:username>/<slug:token>',
