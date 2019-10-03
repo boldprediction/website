@@ -4,12 +4,10 @@ from boldpredict.models import Stimuli,WordListStimuli
 def create_word_list_stimuli(stimuli_type, name, text, exp):
     stimuli = Stimuli.objects.create(stimuli_name=name, stimuli_type=stimuli_type,
                                      experiment=exp)
-    print("stimuli = ", stimuli)
     word_list_stimuli = WordListStimuli.objects.create(
         word_list=text, parent_stimuli=stimuli)
 
     return stimuli, word_list_stimuli
-
 
 def create_stimuli(*args, **kwargs):
     exp_id = kwargs.get('exp_id', None)
