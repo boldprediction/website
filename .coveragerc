@@ -2,5 +2,5 @@
 omit = 
     /boldpredict/forms.py
 include = 
-    /boldpredict*.py
+    /boldpredict/*.py
     /boldpredict/api/*.py
