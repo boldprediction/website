@@ -1,0 +1,6 @@
+[report]
+omit = 
+    boldpredict/forms.py
+include = 
+    boldpredict/api/*.py
+    boldpredict/*.py
