@@ -51,6 +51,11 @@ function updateStimuli() {
     });
 }
 
+
+function jumpToNextPage() {
+    window.location.href="/add_contrast";  
+}
+
 function updateStimuliTable(data) {
     stimuli = data["stimuli"];
     tbody = $('#id_stimuli_table_body');
