@@ -1,6 +1,7 @@
+[run]
+include = */boldpredict/*
+omit = */config/*, *tests*, */boldpredict/forms.py
+
 [report]
-omit = 
-    boldpredict/forms.py
-include = 
-    boldpredict/api/*.py
-    boldpredict/*.py
+include = */boldpredict/*
+omit = */config/*, *tests*, */boldpredict/forms.py
