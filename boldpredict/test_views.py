@@ -38,9 +38,15 @@ class ExperimentCreationAPITestCase(TestCase):
         response = self.api_client.post(self.stimuli_url, self.stimuli_data, format='json')
         assert response.status_code == 201
         response_data  = response.data
+        stimuli_id = response_data['id']
         assert response_data['stimuli_type'] == "word_list"
         assert response_data['stimuli_content'] == "walk, run, smile"
         assert response_data['stimuli_name'] == "actions"
+
+        response = self.api_client.delete('/api/stimuli/'+ str(stimuli_id), {} , format='json')
+        response_data  = response.data
+        assert response.status_code == 200
+        assert response_data['id'] == stimuli_id
 
     def test_experiment_detail(self):
         response = self.api_client.get('/api/experiment/'+ str(self.exp_id), {} , format='json')
@@ -50,3 +56,7 @@ class ExperimentCreationAPITestCase(TestCase):
         assert response_data['experiment_title'] == 'test experiment'
         assert response_data['model_type'] == WORD2VEC
         assert response_data['authors'] == 'vivi'
+
+
+    
+
