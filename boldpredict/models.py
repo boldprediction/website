@@ -31,7 +31,7 @@ class Experiment(models.Model):
             "experiment_title": self.experiment_title,
             "authors": self.authors,
             "DOI": self.DOI,
-            "creator": self.creator.username,
+            "creator": self.creator.username if self.creator is not None else "",
             "stimuli_type": self.stimuli_type,
             "coordinate_space": self.coordinate_space,
             "model_type": self.model_type,
