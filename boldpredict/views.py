@@ -485,6 +485,7 @@ def update_contrast(request):
         raise Http404
 
     contrasts_results = json.loads(request.body)
+    print("contrasts_results = ", contrasts_results)
     response_data = {}
     response_data['contrast_ids'] = []
     for contrast_result in contrasts_results:
@@ -492,6 +493,7 @@ def update_contrast(request):
         group_analyses = contrast_result['group_analyses']
         subjects_analyses = contrast_result['subjects_analyses']
         try:
+            print("contrast_id - ", contrast_id, " group_analyses = ", group_analyses, "subjects_analyses = ", subjects_analyses)
             contrast_api.update_contrast_result(contrast_id, group_analyses, subjects_analyses)
             response_data['contrast_ids'].append(contrast_id)
         except:
