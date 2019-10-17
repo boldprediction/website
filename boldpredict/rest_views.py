@@ -125,7 +125,7 @@ def contrast_list(request, exp_id):
         return Response({'contrast_ids': contrast_ids})
     elif request.method == 'GET':
         contrasts_result = []
-        for contrast in exp.contrasts:
+        for contrast in exp.contrasts.all():
             contrast_dict = {}
             contrast_dict['contrast_name'] = contrast.contrast_title
             contrast_dict['privacy_choice'] = privacy_choice
