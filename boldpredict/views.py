@@ -230,9 +230,6 @@ def upload_images(request):
 def save_experiment(request):
     if request.method != 'POST':
         raise Http404
-    
-    if 'exp_id' in request.POST and len(request.POST['exp_id']) > 0:
-        return redirect(reverse('edit_stimulus', args=(int(request.POST['exp_id']),)))
 
     stimuli_types = constants.STIMULI_TYPES
     model_types = constants.MODEL_TYPES
@@ -274,18 +271,24 @@ def save_experiment(request):
     if request.user.is_authenticated:
         params['creator'] = request.user
     params['is_published'] = True
+
+    if 'exp_id' in request.POST and len(request.POST['exp_id']) > 0:
+        # save new content    
+        params['exp_id'] = request.POST['exp_id']
+        exp = experiment_api.update_experiment(**params)
+        return redirect(reverse('edit_stimulus', args=(int(request.POST['exp_id']),)))
     
     exp = experiment_api.create_experiment(**params)
-    return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp.id, 'stimuli_type':params['stimuli_type']})
+    return redirect(reverse('edit_stimulus', args=(int(exp.id),)))
+    # return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp.id, 'stimuli_type':params['stimuli_type']})
     
 @login_required
 def edit_stimulus(request,exp_id):
     exp = Experiment.objects.get(pk=exp_id)
     if not (exp.is_published and exp.creator == request.user):
         raise Http404
-    
-    
-    return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp_id})
+    stimuli_type = exp.stimuli_type
+    return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp_id, 'stimuli_type': stimuli_type })
 
 
 
