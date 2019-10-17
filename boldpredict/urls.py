@@ -18,6 +18,7 @@ urlpatterns = [
     path('new_experiment', views.new_experiment, name='new_experiment'),
     path('save_experiment', views.save_experiment, name='save_experiment'),
     path('experiment/<int:exp_id>/edit_stimulus', views.edit_stimulus, name='edit_stimulus'),
+    path('experiment/<int:exp_id>/edit_contrasts', views.edit_contrasts, name='edit_contrasts'),
     path('save_stimuli', views.save_stimuli, name='save_stimuli'),
     path('add_contrast', views.add_contrast, name="add_contrast"),
     path('upload_images', views.upload_images, name="upload_images"),

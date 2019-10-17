@@ -53,7 +53,8 @@ function updateStimuli() {
 
 
 function jumpToNextPage() {
-    window.location.href="/add_contrast";  
+    exp_id = $('#id_experiment_id').val()  
+    window.location.href="/experiment/"+exp_id+"/edit_contrasts";  
 }
 
 function updateStimuliTable(data) {
