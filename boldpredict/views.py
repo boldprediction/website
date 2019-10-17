@@ -294,6 +294,8 @@ def edit_stimulus(request,exp_id):
     stimuli_type = exp.stimuli_type
     return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp_id, 'stimuli_type': stimuli_type })
 
+
+
 @login_required
 def my_profile_action(request):
     if request.method != 'GET':
@@ -573,33 +575,3 @@ def create_contrast(request):
     return HttpResponse(json.dumps({'contrast_id':str(contrast.id)}), content_type='application/json')
 
 
-@api_view(['POST'])
-def stimuli_list(request):
-    """ 
-    List all snippets, or create a new snippet.
-    """
-    if request.method == 'POST':
-        request_data = request.data
-        if 'stimuli_name' in request_data and 'stimuli_type' in request_data   \
-            and  'stimuli_content' in request_data and 'exp_id' in request_data:
-            stimuli = stimuli_api.create_stimuli(**request_data)
-            return Response(stimuli.serialize(), status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET'])
-def experiment_details(request,exp_id):
-    experiment = experiment_api.get_experiment(exp_id)
-    if experiment is None:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        return Response(experiment.serialize())
-
-@api_view(['DELETE'])
-def stimuli_details(request,stimuli_id):
-    stimuli = Stimuli.objects.get(id=stimuli_id)
-    if stimuli is None:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    stimuli.delete()
-    return Response({'id':stimuli_id })

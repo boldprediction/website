@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from . import views
+from . import views, rest_views
 
 urlpatterns = [
     path('index', views.index, name='index'),
@@ -37,7 +37,7 @@ urlpatterns = [
          views.subj_result_view, name='subj_result_view'),
     path('contrast_results/<slug:contrast_id>',
          views.contrast_results_view, name='contrast_results_view'),
-    path('api/stimuli', views.stimuli_list),
-    path('api/experiment/<int:exp_id>', views.experiment_details),
-    path('api/stimuli/<int:stimuli_id>', views.stimuli_details),
+    path('api/stimuli', rest_views.stimuli_list),
+    path('api/experiment/<int:exp_id>', rest_views.experiment_details),
+    path('api/stimuli/<int:stimuli_id>', rest_views.stimuli_details),
 ]
