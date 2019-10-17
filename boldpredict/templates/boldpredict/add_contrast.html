@@ -1,141 +1,140 @@
 {% extends "boldpredict/base.html" %}
 
 {% block staticfiles %}
-    {% load staticfiles %}
+{% load staticfiles %}
 
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="{% static 'boldpredict/js/add_stimuli.js' %}" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="{% static 'boldpredict/js/add_stimuli.js' %}" type="text/javascript"></script>
 
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
-    <style>
-        #inputGroupFile04:focus {
-            outline: none;
-        }
+<style>
+    #inputGroupFile04:focus {
+        outline: none;
+    }
 
-        #inputGroupFile04 {
-            opacity: 0;
-        }
+    #inputGroupFile04 {
+        opacity: 0;
+    }
 
-        .btn-group .file-name {
-            background-color: rgba(0, 0, 0, 0);
-        }
+    .btn-group .file-name {
+        background-color: rgba(0, 0, 0, 0);
+    }
 
-        .input-group {
-            margin-bottom: 1rem;
-        }
+    .input-group {
+        margin-bottom: 1rem;
+    }
 
-        #upload-btn {
-            margin-top: 1rem;
-        }
-
-    </style>
+    #upload-btn {
+        margin-top: 1rem;
+    }
+</style>
 
 
 {% endblock %}
 
 
 {% block header %}
-    <section>
-        <div class="wrapper topSection">
-            <div id="Header">
-                <div class="row">
-                    <div class="col-md-5"></div>
-                    <div class="col-md-2"><h2>Add Contrast</h2></div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-2">
-                        <button type="button" id="upload-btn" class="btn btn-warning" onclick="uploadFiles()">Upload
-                            Contrasts
-                        </button>
-                    </div>
+<section>
+    <div class="wrapper topSection">
+        <div id="Header">
+            <div class="row">
+                <div class="col-md-5"></div>
+                <div class="col-md-2">
+                    <h2>Add Contrast</h2>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-2">
+                    <button type="button" id="upload-btn" class="btn btn-warning" onclick="uploadFiles()">Upload
+                        Contrasts
+                    </button>
                 </div>
             </div>
-
         </div>
-    </section>
+
+    </div>
+</section>
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <form class="needs-validation" novalidate>
-                    <div id="contrast-block">
-                        <label style="color: white">
-                            <label for="contrast_title_input">Contrast Title(optional) </label>
-                        </label>
-                        <input type="text" class="form-control" name="contrast_tile" id="contrast_title_input"/>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <form class="needs-validation" novalidate>
+                <div id="contrast-block">
+                    <label style="color: white">
+                        <label for="contrast_title_input">Contrast Title(optional) </label>
+                    </label>
+                    <input type="text" class="form-control" name="contrast_tile" id="contrast_title_input" />
+                </div>
+                <div id="condition-1-block">
+                    <label style="color: white">
+                        <label for="condition-1-input">Condition 1 Name</label>
+                    </label>
+                    <input type="text" class="form-control" name="contrast_tile" id="condition-1-input" required />
+                    <div class="invalid-feedback">
+                        Please fill a condition name.
                     </div>
-                    <div id="condition-1-block">
-                        <label style="color: white">
-                            <label for="condition-1-input">Condition 1 Name</label>
-                        </label>
-                        <input type="text" class="form-control" name="contrast_tile" id="condition-1-input" required/>
-                        <div class="invalid-feedback">
-                            Please fill a condition name.
-                        </div>
+                </div>
+                <div>
+                    <label style="color: white">
+                        <label for="stimuli_1">Stimuli of Condition 1</label>
+                    </label>
+                    <select id="stimuli_1" class="selectpicker form-control" multiple data-live-search="true" required>
+                        <option>Mustard</option>
+                        <option>Ketchup</option>
+                        <option>Relish</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please select at least one stimulus.
                     </div>
-                    <div>
-                        <label style="color: white">
-                            <label for="stimuli_1">Stimuli of Condition 1</label>
-                        </label>
-                        <select id="stimuli_1" class="selectpicker form-control" multiple data-live-search="true"
-                                required>
-                            <option>Mustard</option>
-                            <option>Ketchup</option>
-                            <option>Relish</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            Please select at least one stimulus.
-                        </div>
+                </div>
+                <div id="condition-2-block">
+                    <label style="color: white">
+                        <label for="condition-2-input">Condition 2 Name</label>
+                    </label>
+                    <input type="text" class="form-control" name="contrast_tile" id="condition-2-input" />
+                </div>
+                <div>
+                    <label style="color: white">
+                        <label for="stimuli_2">Stimuli of Condition 2</label>
+                    </label>
+                    <select id="stimuli_2" class="selectpicker form-control" multiple data-live-search="true">
+                        <option>Mustard</option>
+                        <option>Ketchup</option>
+                        <option>Relish</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="color: white">Figures</label>
+                </div>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputGroupFile04">
+                        <label class="custom-file-label" id="inputGroupFile04label" for="inputGroupFile04">Choose
+                            file</label>
                     </div>
-                    <div id="condition-2-block">
-                        <label style="color: white">
-                            <label for="condition-2-input">Condition 2 Name</label>
-                        </label>
-                        <input type="text" class="form-control" name="contrast_tile" id="condition-2-input"/>
-                    </div>
-                    <div>
-                        <label style="color: white">
-                            <label for="stimuli_2">Stimuli of Condition 2</label>
-                        </label>
-                        <select id="stimuli_2" class="selectpicker form-control" multiple data-live-search="true">
-                            <option>Mustard</option>
-                            <option>Ketchup</option>
-                            <option>Relish</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="color: white">Figures</label>
-                    </div>
-                    <div class="input-group">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputGroupFile04">
-                            <label class="custom-file-label" id="inputGroupFile04label" for="inputGroupFile04">Choose
-                                file</label>
-                        </div>
-                    </div>
-                    <table id="file-block">
-                        <tbody id="file-block-body">
-                        </tbody>
-                    </table>
-                    <div>
-                        <button type="submit" id="upload-btn" class="btn btn-warning" onclick="addContrast()">Upload
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-1"></div>
-            <div class="col-md-7">
-                <table class="table" style="color: white">
-                    <thead>
+                </div>
+                <table id="file-block">
+                    <tbody id="file-block-body">
+                    </tbody>
+                </table>
+                <div>
+                    <button type="submit" id="upload-btn" class="btn btn-warning" onclick="addContrast()">Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-7">
+            <table class="table" style="color: white">
+                <thead>
                     <tr>
                         <th>number</th>
                         <th>condition 1</th>
@@ -144,98 +143,98 @@
                         <th>stimuli of 2</th>
                         <th>figures</th>
                     </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
-        {% csrf_token %}
     </div>
-    <script type="text/javascript">
-        {#window.onload = updateStimuli();#}
-        let filesToBeUploaded = []
-        const btnstrleft = "<tr><td style=\"color:white\">"
-        const btnstrright = "</td><td><button type=\"button\" class=\"file-name btn-danger\" onclick=\"deleteFile(this)\">delete</button></td></tr>"
-        $(document).ready(function () {
-            $("#inputGroupFile04").on("change", function () {
-                let files = $("#inputGroupFile04")[0].files
-                if (files.length > 0) {
-                    let a = $("#file-block-body")[0].innerHTML
-                    $("#file-block-body")[0].innerHTML = a + btnstrleft + files[0].name + btnstrright
-                    filesToBeUploaded.push(files[0])
+    {% csrf_token %}
+</div>
+<script type="text/javascript">
+    { #window.onload = updateStimuli(); # }
+    let filesToBeUploaded = []
+    const btnstrleft = "<tr><td style=\"color:white\">"
+    const btnstrright = "</td><td><button type=\"button\" class=\"file-name btn-danger\" onclick=\"deleteFile(this)\">delete</button></td></tr>"
+    $(document).ready(function () {
+        $("#inputGroupFile04").on("change", function () {
+            let files = $("#inputGroupFile04")[0].files
+            if (files.length > 0) {
+                let a = $("#file-block-body")[0].innerHTML
+                $("#file-block-body")[0].innerHTML = a + btnstrleft + files[0].name + btnstrright
+                filesToBeUploaded.push(files[0])
+            }
+        });
+
+        let forms = $(".needs-validation")[0]
+        for (let i = 0; i < forms.length; i++) {
+            let form = forms[i]
+            form.addEventListener('submit', function (event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
                 }
-            });
-
-            let forms = $(".needs-validation")[0]
-            for (let i = 0; i < forms.length; i++) {
-                let form = forms[i]
-                form.addEventListener('submit', function (event) {
-                    if (form.checkValidity() === false) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            }
-
-
-        })
-
-        function deleteFile(btn) {
-            let tr = $(btn).parent().parent()
-            let index = $(".file-name").index(btn)
-            filesToBeUploaded.splice(index, 1)
-            for (let i = 0; i < filesToBeUploaded.length; i++) {
-                console.log(filesToBeUploaded[i].name)
-            }
-            tr.remove()
+                form.classList.add('was-validated');
+            }, false);
         }
 
-        function createForm() {
-            let form = document.createElement("form");
-            form.setAttribute("method", "POST");
-            form.setAttribute("action", "/upload_images");
 
-            for (let i = 0; i < filesToBeUploaded.length; i++) {
-                let file = filesToBeUploaded[i]
-                let input = document.createElement("input");
-                input.setAttribute('type', "hidden");
-                input.setAttribute("name", "file" + (i + 1))
-                input.setAttribute("value", file)
-                form.appendChild(input)
-            }
+    })
 
-            return form
+    function deleteFile(btn) {
+        let tr = $(btn).parent().parent()
+        let index = $(".file-name").index(btn)
+        filesToBeUploaded.splice(index, 1)
+        for (let i = 0; i < filesToBeUploaded.length; i++) {
+            console.log(filesToBeUploaded[i].name)
+        }
+        tr.remove()
+    }
+
+    function createForm() {
+        let form = document.createElement("form");
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", "/upload_images");
+
+        for (let i = 0; i < filesToBeUploaded.length; i++) {
+            let file = filesToBeUploaded[i]
+            let input = document.createElement("input");
+            input.setAttribute('type', "hidden");
+            input.setAttribute("name", "file" + (i + 1))
+            input.setAttribute("value", file)
+            form.appendChild(input)
         }
 
-        function addContrast() {
+        return form
+    }
 
+    function addContrast() {
+
+    }
+
+    function uploadFiles() {
+        let formdata = new FormData();
+        let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+        formdata.append('csrfmiddlewaretoken', csrfToken)
+
+        for (let i = 0; i < filesToBeUploaded.length; i++) {
+            let file = filesToBeUploaded[i]
+            formdata.append(file.name, file, file.name);
         }
 
-        function uploadFiles() {
-            let formdata = new FormData();
-            let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
-            formdata.append('csrfmiddlewaretoken', csrfToken)
-
-            for (let i = 0; i < filesToBeUploaded.length; i++) {
-                let file = filesToBeUploaded[i]
-                formdata.append(file.name, file, file.name);
-            }
-
-            for (let [key, value] of formdata.entries()) {
-                console.log(key, value);
-            }
-
-            $.ajax({
-                url: '/upload_images',
-                data: formdata,
-                type: 'POST',
-                processData: false,
-                contentType: false,
-            }).done(function (resp) {
-                console.log(resp);
-            });
+        for (let [key, value] of formdata.entries()) {
+            console.log(key, value);
         }
-    </script>
+
+        $.ajax({
+            url: '/upload_images',
+            data: formdata,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+        }).done(function (resp) {
+            console.log(resp);
+        });
+    }
+</script>
 {% endblock %}
