@@ -24,6 +24,9 @@ class Experiment(models.Model):
 
     is_published = models.BooleanField(
         'Is this a published experiment', default=False)
+    
+    is_approved = models.BooleanField(
+        'If it is a published experiment, is this experiment approved', default=False)
 
     def serialize(self):
         return {
@@ -79,6 +82,8 @@ class Contrast(models.Model):
     hash_key = models.CharField('Hash Key', max_length=56, db_index=True)
     created_at = models.DateTimeField(default=timezone.now)
     result_generated_at = models.DateTimeField(null=True)
+    figures_list = models.TextField('Contrast related figures', default = '')
+
 
     def serialize(self):
         if self.experiment.stimuli_type == WORD_LIST:
@@ -181,7 +186,8 @@ class Coordinate(models.Model):
     x = models.IntegerField('x')
     y = models.IntegerField('y')
     z = models.IntegerField('z')
-    contrast = models.ForeignKey(Contrast, on_delete=models.CASCADE)
+    contrast = models.ForeignKey(Contrast, on_delete=models.CASCADE, related_name="coordinates")
+    zscore = models.IntegerField('zcore',null=True)
     # coordinates_holder = models.ForeignKey(Coordinates_holder)
 
 # for coordinate analysis
