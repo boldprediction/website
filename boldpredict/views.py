@@ -294,8 +294,6 @@ def edit_stimulus(request,exp_id):
     stimuli_type = exp.stimuli_type
     return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp_id, 'stimuli_type': stimuli_type })
 
-
-
 @login_required
 def my_profile_action(request):
     if request.method != 'GET':
