@@ -41,4 +41,5 @@ urlpatterns = [
     path('api/stimuli', rest_views.stimuli_list),
     path('api/experiment/<int:exp_id>', rest_views.experiment_details),
     path('api/stimuli/<int:stimuli_id>', rest_views.stimuli_details),
+    path('api/contrasts/<int:exp_id>', rest_views.contrast_list),
 ]

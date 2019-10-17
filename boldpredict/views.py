@@ -119,6 +119,7 @@ def word_list_start_contrast(request):
             context['conditions'].append(condition)
         return render(request, 'boldpredict/contrast_filler.html', context)
 
+
     params = request.POST.dict()
     params['baseline_choice'] = form.clean_baseline_choice()
     params['permutation_choice'] = form.clean_permutation_choice()
