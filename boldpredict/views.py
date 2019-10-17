@@ -239,10 +239,14 @@ def save_experiment(request):
     error_context['model_types'] = model_types
     error_context['coordinate_types'] = coordinate_types   
     error_context['settings']  = {
-        'coordinate_space': MNI,
-        'stimuli_type': WORD_LIST,
-        'model_type': ENG1000
+        'coordinate_space': request.POST.get('coordinate_space', MNI),
+        'stimuli_type': request.POST.get('stimuli_type', WORD_LIST),
+        'model_type': request.POST.get('model_type', ENG1000)
     }  
+    error_context['experiment_title'] = request.POST.get('experiment_title', "")
+    error_context['authors'] = request.POST.get('authors', "")
+    error_context['DOI'] = request.POST.get('DOI', "")
+
     if 'experiment_title' not in request.POST or not len(request.POST['experiment_title']):
         error_context['error']= "Please input experiment title"
         return render(request, 'boldpredict/new_experiment.html', error_context)
