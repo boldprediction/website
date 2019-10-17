@@ -165,6 +165,30 @@ def experiment_detail(request,exp_id):
                                                         'DOI':exp.DOI, 'authors':exp.authors,
                                                         'txt':txt})
 @login_required
+def experiment_edit(request,exp_id):
+    exp = Experiment.objects.get(pk=exp_id)
+    if not (exp.is_published and exp.creator == request.user):
+        raise Http404
+    stimuli_types = constants.STIMULI_TYPES
+    model_types = constants.MODEL_TYPES
+    coordinate_types = constants.COORDINATE_TYPES
+    context = {}
+    context['stimulis'] = stimuli_types
+    context['model_types'] = model_types
+    context['coordinate_types'] = coordinate_types  
+    context['settings']  = {
+        'coordinate_space': exp.coordinate_space,
+        'stimuli_type': exp.stimuli_type,
+        'model_type': exp.model_type
+    } 
+    context['experiment_title'] = exp.experiment_title
+    context['authors'] = exp.authors
+    context['DOI'] = exp.DOI
+    context['exp_id'] = exp_id
+    return render(request, 'boldpredict/new_experiment.html', context)
+
+
+@login_required
 def new_experiment(request):
     stimuli_types = constants.STIMULI_TYPES
     model_types = constants.MODEL_TYPES
@@ -172,7 +196,12 @@ def new_experiment(request):
     context = {}
     context['stimulis'] = stimuli_types
     context['model_types'] = model_types
-    context['coordinate_types'] = coordinate_types    
+    context['coordinate_types'] = coordinate_types  
+    context['settings']  = {
+        'coordinate_space': MNI,
+        'stimuli_type': WORD_LIST,
+        'model_type': ENG1000
+    }  
     return render(request, 'boldpredict/new_experiment.html', context)
 
 
@@ -199,8 +228,12 @@ def upload_images(request):
 
 @login_required
 def save_experiment(request):
-    # if request.method != 'POST':
-        # raise Http404
+    if request.method != 'POST':
+        raise Http404
+    
+    if 'exp_id' in request.POST and len(request.POST['exp_id']) > 0:
+        return redirect(reverse('edit_stimulus', args=(int(request.POST['exp_id']),)))
+
     stimuli_types = constants.STIMULI_TYPES
     model_types = constants.MODEL_TYPES
     coordinate_types = constants.COORDINATE_TYPES
@@ -208,6 +241,11 @@ def save_experiment(request):
     error_context['stimulis'] = stimuli_types
     error_context['model_types'] = model_types
     error_context['coordinate_types'] = coordinate_types   
+    error_context['settings']  = {
+        'coordinate_space': MNI,
+        'stimuli_type': WORD_LIST,
+        'model_type': ENG1000
+    }  
     if 'experiment_title' not in request.POST or not len(request.POST['experiment_title']):
         error_context['error']= "Please input experiment title"
         return render(request, 'boldpredict/new_experiment.html', error_context)
@@ -240,6 +278,16 @@ def save_experiment(request):
     exp = experiment_api.create_experiment(**params)
     return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp.id, 'stimuli_type':params['stimuli_type']})
     
+@login_required
+def edit_stimulus(request,exp_id):
+    exp = Experiment.objects.get(pk=exp_id)
+    if not (exp.is_published and exp.creator == request.user):
+        raise Http404
+    
+    
+    return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp_id})
+
+
 
 @login_required
 def my_profile_action(request):
