@@ -140,7 +140,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" id = "id_figures">
+        <div class="row" id="id_figures">
         </div>
 </section>
 
@@ -310,6 +310,35 @@
             }
         });
     });
+
+</script>
+<script type="text/javascript">
+    function loadFigures() {
+        var figure_num = "{{figure_num}}";
+        if (figure_num <= 0) {
+            return;
+        }
+        var figures_list = JSON.parse("{{figures_list | safe}}");
+        figure_div = document.getElementById("id_figures");
+        var row_num = figure_num / 3;
+        var html = ""
+        var image_url = "{{image_url}}"
+        for (var i = 0; i < row_num; i++) {
+            html += "<div class='row'>";
+            for (var j = 0; j < 3; j++) {
+                html += "<div class='col-sm-4'>";
+                if ((i * 3 + j) > figure_num) {
+                    break;
+                }
+                var figure_path = figures_list[i * 3 + j];
+                var template = "<img src='{0}{1}' style=\"width: 100%\" />".format(image_url, figure_path)
+                html += template
+                html += "</div>";
+            }
+            html += "</div>";
+        }
+    }
+    window.onload = loadFigures();
 </script>
 
 {% endblock %}

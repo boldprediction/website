@@ -218,6 +218,7 @@ REGION_NAME =  'us-east-2'
 
 SUBJECTS_URL = '/static/boldpredict/subjects/'
 DATA_URL = '/static/boldpredict/data/'
+IMAGE_URL = '/static/boldpredict/images/'
 
 SUBJECTS = ["JGfs", "MLfs2",  "AHfs"]
 SUBJECT_NUM = len(SUBJECTS)

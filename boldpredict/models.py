@@ -83,7 +83,7 @@ class Contrast(models.Model):
     hash_key = models.CharField('Hash Key', max_length=56, db_index=True)
     created_at = models.DateTimeField(default=timezone.now)
     result_generated_at = models.DateTimeField(null=True)
-    figures_list = models.TextField('Contrast related figures', default = '')
+    figures_list = models.TextField('Contrast related figures', default = '[]')
 
 
     def serialize(self):
