@@ -321,17 +321,17 @@
         var figures = '{{figures_list | safe }}';
         figures_list = JSON.parse(figures);
         var figure_div = document.getElementById("id_figures");
-        var row_num = Math.floor(figure_num/3) ;
+        var row_num = Math.floor(figure_num/2) ;
         var html = "";
         var image_url = "{{image_url}}";
         for (var i = 0; i <= row_num; i++) {
             html += "<div class='row'>";
-            for (var j = 0; j < 3; j++) {
-                html += "<div class='col-sm-4'>";
-                if ((i * 3 + j) > figure_num - 1) {
+            for (var j = 0; j < 2; j++) {
+                html += "<div class='col-sm-6'>";
+                if ((i * 2 + j) > figure_num - 1) {
                     break;
                 }
-                var figure_path = figures_list[i * 3 + j];
+                var figure_path = figures_list[i * 2 + j];
                 var template = "<img src='" + image_url + figure_path + "' style='width: 100%' />";
                 html += template;
                 html += "</div>";
