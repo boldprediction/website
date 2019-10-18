@@ -16,11 +16,10 @@ from django.utils import timezone
 #     return stimuli, word_list_stimuli
 
 def create_word_list_contrast(*args, **kwargs):
-
     hash_key = kwargs.get('hash_key', None)
     if hash_key is None:
         hash_key = utils.generate_hash_key(**kwargs)
-
+    
     model_type = kwargs.get('model_type', ENG1000)
     stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
     coordinate_space = kwargs.get('coordinate_space', MNI)
