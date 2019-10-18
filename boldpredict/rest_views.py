@@ -134,6 +134,7 @@ def contrast_list(request, exp_id):
         contrasts_result = []
         for contrast in exp.contrasts.all():
             contrast_dict = {}
+            contrast_dict['id'] = str(contrast.id)
             contrast_dict['contrast_name'] = contrast.contrast_title
             contrast_dict['privacy_choice'] = contrast.privacy_choice
             contrast_dict['baseline_choice'] = contrast.baseline_choice
