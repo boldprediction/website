@@ -541,6 +541,7 @@ def contrast_results_view(request, contrast_id):
             contrast[subject_key] = "dummy"
 
     if contrast and contrast['stimuli_type'] == WORD_LIST:
+        contrast['row_num'] = contrast.get('figure_num',0)
         return render(request, 'boldpredict/word_list_contrast_results.html', contrast)
     return render(request, 'boldpredict/index.html', {})
 

@@ -123,6 +123,8 @@ class Contrast(models.Model):
         contrast_dict['hash_key'] = self.hash_key
         contrast_dict['created_at'] = str(self.created_at)
         contrast_dict['result_generated_at'] = str(self.result_generated_at)
+        contrast_dict['figures_list'] = json.loads(self.figures_list)
+        contrast_dict['figure_num'] = len(json.loads(self.figures_list))
 
         # collect subjects result
         subjects_dict = {}

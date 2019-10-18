@@ -3,12 +3,12 @@
 {% block content %}
 <section>
     <div class="container-fluid">
-        <div class="row">
+        <div class="row" id="id_word_lists">
             <div class="col-sm-6">
                 <div class="row">
-                    <center>
-                        <h2>{{contrast_title}}</h2>
-                    </center>
+                    <div class="col-sm-3">
+                    </div>
+                    <h2>{{contrast_title}}</h2>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
@@ -57,7 +57,7 @@
 
             <p> </p>
         </div>
-        <div class="row">
+        <div class="row" id="id_view_buttons">
             <div class="col-sm-6">
                 <center>
                     <button type='button' class="btn btn-primary btn-sm" id="lateral_left">Lateral Left</button>
@@ -79,7 +79,7 @@
         </div>
         <br>
         <br>
-        <div class="row">
+        <div class="row" id="id_generated_imges">
             <div class="col-sm-6">
                 <center>
                     <p>
@@ -140,7 +140,8 @@
                 </div>
             </div>
         </div>
-    </div>
+        <div class="row" id = "id_figures">
+        </div>
 </section>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
