@@ -14,7 +14,7 @@ urlpatterns = [
     path('experiment', views.experiment_action, name='experiment'),
     path('experiment/<int:exp_id>',
          views.experiment_detail, name='experiment_detail'),
-    path('experiment/<int:exp_id>/edit', views.experiment_edit),
+    path('experiment/<int:exp_id>/edit', views.experiment_edit , name='experiment_edit'),
     path('new_experiment', views.new_experiment, name='new_experiment'),
     path('save_experiment', views.save_experiment, name='save_experiment'),
     path('experiment/<int:exp_id>/edit_stimulus', views.edit_stimulus, name='edit_stimulus'),
@@ -42,4 +42,5 @@ urlpatterns = [
     path('api/experiment/<int:exp_id>', rest_views.experiment_details),
     path('api/stimuli/<int:stimuli_id>', rest_views.stimuli_details),
     path('api/contrasts/<int:exp_id>', rest_views.contrast_list),
+    path('api/email/<int:exp_id>', rest_views.experiment_email),
 ]

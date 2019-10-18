@@ -169,3 +169,21 @@ def get_text(condition):
         stimuli_dict = stimuli.serialize()
         text.append(stimuli_dict['stimuli_content'])
     return ','.join(text)
+
+
+
+@api_view(['POST'])
+@login_required
+def experiment_email(request, exp_id):
+    exp = Experiment.objects.get(id = exp_id)
+    administrators = User.objects.filter(username__in=settings.ADMINISTRATORS ) 
+    email_addresses = [u.email for u in administrators.all()]
+    email_body = """
+    Please click the link below to edit and approve the submitted published experiment:
+    http://{host}{path}
+    """.format(host=request.get_host(),
+            path=reverse('experiment_edit', args=(exp_id, )))
+    send_mail(subject="Approve published experiment" + exp.experiment_title,
+            message=email_body,
+            from_email="boldpredictionscmu@gmail.com",
+            recipient_list=email_addresses)
