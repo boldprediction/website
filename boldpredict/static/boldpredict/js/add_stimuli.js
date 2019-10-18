@@ -79,7 +79,7 @@ function deleteStimuli(stimuli_id) {
         type: "DELETE",
         url: "/api/stimuli/" + stimuli_id,
         headers: { "X-CSRFToken": csrftoken },
-        data: JSON.stringify(postData),
+        data: JSON.stringify({}),
         dataType: 'json',
         contentType: 'application/json',
         success: function(result){

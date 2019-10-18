@@ -7,15 +7,15 @@
         "contrast_name": "contrast1",
         "condition1": {
             "name": "condition1name",
-            "stimili_list": [
-                "stimulus1key",
-                "stimulus2key"
+            "stimuli_list": [
+                "103",
+                "104"
             ]
         },
         "condition2": {
             "name": "condition2name",
-            "stimili_list": [
-                "baseline"
+            "stimuli_list": [
+                "105"
             ]
         },
         "coordinates": [
@@ -42,15 +42,15 @@
         "contrast_name": "contrast2",
         "condition1": {
             "name": "condition1name",
-            "stimili_list": [
-                "stimulus2key",
-                "stimulus3key"
+            "stimuli_list": [
+                "105",
+                "103"
             ]
         },
         "condition2": {
             "name": "condition3name",
-            "stimili_list": [
-                "stimulus3key"
+            "stimuli_list": [
+                "104"
             ]
         },
         "coordinates": [

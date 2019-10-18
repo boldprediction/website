@@ -84,9 +84,9 @@ def contrast_list(request, exp_id):
             contrast_title = contrast["contrast_name"]
             condition1 = contrast['condition1']
             condition2 = contrast['condition2']
-            privacy_choice = contrast['privacy_choice']
-            baseline_choice = contrast['baseline_choice']
-            permutation_choice = contrast['permutation_choice']
+            privacy_choice = contrast.get('privacy_choice', PRIVATE)
+            baseline_choice = contrast.get('baseline_choice',False)
+            permutation_choice = contrast.get('permutation_choice',False)
 
             params = {}
             params['stimuli_type'] = exp.stimuli_type
@@ -99,13 +99,13 @@ def contrast_list(request, exp_id):
 
             hash_key = utils.generate_hash_key(**params)
             figures = contrast['figures'] if "figures" in contrast else []
-            contrast = Contrast.objects.create(contrast_title=contrast_title, baseline_choice=baseline_choice,
+            contrast_obj = Contrast.objects.create(contrast_title=contrast_title, baseline_choice=baseline_choice,
                                                permutation_choice=permutation_choice, experiment=exp,
                                                privacy_choice=privacy_choice, creator=request.user,
-                                               hash_key=hash_key,figure_list = json.dumps(figures))
+                                               hash_key=hash_key,figures_list = json.dumps(figures))
 
-            condition1['contrast_id'] = contrast.id
-            condition2['contrast_id'] = contrast.id
+            condition1['contrast_id'] = contrast_obj.id
+            condition2['contrast_id'] = contrast_obj.id
             contrast_api.create_condition(**condition1)
             contrast_api.create_condition(**condition2)
 
@@ -119,33 +119,36 @@ def contrast_list(request, exp_id):
                     z = coordinate['z']
                     zscore = coordinate['zscore']
                     Coordinate.objects.create(coordinate_name=coordinate_name,
-                                            x=x, y=y, z=z, zscore=zscore, contrast=contrast)
+                                            x=x, y=y, z=z, zscore=zscore, contrast=contrast_obj)
 
-            contrast_ids.append(contrast.id)
+            contrast_ids.append(contrast_obj.id)
         return Response({'contrast_ids': contrast_ids})
+
     elif request.method == 'GET':
         contrasts_result = []
         for contrast in exp.contrasts.all():
             contrast_dict = {}
             contrast_dict['contrast_name'] = contrast.contrast_title
-            contrast_dict['privacy_choice'] = privacy_choice
-            contrast_dict['baseline_choice'] = baseline_choice
-            contrast_dict['permutation_choice'] = permutation_choice
-            contrast['figures'] = json.loads(figures_list)
+            contrast_dict['privacy_choice'] = contrast.privacy_choice
+            contrast_dict['baseline_choice'] = contrast.baseline_choice
+            contrast_dict['permutation_choice'] = contrast.permutation_choice
+            contrast_dict['figures'] = json.loads(contrast.figures_list)
             condition1_dict,condition2_dict = {}, {}
-            condition1,condition2 = contrast.conditions[0], contrast.conditions[1] 
-            condition1_dict['name'] = condition1.condition_name
-            stimuli_list1 = [ stimuli.id for stimuli in condition1.stimulus]
-            condition1_dict['stimuli_list'] = stimuli_list1
-            contrast['condition1'] = condition1_dict
-            
-            condition2_dict['name'] = condition2.condition_name
-            stimuli_list2 = [ stimuli.id for stimuli in condition2.stimulus]
-            condition2_dict['stimuli_list'] = stimuli_list2
-            contrast['condition2'] = condition2_dict
-
+            contrast_conditions = contrast.conditions.all()
+            if len(contrast_conditions) >= 1:
+                condition1 = contrast_conditions[0]
+                condition1_dict['name'] = condition1.condition_name
+                stimuli_list1 = [ stimuli.id for stimuli in condition1.stimulus.all()]
+                condition1_dict['stimuli_list'] = stimuli_list1
+                contrast_dict['condition1'] = condition1_dict
+            if len(contrast_conditions) >= 2:
+                condition2 = contrast_conditions[1]
+                condition2_dict['name'] = condition2.condition_name
+                stimuli_list2 = [ stimuli.id for stimuli in condition2.stimulus.all()]
+                condition2_dict['stimuli_list'] = stimuli_list2
+                contrast_dict['condition2'] = condition2_dict
             coordinates = []
-            for coordinate in contrast.coordinates:
+            for coordinate in contrast.coordinates.all():
                 coordinate_dict = {}
                 coordinate_dict['zscore'] = coordinate.zscore
                 coordinate_dict['x'] = coordinate.x
@@ -153,7 +156,8 @@ def contrast_list(request, exp_id):
                 coordinate_dict['z'] = coordinate.z
                 coordinate_dict['name'] = coordinate.coordinate_name
                 coordinates.append(coordinate_dict)
-            contrast['coordinates'] = coordinates
+            contrast_dict['coordinates'] = coordinates
+            contrasts_result.append(contrast_dict)
 
         return Response(contrasts_result)
 
@@ -162,6 +166,6 @@ def get_text(condition):
     text = []
     for stimuli_key in condition['stimuli_list']:
         stimuli = Stimuli.objects.get(id=stimuli_key)
-        stimuli_dict = stimuli.serializer()
+        stimuli_dict = stimuli.serialize()
         text.append(stimuli_dict['stimuli_content'])
     return ','.join(text)
