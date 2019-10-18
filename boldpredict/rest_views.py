@@ -50,13 +50,19 @@ def stimuli_list(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def experiment_details(request, exp_id):
     experiment = experiment_api.get_experiment(exp_id)
     if experiment is None:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
+        return Response(experiment.serialize())
+    elif request.method == 'POST':
+        data = request.data
+        data['exp_id'] = exp_id
+        experiment_api.update_experiment(**data)
+        experiment = experiment_api.get_experiment(exp_id)
         return Response(experiment.serialize())
 
 
@@ -187,3 +193,5 @@ def experiment_email(request, exp_id):
             message=email_body,
             from_email="boldpredictionscmu@gmail.com",
             recipient_list=email_addresses)
+
+    return Response({"exp_id": exp_id})

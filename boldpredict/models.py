@@ -39,6 +39,7 @@ class Experiment(models.Model):
             "coordinate_space": self.coordinate_space,
             "model_type": self.model_type,
             "is_published": self.is_published,
+            "is_approved" : self.is_approved,
             "stimuli": [ stimuli.serialize() for stimuli in self.stimulus.all() ]
         }
 
