@@ -2,7 +2,6 @@ import hashlib
 from boldpredict.constants import *
 
 def generate_word_list_hash_key(*args, **kwargs):
-    print("kwargs = ", kwargs)
     hash224 = hashlib.sha224()
     
     stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
