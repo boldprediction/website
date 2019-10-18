@@ -76,6 +76,17 @@ def stimuli_details(request, stimuli_id):
     return Response({'id': stimuli_id})
 
 
+
+@api_view(['GET'])
+def stimulus_list(request, exp_id):
+    experiment = experiment_api.get_experiment(exp_id)
+    if experiment is None:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        exp_dict = experiment.serialize()
+        return Response(exp_dict['stimuli'])
+
 @api_view(['POST','GET'])
 @login_required
 def contrast_list(request, exp_id):
