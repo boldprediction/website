@@ -209,4 +209,4 @@ def experiment_approval(request,exp_id):
         sqs_api.send_contrast_message(sqs_api.create_contrast_message(
         contrast), exp.stimuli_type)
     
-    return HttpResponse(json.dumps(exp.serialize()))
+    return Response(exp.serialize())
