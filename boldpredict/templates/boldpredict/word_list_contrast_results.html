@@ -4,11 +4,13 @@
 <section>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-12">
-                <div class="col-sm-6">
+            <div class="col-sm-6">
+                <div class="row">
                     <center>
                         <h2>{{contrast_title}}</h2>
                     </center>
+                </div>
+                <div class="row">
                     <div class="col-sm-6">
                         <h3>{{list1_name}}</h3>
                         <p .pre-scrollable>{{list1}}</p>
@@ -17,44 +19,43 @@
                         <h3>{{list2_name}}</h3>
                         <p .pre-scrollable>{{list2}}</p>
                     </div>
-
                 </div>
-                <div class="col-sm-6">
-                    <p>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <button type='button' class="btn btn-danger btn-inverse" id="first_group">Subjects 1-4</button>
-                        &nbsp;
-                        {% if subject_num > 4%}
-                        <button type='button' class="btn btn-danger" id="second_group">Subjects 5-8</button>
-                        &nbsp;
-                        {% endif %}
-                        <button type='button' class="btn btn-danger" id="no_group">Close all subjects</button>
-                        &nbsp;
-                        <br>
-                        <br>
-                        <br>
-                        <button type='button' class="btn btn-primary btn-sm" id="fiducial"
-                            style="visibility:hidden">Fiducial View</button>
-                        &nbsp;
-                        <button type='button' class="btn btn-primary btn-sm" id="inflated"
-                            style="visibility:hidden">Inflated View</button>
-                        &nbsp;
-                        <button type='button' class="btn btn-primary btn-sm" id="flatten"
-                            style="visibility:hidden">Flat</button>
-                        &nbsp;
-                        <div id='roi_labels' style="visibility:hidden">
-                            <input type="checkbox" aria-label="..." id="labels_checkbox" checked="unchecked">
-                            <label for="labels_checkbox">Show ROI labels</label>
-                        </div>
-                    </p>
-                    <p><br></p>
-                </div>
-
-                <p> </p>
             </div>
+            <div class="col-sm-6">
+                <p>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <button type='button' class="btn btn-danger btn-inverse" id="first_group">Subjects 1-4</button>
+                    &nbsp;
+                    {% if subject_num > 4%}
+                    <button type='button' class="btn btn-danger" id="second_group">Subjects 5-8</button>
+                    &nbsp;
+                    {% endif %}
+                    <button type='button' class="btn btn-danger" id="no_group">Close all subjects</button>
+                    &nbsp;
+                    <br>
+                    <br>
+                    <br>
+                    <button type='button' class="btn btn-primary btn-sm" id="fiducial"
+                        style="visibility:hidden">Fiducial View</button>
+                    &nbsp;
+                    <button type='button' class="btn btn-primary btn-sm" id="inflated"
+                        style="visibility:hidden">Inflated View</button>
+                    &nbsp;
+                    <button type='button' class="btn btn-primary btn-sm" id="flatten"
+                        style="visibility:hidden">Flat</button>
+                    &nbsp;
+                    <div id='roi_labels' style="visibility:hidden">
+                        <input type="checkbox" aria-label="..." id="labels_checkbox" checked="unchecked">
+                        <label for="labels_checkbox">Show ROI labels</label>
+                    </div>
+                </p>
+                <p><br></p>
+            </div>
+
+            <p> </p>
         </div>
         <div class="row">
             <div class="col-sm-6">
