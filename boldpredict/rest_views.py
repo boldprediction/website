@@ -67,6 +67,12 @@ def experiment_details(request, exp_id):
 
 
 @api_view(['DELETE'])
+def contrast_details(request, c_id):
+    contrast  = Contrast.objects.get(id = c_id)
+    contrast.delete()
+    return Response({'id': c_id})
+
+@api_view(['DELETE'])
 @login_required
 def stimuli_details(request, stimuli_id):
     stimuli = Stimuli.objects.get(id=stimuli_id)
