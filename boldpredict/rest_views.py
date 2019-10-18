@@ -195,3 +195,18 @@ def experiment_email(request, exp_id):
             recipient_list=email_addresses)
 
     return Response({"exp_id": exp_id})
+
+
+@api_view(['POST'])
+@login_required
+def experiment_approval(request,exp_id):
+    data = {}
+    data['exp_id'] = exp_id
+    data['is_approved'] = True
+    experiment_api.update_experiment(**data)
+    exp = experiment_api.get_experiment(exp_id)
+    for contrast in exp.contrasts.all():
+        sqs_api.send_contrast_message(sqs_api.create_contrast_message(
+        contrast), exp.stimuli_type)
+    
+    return HttpResponse(json.dumps(exp.serialize()))

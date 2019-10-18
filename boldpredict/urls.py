@@ -22,8 +22,6 @@ urlpatterns = [
          views.edit_stimulus, name='edit_stimulus'),
     path('experiment/<int:exp_id>/edit_contrasts',
          views.edit_contrasts, name='edit_contrasts'),
-    path('experiment/<int:exp_id>/approval',
-         views.experiment_approval, name='experiment_approval'),
     path('save_stimuli', views.save_stimuli, name='save_stimuli'),
     path('add_contrast', views.add_contrast, name="add_contrast"),
     path('upload_images', views.upload_images, name="upload_images"),
@@ -48,4 +46,6 @@ urlpatterns = [
     path('api/stimuli/<int:stimuli_id>', rest_views.stimuli_details),
     path('api/contrasts/<int:exp_id>', rest_views.contrast_list),
     path('api/email/<int:exp_id>', rest_views.experiment_email),
+    path('api/experiment/<int:exp_id>/approval',
+         rest_views.experiment_approval),
 ]

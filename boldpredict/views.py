@@ -587,15 +587,6 @@ def create_contrast(request):
 
 
 
-@login_required
-def experiment_approval(request,exp_id):
-    data = {}
-    data['exp_id'] = exp_id
-    data['is_approved'] = True
-    experiment_api.update_experiment(**data)
-    exp = experiment_api.get_experiment(exp_id)
-    for contrast in exp.contrasts:
-        sqs_api.send_contrast_message(sqs_api.create_contrast_message(
-        contrast), exp.stimuli_type)
-    
+
+
 
