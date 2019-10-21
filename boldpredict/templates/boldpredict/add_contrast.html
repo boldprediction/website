@@ -3,17 +3,17 @@
 {% block staticfiles %}
     {% load staticfiles %}
 
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="{% static 'boldpredict/js/add_stimuli.js' %}" type="text/javascript"></script>
-
-
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
 
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+    <script src="{% static 'boldpredict/js/utils.js' %}" type="text/javascript"></script>
+    <script src="{% static 'boldpredict/js/add_stimuli.js' %}" type="text/javascript"></script>
 
     <style>
         #inputGroupFile04:focus {
@@ -36,6 +36,18 @@
             margin-top: 1rem;
         }
 
+        #file-block {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        label, th {
+            color: white;
+        }
+
+        #coordinate-header-block {
+            margin-bottom: 0.5rem;
+        }
     </style>
 
 
@@ -66,24 +78,24 @@
     <div class="container">
         <div class="row">
             <div class="col-md-3">
-                <form class="needs-validation" novalidate>
+                <form class="needs-validation">
                     <div id="contrast-block">
-                        <label style="color: white">
-                            <label for="contrast_title_input">Contrast Title(optional) </label>
-                        </label>
-                        <input type="text" class="form-control" name="contrast_tile" id="contrast_title_input"/>
+                        <div id="contrast-title-block" class="d-flex justify-content-between align-items-baseline">
+                            <label for="contrast_title_input">Contrast Title</label>
+                            <div></div>
+                            <button type="submit" id="upload-btn" class="btn btn-sm" onclick="addContrast()">Add
+                            </button>
+                        </div>
+                        <input type="text" class="form-control" placeholder="option" id="contrast_title_input"/>
                     </div>
                     <div id="condition-1-block">
-                        <label style="color: white">
+                        <label>
                             <label for="condition-1-input">Condition 1 Name</label>
                         </label>
                         <input type="text" class="form-control" name="contrast_tile" id="condition-1-input" required/>
-                        <div class="invalid-feedback">
-                            Please fill a condition name.
-                        </div>
                     </div>
                     <div>
-                        <label style="color: white">
+                        <label>
                             <label for="stimuli_1">Stimuli of Condition 1</label>
                         </label>
                         <select id="stimuli_1" class="selectpicker form-control" multiple data-live-search="true"
@@ -92,18 +104,15 @@
                             <option>Ketchup</option>
                             <option>Relish</option>
                         </select>
-                        <div class="invalid-feedback">
-                            Please select at least one stimulus.
-                        </div>
                     </div>
                     <div id="condition-2-block">
-                        <label style="color: white">
+                        <label>
                             <label for="condition-2-input">Condition 2 Name</label>
                         </label>
                         <input type="text" class="form-control" name="contrast_tile" id="condition-2-input"/>
                     </div>
                     <div>
-                        <label style="color: white">
+                        <label>
                             <label for="stimuli_2">Stimuli of Condition 2</label>
                         </label>
                         <select id="stimuli_2" class="selectpicker form-control" multiple data-live-search="true">
@@ -113,7 +122,7 @@
                         </select>
                     </div>
                     <div>
-                        <label style="color: white">Figures</label>
+                        <label>Figures</label>
                     </div>
                     <div class="input-group">
                         <div class="custom-file">
@@ -126,22 +135,92 @@
                         <tbody id="file-block-body">
                         </tbody>
                     </table>
-                    <div>
-                        <button type="submit" id="upload-btn" class="btn btn-warning" onclick="addContrast()">Upload
-                        </button>
+                </form>
+                <form id="coordinate-input-block">
+                    <div id="coordinate-header-block" class="d-flex justify-content-between align-items-baseline">
+                        <label>Coordinates</label>
+                        <div></div>
+                        <button type="submit" class="btn btn-sm">Add a coordinate</button>
                     </div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Name</span>
+                        </div>
+                        <input type="text" placeholder="coordinate name" class="form-control" required/>
+                    </div>
+
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">X:</span>
+                                    </div>
+                                    <input type="number" placeholder="x value" class="form-control" required/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">ZScore:</span>
+                                    </div>
+                                    <input type="number" placeholder="z score" class="form-control" required/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Y:</span>
+                                    </div>
+                                    <input type="number" placeholder="y value" class="form-control" required/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">TScore:</span>
+                                    </div>
+                                    <input type="number" placeholder="t score" class="form-control" required/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Z:</span>
+                                    </div>
+                                    <input type="number" placeholder="z value" class="form-control" required/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Voxel:</span>
+                                    </div>
+                                    <input type="number" placeholder="voxel" class="form-control" required/>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </form>
             </div>
             <div class="col-md-1"></div>
-            <div class="col-md-7">
-                <table class="table" style="color: white">
+            <div class="col-md-8">
+                <table class="table">
                     <thead>
                     <tr>
-                        <th>number</th>
+                        <th>#</th>
                         <th>condition 1</th>
                         <th>stimuli of 1</th>
                         <th>condition name 2</th>
                         <th>stimuli of 2</th>
+                        <th>coordinates</th>
                         <th>figures</th>
                     </tr>
                     </thead>
@@ -154,41 +233,31 @@
     </div>
     <script type="text/javascript">
         {#window.onload = updateStimuli();#}
-        let filesToBeUploaded = []
-        const btnstrleft = "<tr><td style=\"color:white\">"
-        const btnstrright = "</td><td><button type=\"button\" class=\"file-name btn-danger\" onclick=\"deleteFile(this)\">delete</button></td></tr>"
+        let files = []
+        let contrasts = []
+        const btnStr = "<tr><td style=\"color:white\">{0}</td><td><button type=\"button\" class=\"file-name btn-danger\" onclick=\"deleteFile(this)\">delete</button></td></tr>"
         $(document).ready(function () {
             $("#inputGroupFile04").on("change", function () {
-                let files = $("#inputGroupFile04")[0].files
-                if (files.length > 0) {
+                let selectedFiles = $("#inputGroupFile04")[0].files
+                if (selectedFiles.length > 0) {
                     let a = $("#file-block-body")[0].innerHTML
-                    $("#file-block-body")[0].innerHTML = a + btnstrleft + files[0].name + btnstrright
-                    filesToBeUploaded.push(files[0])
+                    $("#file-block-body")[0].innerHTML = a + btnStr.format(selectedFiles[0].name)
+                    files.push(selectedFiles[0])
                 }
             });
 
-            let forms = $(".needs-validation")[0]
-            for (let i = 0; i < forms.length; i++) {
-                let form = forms[i]
-                form.addEventListener('submit', function (event) {
-                    if (form.checkValidity() === false) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            }
-
-
-        })
+            let form = $(".needs-validation")[0]
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                addContrast();
+            });
+        });
 
         function deleteFile(btn) {
             let tr = $(btn).parent().parent()
             let index = $(".file-name").index(btn)
-            filesToBeUploaded.splice(index, 1)
-            for (let i = 0; i < filesToBeUploaded.length; i++) {
-                console.log(filesToBeUploaded[i].name)
-            }
+            files.splice(index, 1)
             tr.remove()
         }
 
@@ -197,8 +266,8 @@
             form.setAttribute("method", "POST");
             form.setAttribute("action", "/upload_images");
 
-            for (let i = 0; i < filesToBeUploaded.length; i++) {
-                let file = filesToBeUploaded[i]
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i]
                 let input = document.createElement("input");
                 input.setAttribute('type', "hidden");
                 input.setAttribute("name", "file" + (i + 1))
@@ -210,7 +279,26 @@
         }
 
         function addContrast() {
-
+            let title = $("#contrast_title_input").val()
+            if (!title || title.length == 0) {
+                title = 'contrast' + (contrasts.length + 1) + '@' + randID(7)
+            }
+            let cond1 = $("#condition-1-input").val()
+            let stim1 = $("#stimuli_1").val()
+            let cond2 = $("#condition-2-input").val()
+            let stim2 = $("#stimuli_2").val()
+            let fileNames = []
+            for (let i = 0; i < files.length; i++) {
+                fileNames.push(files[i].name)
+            }
+            contrasts.push({
+                title: {
+                    cond1: stim1,
+                    cond2: stim2,
+                    "figures": fileNames
+                }
+            })
+            console.log("haha")
         }
 
         function uploadFiles() {
@@ -218,13 +306,9 @@
             let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
             formdata.append('csrfmiddlewaretoken', csrfToken)
 
-            for (let i = 0; i < filesToBeUploaded.length; i++) {
-                let file = filesToBeUploaded[i]
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i]
                 formdata.append(file.name, file, file.name);
-            }
-
-            for (let [key, value] of formdata.entries()) {
-                console.log(key, value);
             }
 
             $.ajax({
