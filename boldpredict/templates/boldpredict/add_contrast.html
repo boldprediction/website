@@ -368,14 +368,23 @@
         }
 
         function addCoordinates() {
-            let table = $("#coord-table")
-            let n = $("#name-coord")[0].value
-            let x = $("#x-coord")[0].value
-            let y = $("#y-coord")[0].value
-            let z = $("#z-coord")[0].value
-            let ts = $("#ts-coord")[0].value
-            let zs = $("#zs-coord")[0].value
-            let v = $("#v-coord")[0].value
+            let table = $("#coord-table");
+            let nInput = $("#name-coord")[0];
+            let xInput = $("#x-coord")[0];
+            let yInput = $("#y-coord")[0];
+            let zInput = $("#z-coord")[0];
+            let tsInput = $("#ts-coord")[0];
+            let zsInput = $("#zs-coord")[0];
+            let vInput = $("#v-coord")[0];
+
+            let n = nInput.value;
+            let x = xInput.value;
+            let y = yInput.value;
+            let z = zInput.value;
+            let ts = tsInput.value;
+            let zs = zsInput.value;
+            let v = vInput.value;
+
 
             table.append(coordStr.format(n,x,y,z,ts,zs,v))
             coordinates.push({
@@ -386,7 +395,15 @@
                 "t-score":ts,
                 "z-score":zs,
                 "voxel":v
-            })
+            });
+
+            nInput.value = "";
+            xInput.value = 0;
+            yInput.value = 0;
+            zInput.value = 0;
+            tsInput.value = 0;
+            zsInput.value = 0;
+            vInput.value = 0;
         }
 
         function deleteCoord(btn) {
