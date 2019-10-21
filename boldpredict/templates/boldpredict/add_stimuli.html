@@ -42,6 +42,7 @@
                     id="id_stimuli_type" disabled>
             </div>
         </div>
+        <br>
         <div class="row">
             <div class="col-md-2">
             </div>
@@ -50,8 +51,7 @@
                     Enter Stimuli (use comma to seperate words)
                 </h5>
                 <textarea rows="5" cols="8" type="text" class="form-control" name="stimuli_content"
-                    id="id_stimuli_content" value="{{stimuli_content}}">
-                    </textarea>
+                    id="id_stimuli_content" value="{{stimuli_content}}"></textarea>
             </div>
         </div>
         <br>
@@ -68,10 +68,10 @@
             <div class="col-md-2">
             </div>
             <div class="col-md-8">
-                <table class="table tab-dark table-bordered" > 
+                <table class="table table-light table-bordered">
                     <thead>
                         <tr class="table-dark">
-                            <th scope="col">#</th>
+                            <th scope="col">No.</th>
                             <th scope="col">Stimuli Name</th>
                             <th scope="col">Stimuli Type</th>
                             <th scope="col">Stimuli Content</th>
@@ -86,8 +86,17 @@
             <div class="col-md-2">
             </div>
         </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-8">
+            </div>
+            <input class="btn" type="submit" value="Next" onclick="jumpToNextPage()">
+        </div>
     </div>
-    <input type ="hidden" value = "{{exp_id}}" id = "id_experiment_id">
+    <input type="hidden" value="{{exp_id}}" id="id_experiment_id">
 </section>
 <br>
 <br>
@@ -97,5 +106,3 @@
     window.onload = updateStimuli();
 </script>
 {% endblock%}
-
-

@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'boldpredict',
-    'rest_framework',
-    'tests'
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -219,6 +218,7 @@ REGION_NAME =  'us-east-2'
 
 SUBJECTS_URL = '/static/boldpredict/subjects/'
 DATA_URL = '/static/boldpredict/data/'
+IMAGE_URL = '/static/boldpredict/images/'
 
 SUBJECTS = ["JGfs", "MLfs2",  "AHfs"]
 SUBJECT_NUM = len(SUBJECTS)
@@ -230,3 +230,5 @@ CACHE_EXPIRATION_TIME = 86400
 
 REFRESH_INTERVAL = 1000
 TIMEOUT_INTERVAL = 50000
+
+ADMINISTRATORS = [ 'admin', 'hww19920718'  ]

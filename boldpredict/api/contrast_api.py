@@ -16,11 +16,10 @@ from django.utils import timezone
 #     return stimuli, word_list_stimuli
 
 def create_word_list_contrast(*args, **kwargs):
-
     hash_key = kwargs.get('hash_key', None)
     if hash_key is None:
         hash_key = utils.generate_hash_key(**kwargs)
-
+    
     model_type = kwargs.get('model_type', ENG1000)
     stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
     coordinate_space = kwargs.get('coordinate_space', MNI)
@@ -49,9 +48,9 @@ def create_word_list_contrast(*args, **kwargs):
     baseline_choice = kwargs.get('baseline_choice', False)
     permutation_choice = kwargs.get('permutation_choice', False)
     contrast = Contrast.objects.create(contrast_title=contrast_title, baseline_choice=baseline_choice,
-                                       permutation_choice=permutation_choice, experiment = exp,
-                                       privacy_choice=contrast_type, creator = owner,
-                                       hash_key = hash_key )
+                                       permutation_choice=permutation_choice, experiment=exp,
+                                       privacy_choice=contrast_type, creator=owner,
+                                       hash_key=hash_key)
 
     # create condition
     condition1 = Condition.objects.create(
@@ -64,10 +63,27 @@ def create_word_list_contrast(*args, **kwargs):
         stimuli=stimuli2, condition=condition2)
 
     contrast_dict = contrast.serialize()
-    cache_api.set_contrast_in_cache(contrast_dict['c_id'],contrast_dict['hash_key'],contrast_dict)
+    cache_api.set_contrast_in_cache(
+        contrast_dict['c_id'], contrast_dict['hash_key'], contrast_dict)
 
     return contrast
 
+
+def create_condition(*args, **kwargs):
+    contrast_id = kwargs['contrast_id']
+    condition_name = kwargs['name']
+    stimuli_list = kwargs['stimuli_list']
+    stimulus = []
+    for stimuli_key in stimuli_list:
+        stimuli = Stimuli.objects.get(id=stimuli_key)
+        stimulus.append(stimuli)
+    contrast = Contrast.objects.get(id = contrast_id)
+    condition = Condition.objects.create(
+        condition_name=condition_name, contrast=contrast)
+    for stimuli in stimulus:
+        combine = ConditionCombination.objects.create(
+            stimuli=stimuli, condition=condition)
+    return condition
 
 def create_contrast(*args, **kwargs):
     stimuli_type = kwargs.get('stimuli_type', WORD_LIST)

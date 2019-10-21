@@ -24,6 +24,9 @@ class Experiment(models.Model):
 
     is_published = models.BooleanField(
         'Is this a published experiment', default=False)
+    
+    is_approved = models.BooleanField(
+        'If it is a published experiment, is this experiment approved', default=False)
 
     def serialize(self):
         return {
@@ -31,11 +34,12 @@ class Experiment(models.Model):
             "experiment_title": self.experiment_title,
             "authors": self.authors,
             "DOI": self.DOI,
-            "creator": self.creator.username,
+            "creator": self.creator.username if self.creator is not None else "",
             "stimuli_type": self.stimuli_type,
             "coordinate_space": self.coordinate_space,
             "model_type": self.model_type,
             "is_published": self.is_published,
+            "is_approved" : self.is_approved,
             "stimuli": [ stimuli.serialize() for stimuli in self.stimulus.all() ]
         }
 
@@ -79,6 +83,8 @@ class Contrast(models.Model):
     hash_key = models.CharField('Hash Key', max_length=56, db_index=True)
     created_at = models.DateTimeField(default=timezone.now)
     result_generated_at = models.DateTimeField(null=True)
+    figures_list = models.TextField('Contrast related figures', default = '[]')
+
 
     def serialize(self):
         if self.experiment.stimuli_type == WORD_LIST:
@@ -117,6 +123,8 @@ class Contrast(models.Model):
         contrast_dict['hash_key'] = self.hash_key
         contrast_dict['created_at'] = str(self.created_at)
         contrast_dict['result_generated_at'] = str(self.result_generated_at)
+        contrast_dict['figures_list'] = self.figures_list
+        contrast_dict['figure_num'] = len(json.loads(self.figures_list))
 
         # collect subjects result
         subjects_dict = {}
@@ -181,7 +189,8 @@ class Coordinate(models.Model):
     x = models.IntegerField('x')
     y = models.IntegerField('y')
     z = models.IntegerField('z')
-    contrast = models.ForeignKey(Contrast, on_delete=models.CASCADE)
+    contrast = models.ForeignKey(Contrast, on_delete=models.CASCADE, related_name="coordinates")
+    zscore = models.IntegerField('zcore',null=True)
     # coordinates_holder = models.ForeignKey(Coordinates_holder)
 
 # for coordinate analysis

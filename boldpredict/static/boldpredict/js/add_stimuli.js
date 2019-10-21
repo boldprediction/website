@@ -51,6 +51,12 @@ function updateStimuli() {
     });
 }
 
+
+function jumpToNextPage() {
+    exp_id = $('#id_experiment_id').val()  
+    window.location.href="/experiment/"+exp_id+"/edit_contrasts";  
+}
+
 function updateStimuliTable(data) {
     stimuli = data["stimuli"];
     tbody = $('#id_stimuli_table_body');
@@ -73,7 +79,7 @@ function deleteStimuli(stimuli_id) {
         type: "DELETE",
         url: "/api/stimuli/" + stimuli_id,
         headers: { "X-CSRFToken": csrftoken },
-        data: JSON.stringify(postData),
+        data: JSON.stringify({}),
         dataType: 'json',
         contentType: 'application/json',
         success: function(result){

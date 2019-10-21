@@ -111,11 +111,16 @@
                             <button type="submit" class="submit_button">Submit</button>
                             {% csrf_token %}
                         </div>
-                        <input class="hidden" name="stimuli_type" value={{ stimuli_type }}/>
-                        <input class="hidden" name="model_type" value={{ model_type }}/>
+                        <input type="hidden" name="stimuli_type" value="{{ stimuli_type }}"/>
+                        <input type="hidden" name="model_type" value="{{ model_type }}"/>
                     </form>
                 </div>
                 <div class="col-md-7">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
                     <br>
                     <br>
                     <h3>
@@ -131,6 +136,10 @@
                             </button>
                         {% endfor %}
                     </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
                     <br>
                     <br>
                     <br>
