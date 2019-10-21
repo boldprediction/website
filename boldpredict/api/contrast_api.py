@@ -2,18 +2,18 @@ from boldpredict.models import *
 from boldpredict.constants import *
 import json
 from django.conf import settings
-from boldpredict.api import cache_api, experiment_api
+from boldpredict.api import cache_api, experiment_api, stimuli_api
 import boldpredict.utils as utils
 from django.utils import timezone
 
 
-def create_word_list_stimuli(stimuli_type, name, text, exp):
-    stimuli = Stimuli.objects.create(stimuli_name=name, stimuli_type=stimuli_type,
-                                     experiment=exp)
-    word_list_stimuli = WordListStimuli.objects.create(
-        word_list=text, parent_stimuli=stimuli)
+# def create_word_list_stimuli(stimuli_type, name, text, exp):
+#     stimuli = Stimuli.objects.create(stimuli_name=name, stimuli_type=stimuli_type,
+#                                      experiment=exp)
+#     word_list_stimuli = WordListStimuli.objects.create(
+#         word_list=text, parent_stimuli=stimuli)
 
-    return stimuli, word_list_stimuli
+#     return stimuli, word_list_stimuli
 
 def create_word_list_contrast(*args, **kwargs):
 
@@ -33,11 +33,11 @@ def create_word_list_contrast(*args, **kwargs):
     # create stimuli
     list1_name = kwargs.get('list1_name', None)
     list1_text = kwargs.get('list1_text', None)
-    stimuli1, word_list_stimuli_1 = create_word_list_stimuli(
+    stimuli1, word_list_stimuli_1 = stimuli_api.create_word_list_stimuli(
         stimuli_type, list1_name, list1_text, exp)
     list2_name = kwargs.get('list2_name', None)
     list2_text = kwargs.get('list2_text', None)
-    stimuli2, word_list_stimuli_2 = create_word_list_stimuli(
+    stimuli2, word_list_stimuli_2 = stimuli_api.create_word_list_stimuli(
         stimuli_type, list2_name, list2_text, exp)
 
     # contrast

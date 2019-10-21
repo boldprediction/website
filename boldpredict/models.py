@@ -48,12 +48,13 @@ class Stimuli(models.Model):
         Experiment, related_name="stimulus", on_delete=models.CASCADE)
 
     def serialize(self):
-        return {
-            "id": self.id,
-            "stimuli_type": self.stimuli_type,
-            "stimuli_name": self.stimuli_name,
-            "stimuli_content": self.word_list_stimuli.word_list if self.stimuli_type == WORD_LIST and hasattr(self,'word_list_stimuli') else ""
-        }
+        if self.stimuli_type == WORD_LIST:
+            return {
+                "id": self.id,
+                "stimuli_type": self.stimuli_type,
+                "stimuli_name": self.stimuli_name,
+                "stimuli_content": self.word_list_stimuli.word_list if hasattr(self,'word_list_stimuli') else ""
+            }
 
 class WordListStimuli(models.Model):
     word_list = models.TextField(max_length=10000)
