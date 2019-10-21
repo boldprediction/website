@@ -16,6 +16,11 @@
     <script src="{% static 'boldpredict/js/add_stimuli.js' %}" type="text/javascript"></script>
 
     <style>
+
+        .container {
+            max-width: 90%;
+        }
+
         #inputGroupFile04:focus {
             outline: none;
         }
@@ -37,8 +42,8 @@
         }
 
         #file-block {
-            margin-top: 1rem;
-            margin-bottom: 1rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
         label, th {
@@ -46,7 +51,20 @@
         }
 
         #coordinate-header-block {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        #coord-table {
+            width: 100%;
+        }
+
+        #coord-table th, #coord-table td {
+            border: #fff 1px solid;
+            text-align: center;
+        }
+
+        div label {
+            font-weight: bold;
         }
     </style>
 
@@ -60,7 +78,7 @@
             <div id="Header">
                 <div class="row">
                     <div class="col-md-5"></div>
-                    <div class="col-md-2"><h2>Add Contrast</h2></div>
+                    <div class="col-md-2"><h2>Add Contrasts</h2></div>
                     <div class="col-md-2"></div>
                     <div class="col-md-2">
                         <button type="button" id="upload-btn" class="btn btn-warning" onclick="uploadFiles()">Upload
@@ -77,7 +95,7 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <form class="needs-validation">
                     <div id="contrast-block">
                         <div id="contrast-title-block" class="d-flex justify-content-between align-items-baseline">
@@ -135,21 +153,34 @@
                         <tbody id="file-block-body">
                         </tbody>
                     </table>
+                    <div>
+                        <label>Coordinates</label>
+                        <table id="coord-table">
+                            <tr>
+                                <th style="width: 1rem;">name</th>
+                                <th>x</th>
+                                <th>y</th>
+                                <th>z</th>
+                                <th>T</th>
+                                <th>Z</th>
+                                <th>V</th>
+                                <th style="width: 1rem;">Delete</th>
+                            </tr>
+                        </table>
+                    </div>
                 </form>
+                <div style="height: 20px"></div>
                 <form id="coordinate-input-block">
                     <div id="coordinate-header-block" class="d-flex justify-content-between align-items-baseline">
-                        <label>Coordinates</label>
-                        <div></div>
-                        <button type="submit" class="btn btn-sm">Add a coordinate</button>
-                    </div>
-
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Name</span>
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Name</span>
+                            </div>
+                            <input type="text" placeholder="coordinate name" class="form-control" id="name-coord" required/>
                         </div>
-                        <input type="text" placeholder="coordinate name" class="form-control" required/>
+                        <div style="width: 1rem"></div>
+                        <button type="submit" class="btn btn-sm">Add</button>
                     </div>
-
                     <table>
                         <tbody>
                         <tr>
@@ -158,15 +189,17 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">X:</span>
                                     </div>
-                                    <input type="number" placeholder="x value" class="form-control" required/>
+                                    <input type="number" placeholder="x value" class="form-control" id="x-coord"
+                                           required/>
                                 </div>
                             </td>
                             <td>
                                 <div class="input-group input-group-sm">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text">ZScore:</span>
+                                        <span class="input-group-text">TScore:</span>
                                     </div>
-                                    <input type="number" placeholder="z score" class="form-control" required/>
+                                    <input type="number" placeholder="t score" class="form-control" id="ts-coord"
+                                           required/>
                                 </div>
                             </td>
                         </tr>
@@ -176,15 +209,17 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Y:</span>
                                     </div>
-                                    <input type="number" placeholder="y value" class="form-control" required/>
+                                    <input type="number" placeholder="y value" class="form-control" id="y-coord"
+                                           required/>
                                 </div>
                             </td>
                             <td>
                                 <div class="input-group input-group-sm">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text">TScore:</span>
+                                        <span class="input-group-text">ZScore:</span>
                                     </div>
-                                    <input type="number" placeholder="t score" class="form-control" required/>
+                                    <input type="number" placeholder="z score" class="form-control" id="zs-coord"
+                                           required/>
                                 </div>
                             </td>
                         </tr>
@@ -194,7 +229,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Z:</span>
                                     </div>
-                                    <input type="number" placeholder="z value" class="form-control" required/>
+                                    <input type="number" placeholder="z value" class="form-control" id="z-coord"
+                                           required/>
                                 </div>
                             </td>
                             <td>
@@ -202,7 +238,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Voxel:</span>
                                     </div>
-                                    <input type="number" placeholder="voxel" class="form-control" required/>
+                                    <input type="number" placeholder="voxel" class="form-control" id="v-coord"
+                                           required/>
                                 </div>
                             </td>
                         </tr>
@@ -210,7 +247,6 @@
                     </table>
                 </form>
             </div>
-            <div class="col-md-1"></div>
             <div class="col-md-8">
                 <table class="table">
                     <thead>
@@ -218,7 +254,7 @@
                         <th>#</th>
                         <th>condition 1</th>
                         <th>stimuli of 1</th>
-                        <th>condition name 2</th>
+                        <th>condition 2</th>
                         <th>stimuli of 2</th>
                         <th>coordinates</th>
                         <th>figures</th>
@@ -235,7 +271,10 @@
         {#window.onload = updateStimuli();#}
         let files = []
         let contrasts = []
+        let coordinates = []
         const btnStr = "<tr><td style=\"color:white\">{0}</td><td><button type=\"button\" class=\"file-name btn-danger\" onclick=\"deleteFile(this)\">delete</button></td></tr>"
+        const coordStr = "<tr>><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td><button onclick=\"deleteCoord(this)\" type=\"button\" class=\"btn-danger coord-btn\"><span>&#10005;</span></button></td></tr>"
+
         $(document).ready(function () {
             $("#inputGroupFile04").on("change", function () {
                 let selectedFiles = $("#inputGroupFile04")[0].files
@@ -252,6 +291,13 @@
                 event.stopPropagation();
                 addContrast();
             });
+
+            let coordinate_form = $("#coordinate-input-block")[0]
+            coordinate_form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                addCoordinates();
+            })
         });
 
         function deleteFile(btn) {
@@ -298,7 +344,6 @@
                     "figures": fileNames
                 }
             })
-            console.log("haha")
         }
 
         function uploadFiles() {
@@ -320,6 +365,35 @@
             }).done(function (resp) {
                 console.log(resp);
             });
+        }
+
+        function addCoordinates() {
+            let table = $("#coord-table")
+            let n = $("#name-coord")[0].value
+            let x = $("#x-coord")[0].value
+            let y = $("#y-coord")[0].value
+            let z = $("#z-coord")[0].value
+            let ts = $("#ts-coord")[0].value
+            let zs = $("#zs-coord")[0].value
+            let v = $("#v-coord")[0].value
+
+            table.append(coordStr.format(n,x,y,z,ts,zs,v))
+            coordinates.push({
+                "name":n,
+                "x":x,
+                "y":y,
+                "z":z,
+                "t-score":ts,
+                "z-score":zs,
+                "voxel":v
+            })
+        }
+
+        function deleteCoord(btn) {
+            let tr = $(btn).parent().parent()
+            let index = $(".coord-btn").index(btn)
+            coordinates.splice(index, 1)
+            tr.remove()
         }
     </script>
 {% endblock %}
