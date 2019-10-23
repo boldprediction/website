@@ -15,7 +15,9 @@ import json
 
 class ExperimentCreationAPITestCase(TestCase):
     def setUp(self):
+        user = User.objects.create(username='test',password="test")
         self.api_client = APIClient(enforce_csrf_checks=True)
+        self.api_client.force_authenticate(user=user)
         self.input_params = {'model_type': WORD2VEC,
                              'stimuli_type': WORD_LIST,
                              'coordinate_space': MNI,
