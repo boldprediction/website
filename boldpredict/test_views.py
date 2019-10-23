@@ -123,6 +123,10 @@ class ExperimentCreationAPITestCase(TestCase):
         assert response.status_code == 200
         assert response_data['id'] == self.stimuli_id1
 
+    def test_contrast_list(self):
+        response = self.api_client.get(
+            '/api/experiment/' + str(self.exp_id) + '/approval', {}, format='json')
+        assert True
 
 class ContrastAPITestCase(TestCase):
     def setUp(self):
