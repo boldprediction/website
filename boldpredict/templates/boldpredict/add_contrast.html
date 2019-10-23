@@ -46,7 +46,7 @@
             margin-bottom: 0.5rem;
         }
 
-        label, th {
+        label, th, td {
             color: white;
         }
 
@@ -66,6 +66,20 @@
         div label {
             font-weight: bold;
         }
+
+        #contrast-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .selected-contrast {
+            background-color: rgba(255, 193, 7, 1);
+        }
+
+        .selected-contrast td, .selected-contrast code {
+            color: #0f0f0f;
+        }
+
     </style>
 
 
@@ -95,22 +109,24 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <form class="needs-validation">
                     <div id="contrast-block">
                         <div id="contrast-title-block" class="d-flex justify-content-between align-items-baseline">
                             <label for="contrast_title_input">Contrast Title</label>
                             <div></div>
-                            <button type="submit" id="upload-btn" class="btn btn-sm" onclick="addContrast()">Add
+                            <button type="submit" id="add-contrast-btn" class="btn btn-sm">Add
+                                Contrast
                             </button>
                         </div>
-                        <input type="text" class="form-control" placeholder="option" id="contrast_title_input"/>
+                        <input type="text" class="form-control" placeholder="optional" id="contrast_title_input"/>
                     </div>
                     <div id="condition-1-block">
                         <label>
                             <label for="condition-1-input">Condition 1 Name</label>
                         </label>
-                        <input type="text" class="form-control" name="contrast_tile" id="condition-1-input" required/>
+                        <input type="text" class="form-control" placeholder="condition name 1" id="condition-1-input"
+                               required/>
                     </div>
                     <div>
                         <label>
@@ -127,7 +143,7 @@
                         <label>
                             <label for="condition-2-input">Condition 2 Name</label>
                         </label>
-                        <input type="text" class="form-control" name="contrast_tile" id="condition-2-input"/>
+                        <input type="text" class="form-control" placeholder="condition name 2" id="condition-2-input"/>
                     </div>
                     <div>
                         <label>
@@ -156,6 +172,7 @@
                     <div>
                         <label>Coordinates</label>
                         <table id="coord-table">
+                            <thead>
                             <tr>
                                 <th style="width: 1rem;">name</th>
                                 <th>x</th>
@@ -164,8 +181,11 @@
                                 <th>T</th>
                                 <th>Z</th>
                                 <th>V</th>
-                                <th style="width: 1rem;">Delete</th>
+                                <th style="width: 1rem;">Del</th>
                             </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
                         </table>
                     </div>
                 </form>
@@ -176,7 +196,8 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Name</span>
                             </div>
-                            <input type="text" placeholder="coordinate name" class="form-control" id="name-coord" required/>
+                            <input type="text" placeholder="coordinate name" class="form-control" id="name-coord"
+                                   required/>
                         </div>
                         <div style="width: 1rem"></div>
                         <button type="submit" class="btn btn-sm">Add</button>
@@ -189,7 +210,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">X:</span>
                                     </div>
-                                    <input type="number" placeholder="x value" class="form-control" id="x-coord"
+                                    <input type="number" step="0.01" placeholder="x value" class="form-control"
+                                           id="x-coord"
                                            required/>
                                 </div>
                             </td>
@@ -198,7 +220,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">TScore:</span>
                                     </div>
-                                    <input type="number" placeholder="t score" class="form-control" id="ts-coord"
+                                    <input type="number" step="0.01" placeholder="t score" class="form-control"
+                                           id="ts-coord"
                                            required/>
                                 </div>
                             </td>
@@ -209,7 +232,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Y:</span>
                                     </div>
-                                    <input type="number" placeholder="y value" class="form-control" id="y-coord"
+                                    <input type="number" step="0.01" placeholder="y value" class="form-control"
+                                           id="y-coord"
                                            required/>
                                 </div>
                             </td>
@@ -218,7 +242,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">ZScore:</span>
                                     </div>
-                                    <input type="number" placeholder="z score" class="form-control" id="zs-coord"
+                                    <input type="number" step="0.01" placeholder="z score" class="form-control"
+                                           id="zs-coord"
                                            required/>
                                 </div>
                             </td>
@@ -229,7 +254,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Z:</span>
                                     </div>
-                                    <input type="number" placeholder="z value" class="form-control" id="z-coord"
+                                    <input type="number" step="0.01" placeholder="z value" class="form-control"
+                                           id="z-coord"
                                            required/>
                                 </div>
                             </td>
@@ -238,7 +264,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Voxel:</span>
                                     </div>
-                                    <input type="number" placeholder="voxel" class="form-control" id="v-coord"
+                                    <input type="number" step="0.01" placeholder="voxel" class="form-control"
+                                           id="v-coord"
                                            required/>
                                 </div>
                             </td>
@@ -247,17 +274,18 @@
                     </table>
                 </form>
             </div>
-            <div class="col-md-8">
-                <table class="table">
+            <div class="col-md-9">
+                <table class="table" id="contrast-table">
                     <thead>
                     <tr>
-                        <th>#</th>
-                        <th>condition 1</th>
-                        <th>stimuli of 1</th>
-                        <th>condition 2</th>
-                        <th>stimuli of 2</th>
-                        <th>coordinates</th>
+                        <th>name</th>
+                        <th>cond1</th>
+                        <th>stimuli1</th>
+                        <th>cond2</th>
+                        <th>stimuli2</th>
                         <th>figures</th>
+                        <th>coordinates</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -269,30 +297,28 @@
     </div>
     <script type="text/javascript">
         {#window.onload = updateStimuli();#}
-        let files = []
-        let contrasts = []
-        let coordinates = []
-        const btnStr = "<tr><td style=\"color:white\">{0}</td><td><button type=\"button\" class=\"file-name btn-danger\" onclick=\"deleteFile(this)\">delete</button></td></tr>"
-        const coordStr = "<tr>><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td><button onclick=\"deleteCoord(this)\" type=\"button\" class=\"btn-danger coord-btn\"><span>&#10005;</span></button></td></tr>"
+        let files = [];
+        let contrasts = [];
+        let coordinates = [];
+        let selectedContrastClassName = "selected-contrast";
+        const figureStr = "<tr><td style=\"color:white\">{0}</td><td><button type=\"button\" class=\"file-name btn-danger\" onclick=\"deleteFile(this)\">delete</button></td></tr>";
+        const coordStr = "<tr>><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td><button onclick=\"deleteCoord(this)\" type=\"button\" class=\"btn-danger coord-btn\"><span>&#10005;</span></button></td></tr>";
+        const contrastStr = "<tr class=\"contrast-record\" onclick=\"editContrast(this)\"><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td><button onclick=\"deleteContrast(this)\" type=\"button\" class=\"btn-danger del-contrast-btn\"><span>&#10005;</span></button></td></tr>";
 
         $(document).ready(function () {
             $("#inputGroupFile04").on("change", function () {
-                let selectedFiles = $("#inputGroupFile04")[0].files
+                let selectedFiles = $("#inputGroupFile04")[0].files;
                 if (selectedFiles.length > 0) {
-                    let a = $("#file-block-body")[0].innerHTML
-                    $("#file-block-body")[0].innerHTML = a + btnStr.format(selectedFiles[0].name)
-                    files.push(selectedFiles[0])
+                    let a = $("#file-block-body")[0].innerHTML;
+                    $("#file-block-body")[0].innerHTML = a + figureStr.format(selectedFiles[0].name);
+                    files.push(selectedFiles[0]);
                 }
             });
 
-            let form = $(".needs-validation")[0]
-            form.addEventListener('submit', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                addContrast();
-            });
+            let form = $(".needs-validation")[0];
+            form.addEventListener('submit', addContrast);
 
-            let coordinate_form = $("#coordinate-input-block")[0]
+            let coordinate_form = $("#coordinate-input-block")[0];
             coordinate_form.addEventListener('submit', function (event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -301,9 +327,9 @@
         });
 
         function deleteFile(btn) {
-            let tr = $(btn).parent().parent()
-            let index = $(".file-name").index(btn)
-            files.splice(index, 1)
+            let tr = $(btn).parent().parent();
+            let index = $(".file-name").index(btn);
+            files.splice(index, 1);
             tr.remove()
         }
 
@@ -324,32 +350,69 @@
             return form
         }
 
-        function addContrast() {
-            let title = $("#contrast_title_input").val()
+        function addContrast(event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            let title = $("#contrast_title_input").val();
             if (!title || title.length == 0) {
-                title = 'contrast' + (contrasts.length + 1) + '@' + randID(7)
+                title = (contrasts.length + 1) + '@' + randID(7)
             }
-            let cond1 = $("#condition-1-input").val()
-            let stim1 = $("#stimuli_1").val()
-            let cond2 = $("#condition-2-input").val()
-            let stim2 = $("#stimuli_2").val()
-            let fileNames = []
+            let cond1 = $("#condition-1-input").val();
+            let stim1 = $("#stimuli_1").val();
+            let cond2 = $("#condition-2-input").val();
+            let stim2 = $("#stimuli_2").val();
+            let figures = []
             for (let i = 0; i < files.length; i++) {
-                fileNames.push(files[i].name)
+                figures.push(files[i])
             }
             contrasts.push({
-                title: {
-                    cond1: stim1,
-                    cond2: stim2,
-                    "figures": fileNames
+                "title": title,
+                "condition1": cond1,
+                "condition2": cond2,
+                "stimuli1": stim1,
+                "stimuli2": stim2,
+                "figures": figures,
+                "coordinates": JSON.parse(JSON.stringify(coordinates))
+            });
+
+            let fileNamesStr = "";
+            if (files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                    fileNamesStr += "<li>{0}</li>".format(files[i].name)
                 }
-            })
+                fileNamesStr = "<ul>" + fileNamesStr + "</ul>";
+            }
+
+            let coordinatesStr = "";
+            if (coordinates.length > 0) {
+                let coords = [];
+                for (let i = 0; i < coordinates.length; i++) {
+                    coords.push({
+                        "name": coordinates[i].name,
+                        "xyz": [parseFloat(coordinates[i].x), parseFloat(coordinates[i].y), parseFloat(coordinates[i].z)],
+                        "tscore": parseFloat(coordinates[i].tscore),
+                        "zscore": parseFloat(coordinates[i].zscore),
+                        "voxel": parseFloat(coordinates[i].zscore),
+                    })
+                }
+                coordinatesStr = "<code>" + JSON.stringify(coords) + "</code>";
+            }
+
+            let line = contrastStr.format(title, cond1, stim1.join(), cond2, stim2.join(), fileNamesStr, coordinatesStr);
+            $("#contrast-table").append(line);
+
+            files = [];
+            coordinates = [];
+            $("#file-block tbody")[0].innerHTML = "";
+            $("#coord-table tbody")[0].innerHTML = "";
         }
 
         function uploadFiles() {
             let formdata = new FormData();
             let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
-            formdata.append('csrfmiddlewaretoken', csrfToken)
+            formdata.append('csrfmiddlewaretoken', csrfToken);
 
             for (let i = 0; i < files.length; i++) {
                 let file = files[i]
@@ -386,15 +449,15 @@
             let v = vInput.value;
 
 
-            table.append(coordStr.format(n,x,y,z,ts,zs,v))
+            table.append(coordStr.format(n, x, y, z, ts, zs, v))
             coordinates.push({
-                "name":n,
-                "x":x,
-                "y":y,
-                "z":z,
-                "t-score":ts,
-                "z-score":zs,
-                "voxel":v
+                "name": n,
+                "x": x,
+                "y": y,
+                "z": z,
+                "tscore": ts,
+                "zscore": zs,
+                "voxel": v
             });
 
             nInput.value = "";
@@ -407,10 +470,77 @@
         }
 
         function deleteCoord(btn) {
-            let tr = $(btn).parent().parent()
-            let index = $(".coord-btn").index(btn)
-            coordinates.splice(index, 1)
-            tr.remove()
+
+            let tr = $(btn).parent().parent();
+            let index = $(".coord-btn").index(btn);
+            coordinates.splice(index, 1);
+            tr.remove();
+        }
+
+        function editDone(event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            let form = $(".needs-validation")[0];
+            let btn = $("#add-contrast-btn")[0];
+            form.removeEventListener("submit", editDone);
+            form.addEventListener("submit", addContrast);
+            btn.innerHTML = "Add Contrast";
+
+            let re = new RegExp(selectedContrastClassName, "g");
+            let selectedContrastRow = $("."+selectedContrastClassName)[0];
+            selectedContrastRow.className = selectedContrastRow.className.replace(re, "");
+        }
+
+        function editContrast(row) {
+            if (row.className.includes(selectedContrastClassName)) {
+                return;
+            }
+
+            // change style
+            let re = new RegExp(" "+selectedContrastClassName, "g");
+            let tbody = $("#contrast-table tbody")
+            let rows = tbody.children();
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].className = rows[i].className.replace(re, "");
+            }
+            row.className += " "+selectedContrastClassName;
+
+            //
+            let form = $(".needs-validation")[0];
+            form.removeEventListener("submit", addContrast);
+            form.addEventListener("submit", editDone);
+            let addContrastBtn = $("#add-contrast-btn")[0];
+            addContrastBtn.innerHTML = "Edit Done";
+
+            // find the index and data
+            let index = $(".contrast-record").index(row);
+            let contrastData = contrasts[index];
+
+            // get controls
+            let contrastTitleInput = $("#contrast_title_input")[0];
+            let condition1Input = $("#condition-1-input")[0];
+            let condition2Input = $("#condition-2-input")[0];
+            let fileTable = $("#file-block tbody");
+            let coordTable = $("#coord-table tbody");
+
+            // refill the data
+            contrastTitleInput.value = contrastData.title;
+            condition1Input.value = contrastData.condition1;
+            condition2Input.value = contrastData.condition2;
+            files = contrastData.figures;
+            fileTable[0].innerHTML = "";
+            for (let i = 0; i < contrastData.figures.length; i++) {
+                fileTable.append(figureStr.format(contrastData.figures[i].name))
+            }
+
+            coordinates = contrastData.coordinates;
+            coordTable[0].innerHTML = "";
+            for (let i = 0; i < contrastData.coordinates.length; i++) {
+                let c = contrastData.coordinates[i]
+                coordTable.append(coordStr.format(c.name, c.x, c.y, c.z, c.tscore, c.zscore, c.voxel));
+            }
         }
     </script>
 {% endblock %}
