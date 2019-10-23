@@ -15,7 +15,7 @@ import json
 
 class ExperimentCreationAPITestCase(TestCase):
     def setUp(self):
-        user = User.objects.create(username='test',password="test")
+        user = User.objects.create(username='test', password="test")
         self.api_client = APIClient(enforce_csrf_checks=True)
         self.api_client.force_authenticate(user=user)
         self.input_params = {'model_type': WORD2VEC,
@@ -68,32 +68,38 @@ class ContrastAPITestCase(TestCase):
                              'list1_name': 'fruit',
                              'list1_text': 'apple, peach, grapes',
                              'list2_name': 'action',
-                             'list2_text': 'run, walk, smile',
+                             'list2_text': 'run, walk, smile, cry',
                              'contrast_type': PUBLIC,
                              'contrast_title': 'contrast test',
                              }
 
     def test_contrast_creation(self):
+        c_id, find,hash_key = contrast_api.check_existing_contrast(**self.input_params)
+        if find:
+            cache_api.delete_contrast_in_cache(c_id,hash_key)
+
         response = self.api_client.post(
             '/api/create_contrast', self.input_params, format='json')
+
         assert response.status_code == 200
         contrast_id = json.loads(response.content)['contrast_id']
-        # if Contrast.objects.get(id = contrast_id):
-        #     print("find contrast")
-        # else:
-        #     print("not find")
-        # self.update_info = [
-        #     {
-        #         "contrast_info": {
-        #             'id': str(contrast_id)
-        #         },
-        #         "group_analyses": "test analysis",
-        #         "subjects_analyses": "test subjects"
-        #     }
-        # ]
-
-        # print("contrast_id  = ", contrast_id)
-        # response = self.api_client.post(
-        #     '/api/update_contrast', self.update_info, format='json')
-        # contrast_ids = json.loads(response.content)['contrast_ids']
-        # assert contrast_id in contrast_ids
+        contrast_hash_key = json.loads(response.content)['hash_key']   
+        
+        if Contrast.objects.get(id=contrast_id):
+            print("find contrast")
+        else:
+            print("not find")
+        self.update_info = [
+            {
+                "contrast_info": {
+                    'id': str(contrast_id)
+                },
+                "group_analyses": {"A": "group_analysisa"},
+                "subjects_analyses":  {"subjectA": {"result1": "subject_analysis"}}
+            }
+        ]
+        response = self.api_client.post(
+            '/api/update_contrast', self.update_info, format='json')
+        contrast_ids = json.loads(response.content)['contrast_ids']
+        cache_api.delete_contrast_in_cache(contrast_id,contrast_hash_key)
+        assert contrast_id in contrast_ids
