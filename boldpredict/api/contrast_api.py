@@ -2,47 +2,41 @@ from boldpredict.models import *
 from boldpredict.constants import *
 import json
 from django.conf import settings
-from boldpredict.api import cache_api
+from boldpredict.api import cache_api, experiment_api, stimuli_api
 import boldpredict.utils as utils
 from django.utils import timezone
 
 
-def create_word_list_stimuli(stimuli_type, name, text, exp):
-    stimuli = Stimuli.objects.create(stimuli_name=name, stimuli_type=stimuli_type,
-                                     experiment=exp)
-    word_list_stimuli = WordListStimuli.objects.create(
-        word_list=text, parent_stimuli=stimuli)
+# def create_word_list_stimuli(stimuli_type, name, text, exp):
+#     stimuli = Stimuli.objects.create(stimuli_name=name, stimuli_type=stimuli_type,
+#                                      experiment=exp)
+#     word_list_stimuli = WordListStimuli.objects.create(
+#         word_list=text, parent_stimuli=stimuli)
 
-    return stimuli, word_list_stimuli
+#     return stimuli, word_list_stimuli
 
 def create_word_list_contrast(*args, **kwargs):
-
     hash_key = kwargs.get('hash_key', None)
     if hash_key is None:
         hash_key = utils.generate_hash_key(**kwargs)
-
+    
     model_type = kwargs.get('model_type', ENG1000)
     stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
     coordinate_space = kwargs.get('coordinate_space', MNI)
 
     # experiment attributes
-    title = kwargs.get('experiment_title', None)
-    authors = kwargs.get('authors', None)
-    DOI = kwargs.get('DOI', None)
     owner = kwargs.get('owner', None)
-    exp = Experiment.objects.create(experiment_title=title, authors=authors,
-                                    DOI=DOI, creator = owner, model_type=model_type,
-                                    stimuli_type=stimuli_type,
-                                    coordinate_space=coordinate_space)
+    kwargs['creator'] = owner
+    exp = experiment_api.create_experiment(**kwargs)
 
     # create stimuli
     list1_name = kwargs.get('list1_name', None)
     list1_text = kwargs.get('list1_text', None)
-    stimuli1, word_list_stimuli_1 = create_word_list_stimuli(
+    stimuli1, word_list_stimuli_1 = stimuli_api.create_word_list_stimuli(
         stimuli_type, list1_name, list1_text, exp)
     list2_name = kwargs.get('list2_name', None)
     list2_text = kwargs.get('list2_text', None)
-    stimuli2, word_list_stimuli_2 = create_word_list_stimuli(
+    stimuli2, word_list_stimuli_2 = stimuli_api.create_word_list_stimuli(
         stimuli_type, list2_name, list2_text, exp)
 
     # contrast
@@ -54,9 +48,9 @@ def create_word_list_contrast(*args, **kwargs):
     baseline_choice = kwargs.get('baseline_choice', False)
     permutation_choice = kwargs.get('permutation_choice', False)
     contrast = Contrast.objects.create(contrast_title=contrast_title, baseline_choice=baseline_choice,
-                                       permutation_choice=permutation_choice, experiment = exp,
-                                       privacy_choice=contrast_type, creator = owner,
-                                       hash_key = hash_key )
+                                       permutation_choice=permutation_choice, experiment=exp,
+                                       privacy_choice=contrast_type, creator=owner,
+                                       hash_key=hash_key)
 
     # create condition
     condition1 = Condition.objects.create(
@@ -69,10 +63,27 @@ def create_word_list_contrast(*args, **kwargs):
         stimuli=stimuli2, condition=condition2)
 
     contrast_dict = contrast.serialize()
-    cache_api.set_contrast_in_cache(contrast_dict['c_id'],contrast_dict['hash_key'],contrast_dict)
+    cache_api.set_contrast_in_cache(
+        contrast_dict['c_id'], contrast_dict['hash_key'], contrast_dict)
 
     return contrast
 
+
+def create_condition(*args, **kwargs):
+    contrast_id = kwargs['contrast_id']
+    condition_name = kwargs['name']
+    stimuli_list = kwargs['stimuli_list']
+    stimulus = []
+    for stimuli_key in stimuli_list:
+        stimuli = Stimuli.objects.get(id=stimuli_key)
+        stimulus.append(stimuli)
+    contrast = Contrast.objects.get(id = contrast_id)
+    condition = Condition.objects.create(
+        condition_name=condition_name, contrast=contrast)
+    for stimuli in stimulus:
+        combine = ConditionCombination.objects.create(
+            stimuli=stimuli, condition=condition)
+    return condition
 
 def create_contrast(*args, **kwargs):
     stimuli_type = kwargs.get('stimuli_type', WORD_LIST)
