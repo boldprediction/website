@@ -116,6 +116,13 @@ class ExperimentCreationAPITestCase(TestCase):
         assert response_data['model_type'] == WORD2VEC
         assert response_data['authors'] == 'vivi'
 
+    def test_get_stimuli(self):
+        response = self.api_client.get(
+            '/api/stimulus/' + str(self.exp_id), {}, format='json')
+
+        data = response.data
+        assert len(data) == 2
+
     def test_stimuli_deletion(self):
         response = self.api_client.delete(
             '/api/stimuli/' + str(self.stimuli_id1), {}, format='json')
