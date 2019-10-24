@@ -143,13 +143,15 @@
                         <label>
                             <label for="condition-2-input">Condition 2 Name</label>
                         </label>
-                        <input type="text" class="form-control" placeholder="condition name 2" id="condition-2-input"/>
+                        <input type="text" class="form-control" placeholder="condition name 2" id="condition-2-input"
+                               required/>
                     </div>
                     <div>
                         <label>
                             <label for="stimuli_2">Stimuli of Condition 2</label>
                         </label>
-                        <select id="stimuli_2" class="selectpicker form-control" multiple data-live-search="true">
+                        <select id="stimuli_2" class="selectpicker form-control" multiple data-live-search="true"
+                                required>
                             <option>Mustard</option>
                             <option>Ketchup</option>
                             <option>Relish</option>
@@ -296,14 +298,15 @@
         {% csrf_token %}
     </div>
     <script type="text/javascript">
-        {#window.onload = updateStimuli();#}
+
         let files = [];
         let contrasts = [];
         let coordinates = [];
+        let editingContrastIndex = -1;
         let selectedContrastClassName = "selected-contrast";
         const figureStr = "<tr><td style=\"color:white\">{0}</td><td><button type=\"button\" class=\"file-name btn-danger\" onclick=\"deleteFile(this)\">delete</button></td></tr>";
         const coordStr = "<tr>><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td><button onclick=\"deleteCoord(this)\" type=\"button\" class=\"btn-danger coord-btn\"><span>&#10005;</span></button></td></tr>";
-        const contrastStr = "<tr class=\"contrast-record\" onclick=\"editContrast(this)\"><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td><button onclick=\"deleteContrast(this)\" type=\"button\" class=\"btn-danger del-contrast-btn\"><span>&#10005;</span></button></td></tr>";
+        const contrastStr = "<tr class=\"contrast-record\" onclick=\"editContrast(this)\"><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td><button type=\"button\" class=\"btn-danger del-contrast-btn\"><span>&#10005;</span></button></td></tr>";
 
         $(document).ready(function () {
             $("#inputGroupFile04").on("change", function () {
@@ -350,65 +353,6 @@
             return form
         }
 
-        function addContrast(event) {
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            let title = $("#contrast_title_input").val();
-            if (!title || title.length == 0) {
-                title = (contrasts.length + 1) + '@' + randID(7)
-            }
-            let cond1 = $("#condition-1-input").val();
-            let stim1 = $("#stimuli_1").val();
-            let cond2 = $("#condition-2-input").val();
-            let stim2 = $("#stimuli_2").val();
-            let figures = []
-            for (let i = 0; i < files.length; i++) {
-                figures.push(files[i])
-            }
-            contrasts.push({
-                "title": title,
-                "condition1": cond1,
-                "condition2": cond2,
-                "stimuli1": stim1,
-                "stimuli2": stim2,
-                "figures": figures,
-                "coordinates": JSON.parse(JSON.stringify(coordinates))
-            });
-
-            let fileNamesStr = "";
-            if (files.length > 0) {
-                for (let i = 0; i < files.length; i++) {
-                    fileNamesStr += "<li>{0}</li>".format(files[i].name)
-                }
-                fileNamesStr = "<ul>" + fileNamesStr + "</ul>";
-            }
-
-            let coordinatesStr = "";
-            if (coordinates.length > 0) {
-                let coords = [];
-                for (let i = 0; i < coordinates.length; i++) {
-                    coords.push({
-                        "name": coordinates[i].name,
-                        "xyz": [parseFloat(coordinates[i].x), parseFloat(coordinates[i].y), parseFloat(coordinates[i].z)],
-                        "tscore": parseFloat(coordinates[i].tscore),
-                        "zscore": parseFloat(coordinates[i].zscore),
-                        "voxel": parseFloat(coordinates[i].zscore),
-                    })
-                }
-                coordinatesStr = "<code>" + JSON.stringify(coords) + "</code>";
-            }
-
-            let line = contrastStr.format(title, cond1, stim1.join(), cond2, stim2.join(), fileNamesStr, coordinatesStr);
-            $("#contrast-table").append(line);
-
-            files = [];
-            coordinates = [];
-            $("#file-block tbody")[0].innerHTML = "";
-            $("#coord-table tbody")[0].innerHTML = "";
-        }
-
         function uploadFiles() {
             let formdata = new FormData();
             let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
@@ -430,47 +374,133 @@
             });
         }
 
+        function buildContrast() {
+            let title = $("#contrast_title_input").val();
+            if (!title || title.length === 0) {
+                title = (contrasts.length + 1) + '@' + randID(7)
+            }
+            let cond1 = $("#condition-1-input").val();
+            let stim1 = $("#stimuli_1").val();
+            let cond2 = $("#condition-2-input").val();
+            let stim2 = $("#stimuli_2").val();
+            let figures = [];
+            for (let i = 0; i < files.length; i++) {
+                figures.push(files[i])
+            }
+
+            return {
+                "title": title,
+                "condition1": cond1,
+                "condition2": cond2,
+                "stimuli1": stim1,
+                "stimuli2": stim2,
+                "figures": figures,
+                "coordinates": JSON.parse(JSON.stringify(coordinates))
+            };
+        }
+
+        function buildContrastRecord(contrast) {
+            //selected files
+            let fileNamesStr = "";
+            if (contrast.figures.length > 0) {
+                for (let i = 0; i < contrast.figures.length; i++) {
+                    fileNamesStr += "<li>{0}</li>".format(contrast.figures[i].name)
+                }
+                fileNamesStr = "<ul>" + fileNamesStr + "</ul>";
+            }
+
+            //coordinates
+            let coordinatesStr = "";
+            if (contrast.coordinates.length > 0) {
+                let coords = [];
+                for (let i = 0; i < contrast.coordinates.length; i++) {
+                    let coordinate = contrast.coordinates[i];
+                    coords.push({
+                        "name": coordinate.name,
+                        "xyz": [parseFloat(coordinate.x), parseFloat(coordinate.y), parseFloat(coordinate.z)],
+                        "tscore": parseFloat(coordinate.tscore),
+                        "zscore": parseFloat(coordinate.zscore),
+                        "voxel": parseFloat(coordinate.zscore),
+                    })
+                }
+                coordinatesStr = "<code>" + JSON.stringify(coords) + "</code>";
+            }
+
+            //build a record
+            return contrastStr.format(
+                contrast.title,
+                contrast.condition1,
+                contrast.stimuli1.join(),
+                contrast.condition2,
+                contrast.stimuli2.join(),
+                fileNamesStr,
+                coordinatesStr
+            );
+        }
+
+        function clearFilesCoords() {
+            files = [];
+            coordinates = [];
+            $("#file-block tbody")[0].innerHTML = "";
+            $("#coord-table tbody")[0].innerHTML = "";
+        }
+
+        function addContrast(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            let contrast = buildContrast()
+            contrasts.push(contrast);
+            clearFilesCoords();
+
+            let contrastRecord = buildContrastRecord(contrast)
+            $("#contrast-table").append(contrastRecord);
+            let btns = $(".del-contrast-btn");
+            btns[btns.length - 1].addEventListener('click', deleteContrast);
+        }
+
+        function buildCoordinate() {
+            let values = [];
+            let fields = ["name-coord", "x-coord", "y-coord", "z-coord", "ts-coord", "zs-coord", "v-coord"];
+            for (let i = 0; i < fields.length; i++) {
+                let input = $("#" + fields[i])[0];
+                values.push(input.value);
+                input.value = 0;
+            }
+            $("#" + fields[0])[0].value = "";
+            return {
+                "name": values[0],
+                "x": values[1],
+                "y": values[2],
+                "z": values[3],
+                "tscore": values[4],
+                "zscore": values[5],
+                "voxel": values[6]
+            }
+        }
+
+        function buildCoordinateRecord(coordinate) {
+            return coordStr.format(
+                coordinate.name,
+                coordinate.x,
+                coordinate.y,
+                coordinate.z,
+                coordinate.tscore,
+                coordinate.zscore,
+                coordinate.voxel
+            );
+        }
+
         function addCoordinates() {
+
+            let coordinate = buildCoordinate();
+            coordinates.push(coordinate);
             let table = $("#coord-table");
-            let nInput = $("#name-coord")[0];
-            let xInput = $("#x-coord")[0];
-            let yInput = $("#y-coord")[0];
-            let zInput = $("#z-coord")[0];
-            let tsInput = $("#ts-coord")[0];
-            let zsInput = $("#zs-coord")[0];
-            let vInput = $("#v-coord")[0];
-
-            let n = nInput.value;
-            let x = xInput.value;
-            let y = yInput.value;
-            let z = zInput.value;
-            let ts = tsInput.value;
-            let zs = zsInput.value;
-            let v = vInput.value;
-
-
-            table.append(coordStr.format(n, x, y, z, ts, zs, v))
-            coordinates.push({
-                "name": n,
-                "x": x,
-                "y": y,
-                "z": z,
-                "tscore": ts,
-                "zscore": zs,
-                "voxel": v
-            });
-
-            nInput.value = "";
-            xInput.value = 0;
-            yInput.value = 0;
-            zInput.value = 0;
-            tsInput.value = 0;
-            zsInput.value = 0;
-            vInput.value = 0;
+            let line = buildCoordinateRecord(coordinate);
+            table.append(line);
         }
 
         function deleteCoord(btn) {
-
             let tr = $(btn).parent().parent();
             let index = $(".coord-btn").index(btn);
             coordinates.splice(index, 1);
@@ -488,35 +518,46 @@
             form.addEventListener("submit", addContrast);
             btn.innerHTML = "Add Contrast";
 
-            let re = new RegExp(selectedContrastClassName, "g");
-            let selectedContrastRow = $("."+selectedContrastClassName)[0];
-            selectedContrastRow.className = selectedContrastRow.className.replace(re, "");
+            //let re = new RegExp(selectedContrastClassName, "g");
+            //let selectedContrastRow = $("."+selectedContrastClassName)[0];
+            //selectedContrastRow.className = selectedContrastRow.className.replace(re, "");
+
+            contrasts[editingContrastIndex] = buildContrast();
+            clearFilesCoords();
+            refreshContrastTable();
+            editingContrastIndex = -1;
+            $(".del-contrast-btn").attr('hidden', false);
         }
 
         function editContrast(row) {
+
             if (row.className.includes(selectedContrastClassName)) {
                 return;
             }
 
             // change style
-            let re = new RegExp(" "+selectedContrastClassName, "g");
+            let re = new RegExp(" " + selectedContrastClassName, "g");
             let tbody = $("#contrast-table tbody")
             let rows = tbody.children();
             for (let i = 0; i < rows.length; i++) {
                 rows[i].className = rows[i].className.replace(re, "");
             }
-            row.className += " "+selectedContrastClassName;
+            row.className += " " + selectedContrastClassName;
 
-            //
+            //change Edit/Add button style
             let form = $(".needs-validation")[0];
             form.removeEventListener("submit", addContrast);
             form.addEventListener("submit", editDone);
             let addContrastBtn = $("#add-contrast-btn")[0];
             addContrastBtn.innerHTML = "Edit Done";
 
+            //hide all remove buttons
+            $(".del-contrast-btn").attr('hidden', true);
+
             // find the index and data
             let index = $(".contrast-record").index(row);
             let contrastData = contrasts[index];
+            editingContrastIndex = index;
 
             // get controls
             let contrastTitleInput = $("#contrast_title_input")[0];
@@ -529,18 +570,40 @@
             contrastTitleInput.value = contrastData.title;
             condition1Input.value = contrastData.condition1;
             condition2Input.value = contrastData.condition2;
-            files = contrastData.figures;
+            files = [];
             fileTable[0].innerHTML = "";
             for (let i = 0; i < contrastData.figures.length; i++) {
-                fileTable.append(figureStr.format(contrastData.figures[i].name))
+                files.push(contrastData.figures[i]);
+                fileTable.append(figureStr.format(contrastData.figures[i].name));
             }
 
-            coordinates = contrastData.coordinates;
+            coordinates = JSON.parse(JSON.stringify(contrastData.coordinates));
             coordTable[0].innerHTML = "";
             for (let i = 0; i < contrastData.coordinates.length; i++) {
-                let c = contrastData.coordinates[i]
+                let c = contrastData.coordinates[i];
                 coordTable.append(coordStr.format(c.name, c.x, c.y, c.z, c.tscore, c.zscore, c.voxel));
             }
+        }
+
+        function deleteContrast(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            let btn = $(event.target);
+            if (btn[0].nodeName === "span" || btn[0].nodeName === "SPAN") {
+                btn = btn.parent();
+            }
+            let index = $(".del-contrast-btn").index(btn);
+            contrasts.splice(index, 1);
+            refreshContrastTable();
+        }
+
+        function refreshContrastTable() {
+            let contrastTable = $("#contrast-table tbody");
+            contrastTable[0].innerHTML = "";
+            for (let i = 0; i < contrasts.length; i++) {
+                contrastTable.append(buildContrastRecord(contrasts[i]));
+            }
+            $(".del-contrast-btn").on('click', deleteContrast);
         }
     </script>
 {% endblock %}
