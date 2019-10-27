@@ -80,7 +80,7 @@
             color: #0f0f0f;
         }
 
-        #upload-modal {
+        #modal {
             color: #000;
         }
 
@@ -97,12 +97,17 @@
                 <div class="row">
                     <div class="col-md-5"></div>
                     <div class="col-md-2"><h2>Add Contrasts</h2></div>
-                    <div class="col-md-2"></div>
+                    <div class="col-md-3"></div>
                     <div class="col-md-2">
-                        <button type="button" id="upload-btn" class="btn btn-warning" onclick="submitContrast()"
-                                data-toggle="modal" data-target="#upload-modal">Submit
-                            Contrast
-                        </button>
+                        {% if user.is_superuser %}
+                            <button type="button" id="approve-btn" class="btn btn-warning" onclick="approveExperiment()"
+                                    data-toggle="modal" data-target="#modal">Approve Experiment
+                            </button>
+                        {% else %}
+                            <button type="button" id="upload-btn" class="btn btn-warning" onclick="submitExperiment()"
+                                    data-toggle="modal" data-target="#modal">Submit Experiment
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -296,7 +301,7 @@
         </div>
         {% csrf_token %}
         <!-- Modal -->
-        <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -640,7 +645,7 @@
             $(".del-contrast-btn").on('click', deleteContrast);
         }
 
-        function submitContrast() {
+        function submitExperiment() {
             if (editingContrastIndex !== -1) {
                 showModal("Error", "Please finish edit first!");
                 return;
@@ -651,7 +656,7 @@
                 return;
             }
 
-            showModal("Uploading ...", "...", 'Finished', dismissModal, true);
+            showModal("Uploading ...", "<img src=\"/static/images/loading.gif\" style=\"width: 100%; heigth: auto;\">", 'Finished', dismissModal, true);
 
             //upload contrast first
             let figures = [];
@@ -722,7 +727,22 @@
                 data: JSON.stringify(data),
                 type: 'POST',
             }).done(function (resp) {
-                console.log(resp);
+                console.log(resp)
+                if (resp.contrast_ids.length === contrasts.length) {
+                    $(".modal-header .modal-title")[0].innerHTML = "Upload Finished";
+                    $(".modal-body")[0].innerHTML = "Congratulations! Uploading succeed!";
+                    let oldBtn = $("#modal-ok-btn")[0];
+                    let newBtn = oldBtn.cloneNode(true);
+                    newBtn.addEventListener('click', function () {
+                        window.location.href = "/experiment"
+                    });
+                    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+                } else {
+                    $(".modal-header .modal-title")[0].innerHTML = "Error occurred";
+                    $(".modal-body")[0].innerHTML = "An error occurred during uploading, please contact administrator!";
+                }
+                $("#modal-ok-btn").prop('disabled', false);
+                $('#modal').modal('handleUpdate');
             });
         }
 
@@ -739,7 +759,7 @@
             newBtn.innerHTML = okHTML;
             newBtn.addEventListener('click', okFunc);
             oldBtn.parentNode.replaceChild(newBtn, oldBtn);
-            $("#upload-modal").modal({
+            $("#modal").modal({
                 backdrop: 'static',
                 keyboard: false
             });
@@ -749,7 +769,11 @@
         }
 
         function dismissModal() {
-            $("#upload-modal").modal('hide');
+            $("#modal").modal('hide');
+        }
+
+        function approveExperiment() {
+
         }
 
         /**
