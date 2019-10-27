@@ -214,11 +214,11 @@ SQS_QUERY_URL = 'https://sqs.us-east-2.amazonaws.com/280175692519/bold_sqs'
 
 AWS_ACCESS_KEY = config.get('System', 'AWS_ACCESS_KEY')
 AWS_SECRET_KEY = config.get('System', 'AWS_SECRET_KEY')
-REGION_NAME =  'us-east-2'
+REGION_NAME = 'us-east-2'
 
 SUBJECTS_URL = '/static/boldpredict/subjects/'
 DATA_URL = '/static/boldpredict/data/'
-IMAGE_URL = '/static/boldpredict/images/'
+IMAGE_URL = '/Users/zl/Desktop/'
 
 SUBJECTS = ["JGfs", "MLfs2",  "AHfs"]
 SUBJECT_NUM = len(SUBJECTS)

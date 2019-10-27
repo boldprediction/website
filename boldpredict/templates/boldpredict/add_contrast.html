@@ -80,6 +80,10 @@
             color: #0f0f0f;
         }
 
+        #upload-modal {
+            color: #000;
+        }
+
     </style>
 
 
@@ -95,7 +99,10 @@
                     <div class="col-md-2"><h2>Add Contrasts</h2></div>
                     <div class="col-md-2"></div>
                     <div class="col-md-2">
-                        <button type="button" id="upload-btn" class="btn btn-warning" onclick="submitContrast()">Submit Contrast</button>
+                        <button type="button" id="upload-btn" class="btn btn-warning" onclick="submitContrast()"
+                                data-toggle="modal" data-target="#upload-modal">Submit
+                            Contrast
+                        </button>
                     </div>
                 </div>
             </div>
@@ -288,6 +295,23 @@
             </div>
         </div>
         {% csrf_token %}
+        <!-- Modal -->
+        <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Uploading ...</h5>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="modal-ok-btn">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script type="text/javascript">
 
@@ -296,6 +320,7 @@
         let stimuliMap = {};
         let contrasts = [];
         let coordinates = [];
+        let experimentId = -1;
         let editingContrastIndex = -1;
         let selectedContrastClassName = "selected-contrast";
         const stimuliStr = "<option value=\"{0}\">{1}</option>";
@@ -332,14 +357,14 @@
             if (urls.length > 1) {
                 let parts = urls[1].split("/");
                 if (parts.length > 0) {
-                    let experimentId = parts[0];
+                    experimentId = parts[0];
                     $.get('/api/stimulus/' + experimentId, function (data) {
                         if (data.length === 0) {
                             alert("Cannot any stimuli data, please add stimuli in the previous page or contact administrator");
                             return;
                         }
                         stimuli = data;
-                        for (let i = 0; i<stimuli.length; i++) {
+                        for (let i = 0; i < stimuli.length; i++) {
                             stimuliMap[stimuli[i].id] = stimuli[i];
                         }
                         showStimuli();
@@ -351,11 +376,11 @@
                 alert("Error on getting stimuli data, cannot get experiment id");
             }
         }
-        
+
         function showStimuli() {
             let stimuliInput1 = $("#stimuli_1");
             let stimuliInput2 = $("#stimuli_2");
-            for (let i = 0; i<stimuli.length; i++) {
+            for (let i = 0; i < stimuli.length; i++) {
                 let optionStr = stimuliStr.format(stimuli[i].id, stimuli[i].stimuli_name);
                 stimuliInput1.append(optionStr);
                 stimuliInput2.append(optionStr);
@@ -401,11 +426,11 @@
 
             //stimuli
             let stimuli1Names = [];
-            for(let i = 0; i < contrast.stimuli1.length; i++) {
+            for (let i = 0; i < contrast.stimuli1.length; i++) {
                 stimuli1Names.push(stimuliMap[contrast.stimuli1[i]].stimuli_name);
             }
             let stimuli2Names = [];
-            for(let i = 0; i < contrast.stimuli2.length; i++) {
+            for (let i = 0; i < contrast.stimuli2.length; i++) {
                 stimuli2Names.push(stimuliMap[contrast.stimuli2[i]].stimuli_name);
             }
 
@@ -527,10 +552,6 @@
             form.addEventListener("submit", addContrast);
             btn.innerHTML = "Add Contrast";
 
-            //let re = new RegExp(selectedContrastClassName, "g");
-            //let selectedContrastRow = $("."+selectedContrastClassName)[0];
-            //selectedContrastRow.className = selectedContrastRow.className.replace(re, "");
-
             contrasts[editingContrastIndex] = buildContrast();
             clearFilesCoords();
             refreshContrastTable();
@@ -619,11 +640,19 @@
             $(".del-contrast-btn").on('click', deleteContrast);
         }
 
-        function submitContrast(){
-            if (editingContrastIndex !== -1){
-                alert("Please finish edit first!");
+        function submitContrast() {
+            if (editingContrastIndex !== -1) {
+                showModal("Error", "Please finish edit first!");
                 return;
             }
+
+            if (contrasts.length < 1) {
+                showModal("Error", "Please create at least one contrast first!");
+                return;
+            }
+
+            showModal("Uploading ...", "...", 'Finished', dismissModal, true);
+
             //upload contrast first
             let figures = [];
             for (let i = 0; i < contrasts.length; i++) {
@@ -631,12 +660,16 @@
                     figures.push(contrasts[i].figures[j]);
                 }
             }
-            if (figures.length > 0){
-                uploadFiles(figures);
+            if (figures.length > 0) {
+                uploadFiles(figures, function (resp) {
+                    sendSubmitRequest();
+                });
+            } else {
+                sendSubmitRequest();
             }
         }
 
-        function uploadFiles(figures) {
+        function uploadFiles(figures, callback) {
             let formData = new FormData();
             let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
             formData.append('csrfmiddlewaretoken', csrfToken);
@@ -653,12 +686,76 @@
                 processData: false,
                 contentType: false,
             }).done(function (resp) {
+                callback(resp);
+            });
+        }
+
+        function sendSubmitRequest() {
+            let data = [];
+            let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            for (let i = 0; i < contrasts.length; i++) {
+                let c = contrasts[i];
+                let figures = [];
+                for (let j = 0; j < c.figures.length; j++) {
+                    figures.push(c.figures[j].name)
+                }
+                data.push({
+                    "contrast_name": c.title,
+                    "condition1": {
+                        "name": c.condition1,
+                        "stimuli_list": c.stimuli1
+                    },
+                    "condition2": {
+                        "name": c.condition2,
+                        "stimuli_list": c.stimuli2
+                    },
+                    "coordinates": c.coordinates,
+                    "figures": figures,
+                });
+            }
+
+            console.log(data);
+
+            $.ajax({
+                url: '/api/contrasts/' + experimentId,
+                headers: {"X-CSRFToken": csrfToken},
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(data),
+                type: 'POST',
+            }).done(function (resp) {
                 console.log(resp);
             });
         }
 
+        function showModal(title, body, okHTML, okFunc, okDisabled) {
+
+            okHTML = typeof okHTML != 'undefined' ? okHTML : 'OK';
+            okFunc = typeof okFunc != 'undefined' ? okFunc : dismissModal;
+            okDisabled = typeof okDisabled != 'undefined' ? okDisabled : false;
+
+            $(".modal-header .modal-title")[0].innerHTML = title;
+            $(".modal-body")[0].innerHTML = body;
+            let oldBtn = $("#modal-ok-btn")[0];
+            let newBtn = oldBtn.cloneNode(true);
+            newBtn.innerHTML = okHTML;
+            newBtn.addEventListener('click', okFunc);
+            oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+            $("#upload-modal").modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+            if (okDisabled) {
+                $(newBtn).button('disable');
+            }
+        }
+
+        function dismissModal() {
+            $("#upload-modal").modal('hide');
+        }
+
         /**
-        function createForm(figures) {
+         function createForm(figures) {
             let form = document.createElement("form");
             form.setAttribute("method", "POST");
             form.setAttribute("action", "/upload_images");
@@ -674,6 +771,6 @@
 
             return form
         }
-        */
+         */
     </script>
 {% endblock %}
