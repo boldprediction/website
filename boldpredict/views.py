@@ -230,11 +230,13 @@ def edit_contrasts(request,exp_id):
 @login_required
 def upload_images(request):
     if request.method == 'POST':
+        res = []
         for k, v in request.FILES.items():
-            with open('/Users/zl/'+k, 'wb+') as destination:
+            res.append(k)
+            with open(settings.IMAGE_URL + k, 'wb+') as destination:
                 for chunk in v.chunks():
                     destination.write(chunk)
-    return HttpResponse("hahah")
+    return HttpResponse(json.dumps(res))
 
 
 @login_required

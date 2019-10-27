@@ -1,240 +1,776 @@
 {% extends "boldpredict/base.html" %}
 
 {% block staticfiles %}
-{% load staticfiles %}
+    {% load staticfiles %}
 
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<script src="{% static 'boldpredict/js/add_stimuli.js' %}" type="text/javascript"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
 
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <script src="{% static 'boldpredict/js/utils.js' %}" type="text/javascript"></script>
+    <script src="{% static 'boldpredict/js/add_stimuli.js' %}" type="text/javascript"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    <style>
 
-<style>
-    #inputGroupFile04:focus {
-        outline: none;
-    }
+        .container {
+            max-width: 90%;
+        }
 
-    #inputGroupFile04 {
-        opacity: 0;
-    }
+        #inputGroupFile04:focus {
+            outline: none;
+        }
 
-    .btn-group .file-name {
-        background-color: rgba(0, 0, 0, 0);
-    }
+        #inputGroupFile04 {
+            opacity: 0;
+        }
 
-    .input-group {
-        margin-bottom: 1rem;
-    }
+        .btn-group .file-name {
+            background-color: rgba(0, 0, 0, 0);
+        }
 
-    #upload-btn {
-        margin-top: 1rem;
-    }
-</style>
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        #upload-btn {
+            margin-top: 1rem;
+        }
+
+        #file-block {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        label, th, td {
+            color: white;
+        }
+
+        #coordinate-header-block {
+            margin-bottom: 0.3rem;
+        }
+
+        #coord-table {
+            width: 100%;
+        }
+
+        #coord-table th, #coord-table td {
+            border: #fff 1px solid;
+            text-align: center;
+        }
+
+        div label {
+            font-weight: bold;
+        }
+
+        #contrast-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .selected-contrast {
+            background-color: rgba(255, 193, 7, 1);
+        }
+
+        .selected-contrast td, .selected-contrast code {
+            color: #0f0f0f;
+        }
+
+        #upload-modal {
+            color: #000;
+        }
+
+    </style>
 
 
 {% endblock %}
 
 
 {% block header %}
-<section>
-    <div class="wrapper topSection">
-        <div id="Header">
-            <div class="row">
-                <div class="col-md-5"></div>
-                <div class="col-md-2">
-                    <h2>Add Contrast</h2>
-                </div>
-                <div class="col-md-2"></div>
-                <div class="col-md-2">
-                    <button type="button" id="upload-btn" class="btn btn-warning" onclick="uploadFiles()">Upload
-                        Contrasts
-                    </button>
+    <section>
+        <div class="wrapper topSection">
+            <div id="Header">
+                <div class="row">
+                    <div class="col-md-5"></div>
+                    <div class="col-md-2"><h2>Add Contrasts</h2></div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
+                        <button type="button" id="upload-btn" class="btn btn-warning" onclick="submitContrast()"
+                                data-toggle="modal" data-target="#upload-modal">Submit
+                            Contrast
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </div>
-</section>
+        </div>
+    </section>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-3">
-            <form class="needs-validation" novalidate>
-                <div id="contrast-block">
-                    <label style="color: white">
-                        <label for="contrast_title_input">Contrast Title(optional) </label>
-                    </label>
-                    <input type="text" class="form-control" name="contrast_tile" id="contrast_title_input" />
-                </div>
-                <div id="condition-1-block">
-                    <label style="color: white">
-                        <label for="condition-1-input">Condition 1 Name</label>
-                    </label>
-                    <input type="text" class="form-control" name="contrast_tile" id="condition-1-input" required />
-                    <div class="invalid-feedback">
-                        Please fill a condition name.
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <form class="needs-validation">
+                    <div id="contrast-block">
+                        <div id="contrast-title-block" class="d-flex justify-content-between align-items-baseline">
+                            <label for="contrast_title_input">Contrast Title</label>
+                            <div></div>
+                            <button type="submit" id="add-contrast-btn" class="btn btn-sm">Add
+                                Contrast
+                            </button>
+                        </div>
+                        <input type="text" class="form-control" placeholder="optional" id="contrast_title_input"/>
                     </div>
-                </div>
-                <div>
-                    <label style="color: white">
-                        <label for="stimuli_1">Stimuli of Condition 1</label>
-                    </label>
-                    <select id="stimuli_1" class="selectpicker form-control" multiple data-live-search="true" required>
-                        <option>Mustard</option>
-                        <option>Ketchup</option>
-                        <option>Relish</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        Please select at least one stimulus.
+                    <div id="condition-1-block">
+                        <label>
+                            <label for="condition-1-input">Condition 1 Name</label>
+                        </label>
+                        <input type="text" class="form-control" placeholder="condition name 1" id="condition-1-input"
+                               required/>
                     </div>
-                </div>
-                <div id="condition-2-block">
-                    <label style="color: white">
-                        <label for="condition-2-input">Condition 2 Name</label>
-                    </label>
-                    <input type="text" class="form-control" name="contrast_tile" id="condition-2-input" />
-                </div>
-                <div>
-                    <label style="color: white">
-                        <label for="stimuli_2">Stimuli of Condition 2</label>
-                    </label>
-                    <select id="stimuli_2" class="selectpicker form-control" multiple data-live-search="true">
-                        <option>Mustard</option>
-                        <option>Ketchup</option>
-                        <option>Relish</option>
-                    </select>
-                </div>
-                <div>
-                    <label style="color: white">Figures</label>
-                </div>
-                <div class="input-group">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="inputGroupFile04">
-                        <label class="custom-file-label" id="inputGroupFile04label" for="inputGroupFile04">Choose
-                            file</label>
+                    <div>
+                        <label>
+                            <label for="stimuli_1">Stimuli of Condition 1</label>
+                        </label>
+                        <select id="stimuli_1" class="selectpicker form-control" multiple data-live-search="true"
+                                required title="choose stimuli">
+                        </select>
                     </div>
-                </div>
-                <table id="file-block">
-                    <tbody id="file-block-body">
+                    <div id="condition-2-block">
+                        <label>
+                            <label for="condition-2-input">Condition 2 Name</label>
+                        </label>
+                        <input type="text" class="form-control" placeholder="condition name 2" id="condition-2-input"
+                               required/>
+                    </div>
+                    <div>
+                        <label>
+                            <label for="stimuli_2">Stimuli of Condition 2</label>
+                        </label>
+                        <select id="stimuli_2" class="selectpicker form-control" multiple data-live-search="true"
+                                required title="choose stimuli">
+                        </select>
+                    </div>
+                    <div>
+                        <label>Figures</label>
+                    </div>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile04">
+                            <label class="custom-file-label" id="inputGroupFile04label" for="inputGroupFile04">Choose
+                                file</label>
+                        </div>
+                    </div>
+                    <table id="file-block">
+                        <tbody id="file-block-body">
+                        </tbody>
+                    </table>
+                    <div>
+                        <label>Coordinates</label>
+                        <table id="coord-table">
+                            <thead>
+                            <tr>
+                                <th style="width: 1rem;">name</th>
+                                <th>x</th>
+                                <th>y</th>
+                                <th>z</th>
+                                <th>T</th>
+                                <th>Z</th>
+                                <th>V</th>
+                                <th style="width: 1rem;">Del</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+                <div style="height: 20px"></div>
+                <form id="coordinate-input-block">
+                    <div id="coordinate-header-block" class="d-flex justify-content-between align-items-baseline">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Name</span>
+                            </div>
+                            <input type="text" placeholder="coordinate name" class="form-control" id="name-coord"
+                                   required/>
+                        </div>
+                        <div style="width: 1rem"></div>
+                        <button type="submit" class="btn btn-sm">Add</button>
+                    </div>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">X:</span>
+                                    </div>
+                                    <input type="number" step="0.01" placeholder="x value" class="form-control"
+                                           id="x-coord"
+                                           required/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">TScore:</span>
+                                    </div>
+                                    <input type="number" step="0.01" placeholder="t score" class="form-control"
+                                           id="ts-coord"
+                                           required/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Y:</span>
+                                    </div>
+                                    <input type="number" step="0.01" placeholder="y value" class="form-control"
+                                           id="y-coord"
+                                           required/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">ZScore:</span>
+                                    </div>
+                                    <input type="number" step="0.01" placeholder="z score" class="form-control"
+                                           id="zs-coord"
+                                           required/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Z:</span>
+                                    </div>
+                                    <input type="number" step="0.01" placeholder="z value" class="form-control"
+                                           id="z-coord"
+                                           required/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Voxel:</span>
+                                    </div>
+                                    <input type="number" step="0.01" placeholder="voxel" class="form-control"
+                                           id="v-coord"
+                                           required/>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="col-md-9">
+                <table class="table" id="contrast-table">
+                    <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>cond1</th>
+                        <th>stimuli1</th>
+                        <th>cond2</th>
+                        <th>stimuli2</th>
+                        <th>figures</th>
+                        <th>coordinates</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     </tbody>
                 </table>
-                <div>
-                    <button type="submit" id="upload-btn" class="btn btn-warning" onclick="addContrast()">Upload
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
-        <div class="col-md-1"></div>
-        <div class="col-md-7">
-            <table class="table" style="color: white">
-                <thead>
-                    <tr>
-                        <th>number</th>
-                        <th>condition 1</th>
-                        <th>stimuli of 1</th>
-                        <th>condition name 2</th>
-                        <th>stimuli of 2</th>
-                        <th>figures</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        {% csrf_token %}
+        <!-- Modal -->
+        <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Uploading ...</h5>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="modal-ok-btn">OK</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    {% csrf_token %}
-</div>
-<script type="text/javascript">
-    { #window.onload = updateStimuli(); # }
-    let filesToBeUploaded = []
-    const btnstrleft = "<tr><td style=\"color:white\">"
-    const btnstrright = "</td><td><button type=\"button\" class=\"file-name btn-danger\" onclick=\"deleteFile(this)\">delete</button></td></tr>"
-    $(document).ready(function () {
-        $("#inputGroupFile04").on("change", function () {
-            let files = $("#inputGroupFile04")[0].files
-            if (files.length > 0) {
-                let a = $("#file-block-body")[0].innerHTML
-                $("#file-block-body")[0].innerHTML = a + btnstrleft + files[0].name + btnstrright
-                filesToBeUploaded.push(files[0])
-            }
-        });
+    <script type="text/javascript">
 
-        let forms = $(".needs-validation")[0]
-        for (let i = 0; i < forms.length; i++) {
-            let form = forms[i]
-            form.addEventListener('submit', function (event) {
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
+        let files = [];
+        let stimuli = [];
+        let stimuliMap = {};
+        let contrasts = [];
+        let coordinates = [];
+        let experimentId = -1;
+        let editingContrastIndex = -1;
+        let selectedContrastClassName = "selected-contrast";
+        const stimuliStr = "<option value=\"{0}\">{1}</option>";
+        const figureStr = "<tr><td style=\"color:white\">{0}</td><td><button type=\"button\" class=\"file-name btn-danger\" onclick=\"deleteFile(this)\">delete</button></td></tr>";
+        const coordStr = "<tr>><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td><button onclick=\"deleteCoord(this)\" type=\"button\" class=\"btn-danger coord-btn\"><span>&#10005;</span></button></td></tr>";
+        const contrastStr = "<tr class=\"contrast-record\" onclick=\"editContrast(this)\"><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td><button type=\"button\" class=\"btn-danger del-contrast-btn\"><span>&#10005;</span></button></td></tr>";
+
+        $(document).ready(function () {
+
+            requestStimuli();
+
+            $("#inputGroupFile04").on("change", function () {
+                let selectedFiles = $("#inputGroupFile04")[0].files;
+                if (selectedFiles.length > 0) {
+                    let a = $("#file-block-body")[0].innerHTML;
+                    $("#file-block-body")[0].innerHTML = a + figureStr.format(selectedFiles[0].name);
+                    files.push(selectedFiles[0]);
                 }
-                form.classList.add('was-validated');
-            }, false);
-        }
+            });
 
+            let form = $(".needs-validation")[0];
+            form.addEventListener('submit', addContrast);
 
-    })
-
-    function deleteFile(btn) {
-        let tr = $(btn).parent().parent()
-        let index = $(".file-name").index(btn)
-        filesToBeUploaded.splice(index, 1)
-        for (let i = 0; i < filesToBeUploaded.length; i++) {
-            console.log(filesToBeUploaded[i].name)
-        }
-        tr.remove()
-    }
-
-    function createForm() {
-        let form = document.createElement("form");
-        form.setAttribute("method", "POST");
-        form.setAttribute("action", "/upload_images");
-
-        for (let i = 0; i < filesToBeUploaded.length; i++) {
-            let file = filesToBeUploaded[i]
-            let input = document.createElement("input");
-            input.setAttribute('type', "hidden");
-            input.setAttribute("name", "file" + (i + 1))
-            input.setAttribute("value", file)
-            form.appendChild(input)
-        }
-
-        return form
-    }
-
-    function addContrast() {
-
-    }
-
-    function uploadFiles() {
-        let formdata = new FormData();
-        let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
-        formdata.append('csrfmiddlewaretoken', csrfToken)
-
-        for (let i = 0; i < filesToBeUploaded.length; i++) {
-            let file = filesToBeUploaded[i]
-            formdata.append(file.name, file, file.name);
-        }
-
-        for (let [key, value] of formdata.entries()) {
-            console.log(key, value);
-        }
-
-        $.ajax({
-            url: '/upload_images',
-            data: formdata,
-            type: 'POST',
-            processData: false,
-            contentType: false,
-        }).done(function (resp) {
-            console.log(resp);
+            let coordinate_form = $("#coordinate-input-block")[0];
+            coordinate_form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                addCoordinates();
+            })
         });
-    }
-</script>
+
+        function requestStimuli() {
+            let urls = window.location.href.split("experiment/");
+            if (urls.length > 1) {
+                let parts = urls[1].split("/");
+                if (parts.length > 0) {
+                    experimentId = parts[0];
+                    $.get('/api/stimulus/' + experimentId, function (data) {
+                        if (data.length === 0) {
+                            alert("Cannot any stimuli data, please add stimuli in the previous page or contact administrator");
+                            return;
+                        }
+                        stimuli = data;
+                        for (let i = 0; i < stimuli.length; i++) {
+                            stimuliMap[stimuli[i].id] = stimuli[i];
+                        }
+                        showStimuli();
+                    });
+                } else {
+                    alert("Error on getting stimuli data, cannot get experiment id");
+                }
+            } else {
+                alert("Error on getting stimuli data, cannot get experiment id");
+            }
+        }
+
+        function showStimuli() {
+            let stimuliInput1 = $("#stimuli_1");
+            let stimuliInput2 = $("#stimuli_2");
+            for (let i = 0; i < stimuli.length; i++) {
+                let optionStr = stimuliStr.format(stimuli[i].id, stimuli[i].stimuli_name);
+                stimuliInput1.append(optionStr);
+                stimuliInput2.append(optionStr);
+            }
+            stimuliInput1.selectpicker('refresh');
+            stimuliInput2.selectpicker('refresh');
+        }
+
+        function deleteFile(btn) {
+            let tr = $(btn).parent().parent();
+            let index = $(".file-name").index(btn);
+            files.splice(index, 1);
+            tr.remove()
+        }
+
+        function buildContrast() {
+            let title = $("#contrast_title_input").val();
+            if (!title || title.length === 0) {
+                title = (contrasts.length + 1) + '@' + randID(7)
+            }
+            let cond1 = $("#condition-1-input").val();
+            let stim1 = $("#stimuli_1").val();
+            let cond2 = $("#condition-2-input").val();
+            let stim2 = $("#stimuli_2").val();
+
+            let figures = [];
+            for (let i = 0; i < files.length; i++) {
+                figures.push(files[i])
+            }
+
+            return {
+                "title": title,
+                "condition1": cond1,
+                "condition2": cond2,
+                "stimuli1": stim1,
+                "stimuli2": stim2,
+                "figures": figures,
+                "coordinates": JSON.parse(JSON.stringify(coordinates))
+            };
+        }
+
+        function buildContrastRecord(contrast) {
+
+            //stimuli
+            let stimuli1Names = [];
+            for (let i = 0; i < contrast.stimuli1.length; i++) {
+                stimuli1Names.push(stimuliMap[contrast.stimuli1[i]].stimuli_name);
+            }
+            let stimuli2Names = [];
+            for (let i = 0; i < contrast.stimuli2.length; i++) {
+                stimuli2Names.push(stimuliMap[contrast.stimuli2[i]].stimuli_name);
+            }
+
+            //selected files
+            let fileNamesStr = "";
+            if (contrast.figures.length > 0) {
+                for (let i = 0; i < contrast.figures.length; i++) {
+                    fileNamesStr += "<li>{0}</li>".format(contrast.figures[i].name)
+                }
+                fileNamesStr = "<ul>" + fileNamesStr + "</ul>";
+            }
+
+            //coordinates
+            let coordinatesStr = "";
+            if (contrast.coordinates.length > 0) {
+                let coords = [];
+                for (let i = 0; i < contrast.coordinates.length; i++) {
+                    let coordinate = contrast.coordinates[i];
+                    coords.push({
+                        "name": coordinate.name,
+                        "xyz": [parseFloat(coordinate.x), parseFloat(coordinate.y), parseFloat(coordinate.z)],
+                        "tscore": parseFloat(coordinate.tscore),
+                        "zscore": parseFloat(coordinate.zscore),
+                        "voxel": parseFloat(coordinate.zscore),
+                    })
+                }
+                coordinatesStr = "<code>" + JSON.stringify(coords) + "</code>";
+            }
+
+            //build a record
+            return contrastStr.format(
+                contrast.title,
+                contrast.condition1,
+                stimuli1Names.join(),
+                contrast.condition2,
+                stimuli2Names.join(),
+                fileNamesStr,
+                coordinatesStr
+            );
+        }
+
+        function clearFilesCoords() {
+            files = [];
+            coordinates = [];
+            $("#file-block tbody")[0].innerHTML = "";
+            $("#coord-table tbody")[0].innerHTML = "";
+        }
+
+        function addContrast(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            let contrast = buildContrast()
+            contrasts.push(contrast);
+            clearFilesCoords();
+
+            let contrastRecord = buildContrastRecord(contrast)
+            $("#contrast-table").append(contrastRecord);
+            let btns = $(".del-contrast-btn");
+            btns[btns.length - 1].addEventListener('click', deleteContrast);
+        }
+
+        function buildCoordinate() {
+            let values = [];
+            let fields = ["name-coord", "x-coord", "y-coord", "z-coord", "ts-coord", "zs-coord", "v-coord"];
+            for (let i = 0; i < fields.length; i++) {
+                let input = $("#" + fields[i])[0];
+                values.push(input.value);
+                input.value = 0;
+            }
+            $("#" + fields[0])[0].value = "";
+            return {
+                "name": values[0],
+                "x": values[1],
+                "y": values[2],
+                "z": values[3],
+                "tscore": values[4],
+                "zscore": values[5],
+                "voxel": values[6]
+            }
+        }
+
+        function buildCoordinateRecord(coordinate) {
+            return coordStr.format(
+                coordinate.name,
+                coordinate.x,
+                coordinate.y,
+                coordinate.z,
+                coordinate.tscore,
+                coordinate.zscore,
+                coordinate.voxel
+            );
+        }
+
+        function addCoordinates() {
+
+            let coordinate = buildCoordinate();
+            coordinates.push(coordinate);
+            let table = $("#coord-table");
+            let line = buildCoordinateRecord(coordinate);
+            table.append(line);
+        }
+
+        function deleteCoord(btn) {
+            let tr = $(btn).parent().parent();
+            let index = $(".coord-btn").index(btn);
+            coordinates.splice(index, 1);
+            tr.remove();
+        }
+
+        function editDone(event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            let form = $(".needs-validation")[0];
+            let btn = $("#add-contrast-btn")[0];
+            form.removeEventListener("submit", editDone);
+            form.addEventListener("submit", addContrast);
+            btn.innerHTML = "Add Contrast";
+
+            contrasts[editingContrastIndex] = buildContrast();
+            clearFilesCoords();
+            refreshContrastTable();
+            editingContrastIndex = -1;
+            $(".del-contrast-btn").attr('hidden', false);
+        }
+
+        function editContrast(row) {
+
+            if (row.className.includes(selectedContrastClassName)) {
+                return;
+            }
+
+            // change contrast table style
+            let re = new RegExp(" " + selectedContrastClassName, "g");
+            let tbody = $("#contrast-table tbody")
+            let rows = tbody.children();
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].className = rows[i].className.replace(re, "");
+            }
+            row.className += " " + selectedContrastClassName;
+
+            //change Edit/Add button style
+            let form = $(".needs-validation")[0];
+            form.removeEventListener("submit", addContrast);
+            form.addEventListener("submit", editDone);
+            let addContrastBtn = $("#add-contrast-btn")[0];
+            addContrastBtn.innerHTML = "Edit Done";
+
+            //hide all remove buttons
+            $(".del-contrast-btn").attr('hidden', true);
+
+            // find the index and data
+            let index = $(".contrast-record").index(row);
+            let contrastData = contrasts[index];
+            editingContrastIndex = index;
+
+            // get controls
+            let contrastTitleInput = $("#contrast_title_input")[0];
+            let condition1Input = $("#condition-1-input")[0];
+            let condition2Input = $("#condition-2-input")[0];
+            let stimuli1Input = $("#stimuli_1");
+            let stimuli2Input = $("#stimuli_2");
+            let fileTable = $("#file-block tbody");
+            let coordTable = $("#coord-table tbody");
+
+            // refill the data
+            contrastTitleInput.value = contrastData.title;
+            condition1Input.value = contrastData.condition1;
+            condition2Input.value = contrastData.condition2;
+            stimuli1Input.selectpicker('val', contrastData.stimuli1);
+            stimuli2Input.selectpicker('val', contrastData.stimuli2);
+            files = [];
+            fileTable[0].innerHTML = "";
+            for (let i = 0; i < contrastData.figures.length; i++) {
+                files.push(contrastData.figures[i]);
+                fileTable.append(figureStr.format(contrastData.figures[i].name));
+            }
+
+            coordinates = JSON.parse(JSON.stringify(contrastData.coordinates));
+            coordTable[0].innerHTML = "";
+            for (let i = 0; i < contrastData.coordinates.length; i++) {
+                let c = contrastData.coordinates[i];
+                coordTable.append(coordStr.format(c.name, c.x, c.y, c.z, c.tscore, c.zscore, c.voxel));
+            }
+        }
+
+        function deleteContrast(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            let btn = $(event.target);
+            if (btn[0].nodeName === "span" || btn[0].nodeName === "SPAN") {
+                btn = btn.parent();
+            }
+            let index = $(".del-contrast-btn").index(btn);
+            contrasts.splice(index, 1);
+            refreshContrastTable();
+        }
+
+        function refreshContrastTable() {
+            let contrastTable = $("#contrast-table tbody");
+            contrastTable[0].innerHTML = "";
+            for (let i = 0; i < contrasts.length; i++) {
+                contrastTable.append(buildContrastRecord(contrasts[i]));
+            }
+            $(".del-contrast-btn").on('click', deleteContrast);
+        }
+
+        function submitContrast() {
+            if (editingContrastIndex !== -1) {
+                showModal("Error", "Please finish edit first!");
+                return;
+            }
+
+            if (contrasts.length < 1) {
+                showModal("Error", "Please create at least one contrast first!");
+                return;
+            }
+
+            showModal("Uploading ...", "...", 'Finished', dismissModal, true);
+
+            //upload contrast first
+            let figures = [];
+            for (let i = 0; i < contrasts.length; i++) {
+                for (let j = 0; j < contrasts[i].figures.length; j++) {
+                    figures.push(contrasts[i].figures[j]);
+                }
+            }
+            if (figures.length > 0) {
+                uploadFiles(figures, function (resp) {
+                    sendSubmitRequest();
+                });
+            } else {
+                sendSubmitRequest();
+            }
+        }
+
+        function uploadFiles(figures, callback) {
+            let formData = new FormData();
+            let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            formData.append('csrfmiddlewaretoken', csrfToken);
+
+            for (let i = 0; i < figures.length; i++) {
+                let file = figures[i];
+                formData.append(file.name, file, file.name);
+            }
+
+            $.ajax({
+                url: '/upload_images',
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+            }).done(function (resp) {
+                callback(resp);
+            });
+        }
+
+        function sendSubmitRequest() {
+            let data = [];
+            let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            for (let i = 0; i < contrasts.length; i++) {
+                let c = contrasts[i];
+                let figures = [];
+                for (let j = 0; j < c.figures.length; j++) {
+                    figures.push(c.figures[j].name)
+                }
+                data.push({
+                    "contrast_name": c.title,
+                    "condition1": {
+                        "name": c.condition1,
+                        "stimuli_list": c.stimuli1
+                    },
+                    "condition2": {
+                        "name": c.condition2,
+                        "stimuli_list": c.stimuli2
+                    },
+                    "coordinates": c.coordinates,
+                    "figures": figures,
+                });
+            }
+
+            console.log(data);
+
+            $.ajax({
+                url: '/api/contrasts/' + experimentId,
+                headers: {"X-CSRFToken": csrfToken},
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(data),
+                type: 'POST',
+            }).done(function (resp) {
+                console.log(resp);
+            });
+        }
+
+        function showModal(title, body, okHTML, okFunc, okDisabled) {
+
+            okHTML = typeof okHTML != 'undefined' ? okHTML : 'OK';
+            okFunc = typeof okFunc != 'undefined' ? okFunc : dismissModal;
+            okDisabled = typeof okDisabled != 'undefined' ? okDisabled : false;
+
+            $(".modal-header .modal-title")[0].innerHTML = title;
+            $(".modal-body")[0].innerHTML = body;
+            let oldBtn = $("#modal-ok-btn")[0];
+            let newBtn = oldBtn.cloneNode(true);
+            newBtn.innerHTML = okHTML;
+            newBtn.addEventListener('click', okFunc);
+            oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+            $("#upload-modal").modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+            if (okDisabled) {
+                $(newBtn).button('disable');
+            }
+        }
+
+        function dismissModal() {
+            $("#upload-modal").modal('hide');
+        }
+
+        /**
+         function createForm(figures) {
+            let form = document.createElement("form");
+            form.setAttribute("method", "POST");
+            form.setAttribute("action", "/upload_images");
+
+            for (let i = 0; i < figures.length; i++) {
+                let file = figures[i];
+                let input = document.createElement("input");
+                input.setAttribute('type', "hidden");
+                input.setAttribute("name", "file" + (i + 1));
+                input.setAttribute("value", file);
+                form.appendChild(input);
+            }
+
+            return form
+        }
+         */
+    </script>
 {% endblock %}
