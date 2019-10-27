@@ -5,7 +5,7 @@
 from django.test import TestCase
 
 # Create your tests here.
-from boldpredict.api import experiment_api,contrast_api,cache_api,stimuli_api,sqs_api
+from boldpredict.api import experiment_api, contrast_api, cache_api, stimuli_api, sqs_api
 from boldpredict.constants import *
 import boldpredict.utils as utils
 from boldpredict.models import Contrast
@@ -32,6 +32,12 @@ class ExperimentTestCase(TestCase):
         self.assertEqual(exp.coordinate_space, MNI)
         self.assertEqual(exp.DOI, '10.1162/0898929054021102')
         self.assertEqual(exp.is_published, True)
+
+        exp_dict = {'exp_id': exp_id, "privacy_choice": 'PR',
+                    'experiment_title': "changed title"}
+        new_exp = experiment_api.update_experiment(**exp_dict)
+        assert new_exp.title == "changed title"
+
 
 
 class ContrastTestCase(TestCase):
@@ -111,7 +117,7 @@ class StimuliTestCase(TestCase):
             'stimuli_type': WORD_LIST,
             'stimuli_name': 'fruit',
             'stimuli_content': 'apple, peach, grapes',
-            'exp_id':experiment.id
+            'exp_id': experiment.id
         }
 
     def test_stimuli_creation(self):
@@ -120,7 +126,8 @@ class StimuliTestCase(TestCase):
         self.assertEqual(stimuli_dict['id'], stimuli.id)
         self.assertEqual(stimuli_dict['stimuli_type'], WORD_LIST)
         self.assertEqual(stimuli_dict['stimuli_name'], 'fruit')
-        self.assertEqual(stimuli_dict['stimuli_content'], 'apple, peach, grapes')
+        self.assertEqual(
+            stimuli_dict['stimuli_content'], 'apple, peach, grapes')
 
 
 class SQSTestCase(TestCase):
@@ -138,6 +145,7 @@ class SQSTestCase(TestCase):
         self.contrast = contrast_api.create_contrast(**self.input_params)
 
     def test_sqs_creation(self):
-        message  = sqs_api.create_contrast_message(self.contrast)
+        message = sqs_api.create_contrast_message(self.contrast)
         self.assertEqual(message['semantic_model'], ENG1000)
-        self.assertEqual(message['contrasts'][str(self.contrast.id)]['do_perm'], False)
+        self.assertEqual(message['contrasts'][str(
+            self.contrast.id)]['do_perm'], False)

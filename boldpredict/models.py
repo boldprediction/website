@@ -190,7 +190,7 @@ class Coordinate(models.Model):
     y = models.IntegerField('y')
     z = models.IntegerField('z')
     contrast = models.ForeignKey(Contrast, on_delete=models.CASCADE, related_name="coordinates")
-    zscore = models.IntegerField('zcore',null=True)
+    zscore = models.FloatField('zcore',null=True)
     # coordinates_holder = models.ForeignKey(Coordinates_holder)
 
 # for coordinate analysis

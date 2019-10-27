@@ -26,6 +26,15 @@ function saveStimuli() {
         "stimuli_content": content,
         "exp_id": exp_id
     }
+    if (name.length == 0 || type.length == 0 || content.length == 0) {
+        error_box = $('#id_error');
+        error_box.html("Please fill the stimuli name and content")
+        return
+    }
+    else{
+        error_box = $('#id_error');
+        error_box.html("")
+    }
     $.ajax({
         type: "POST",
         url: "/api/stimuli",
@@ -33,28 +42,28 @@ function saveStimuli() {
         data: JSON.stringify(postData),
         dataType: 'json',
         contentType: 'application/json',
-        success: function(result){
+        success: function (result) {
             updateStimuli()
         }
     });
 }
 
 function updateStimuli() {
-    exp_id = $('#id_experiment_id').val()  
+    exp_id = $('#id_experiment_id').val()
     $.ajax({
         type: "GET",
         url: "/api/experiment/" + exp_id,
         dataType: 'json',
-        success: function(result){
+        success: function (result) {
             updateStimuliTable(result)
-        } 
+        }
     });
 }
 
 
 function jumpToNextPage() {
-    exp_id = $('#id_experiment_id').val()  
-    window.location.href="/experiment/"+exp_id+"/edit_contrasts";  
+    exp_id = $('#id_experiment_id').val()
+    window.location.href = "/experiment/" + exp_id + "/edit_contrasts";
 }
 
 function updateStimuliTable(data) {
@@ -63,12 +72,12 @@ function updateStimuliTable(data) {
     text = "";
     for (var i = 0; i < stimuli.length; i++) {
         text += '<tr>' +
-        '<th scope="row">' + (i+1).toString() + '</th>' +
-        '<td>'+ stimuli[i]["stimuli_name"] + '</td>'+
-        '<td>'+ stimuli[i]["stimuli_type"] + '</td>'+
-        '<td>'+ stimuli[i]["stimuli_content"] + '</td>'+
-        '<td><button type="button" class="btn btn-warning" onclick="deleteStimuli( ' + stimuli[i]['id']  + ' )" >Delete</button></td>'+
-        '</tr>';
+            '<th scope="row">' + (i + 1).toString() + '</th>' +
+            '<td>' + stimuli[i]["stimuli_name"] + '</td>' +
+            '<td>' + stimuli[i]["stimuli_type"] + '</td>' +
+            '<td>' + stimuli[i]["stimuli_content"] + '</td>' +
+            '<td><button type="button" class="btn btn-warning" onclick="deleteStimuli( ' + stimuli[i]['id'] + ' )" >Delete</button></td>' +
+            '</tr>';
     }
     tbody.html(text);
 }
@@ -82,7 +91,7 @@ function deleteStimuli(stimuli_id) {
         data: JSON.stringify({}),
         dataType: 'json',
         contentType: 'application/json',
-        success: function(result){
+        success: function (result) {
             updateStimuli()
         }
     });

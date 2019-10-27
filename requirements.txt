@@ -3,3 +3,4 @@ django-hashid-field
 djangorestframework
 pymemcache
 boto3==1.9.19
+coverage

@@ -144,7 +144,7 @@ def contrast_list(request, exp_id):
                     Coordinate.objects.create(coordinate_name=coordinate_name,
                                             x=x, y=y, z=z, zscore=zscore, contrast=contrast_obj)
 
-            contrast_ids.append(contrast_obj.id)
+            contrast_ids.append(str(contrast_obj.id))
         return Response({'contrast_ids': contrast_ids})
 
     elif request.method == 'GET':

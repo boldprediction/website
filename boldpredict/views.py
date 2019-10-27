@@ -579,14 +579,14 @@ def create_contrast(request):
 
     c_id, find,hash_key = contrast_api.check_existing_contrast(**params)
     if find:
-        return HttpResponse(json.dumps({'contrast_id':c_id}), content_type='application/json')
+        return HttpResponse(json.dumps({'contrast_id':c_id,'hash_key':str(hash_key)}), content_type='application/json')
     
     params['hash_key'] = hash_key
     contrast = contrast_api.create_contrast(**params)
     sqs_api.send_contrast_message(sqs_api.create_contrast_message(
         contrast), params['stimuli_type'])
     
-    return HttpResponse(json.dumps({'contrast_id':str(contrast.id)}), content_type='application/json')
+    return HttpResponse(json.dumps({'contrast_id':str(contrast.id),'hash_key':str(contrast.hash_key)}), content_type='application/json')
 
 
 
