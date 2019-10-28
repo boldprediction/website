@@ -221,7 +221,7 @@ def add_contrast(request):
 @login_required
 def edit_contrasts(request,exp_id):
     exp = Experiment.objects.get(pk=exp_id)
-    if not (exp.is_published and exp.creator == request.user):
+    if not (exp.is_published and ( exp.creator == request.user or request.user.is_superuser )):
         raise Http404
     stimuli_type = exp.stimuli_type
     return render(request, 'boldpredict/add_contrast.html', {'exp_id':exp_id})
@@ -302,7 +302,7 @@ def save_experiment(request):
 @login_required
 def edit_stimulus(request,exp_id):
     exp = Experiment.objects.get(pk=exp_id)
-    if not (exp.is_published and exp.creator == request.user):
+    if not (exp.is_published and ( exp.creator == request.user or request.user.is_superuser )):
         raise Http404
     stimuli_type = exp.stimuli_type
     return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp_id, 'stimuli_type': stimuli_type })
