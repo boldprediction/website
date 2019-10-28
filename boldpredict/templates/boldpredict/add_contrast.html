@@ -318,6 +318,7 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="{% static 'boldpredict/js/add_contrast.js' %}"></script>
     <script type="text/javascript">
 
         let files = [];
@@ -327,26 +328,34 @@
         let coordinates = [];
         let experimentId = -1;
         let editingContrastIndex = -1;
-        let selectedContrastClassName = "selected-contrast";
-        const stimuliStr = "<option value=\"{0}\">{1}</option>";
-        const figureStr = "<tr><td style=\"color:white\">{0}</td><td><button type=\"button\" class=\"file-name btn-danger\" onclick=\"deleteFile(this)\">delete</button></td></tr>";
-        const coordStr = "<tr>><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td><button onclick=\"deleteCoord(this)\" type=\"button\" class=\"btn-danger coord-btn\"><span>&#10005;</span></button></td></tr>";
-        const contrastStr = "<tr class=\"contrast-record\" onclick=\"editContrast(this)\"><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td><td>{6}</td><td><button type=\"button\" class=\"btn-danger del-contrast-btn\"><span>&#10005;</span></button></td></tr>";
+
 
         $(document).ready(function () {
+            // Request stimuli data, and then update the page.
+            requestStimuli(function () {
+                let stimuliInput1 = $("#stimuli_1");
+                let stimuliInput2 = $("#stimuli_2");
+                for (let i = 0; i < stimuli.length; i++) {
+                    let optionStr = stimuliStr.format(stimuli[i].id, stimuli[i].stimuli_name);
+                    stimuliInput1.append(optionStr);
+                    stimuliInput2.append(optionStr);
+                }
+                stimuliInput1.selectpicker('refresh');
+                stimuliInput2.selectpicker('refresh');
+            });
 
-            requestStimuli();
-
+            // Add event listener to file button
             $("#inputGroupFile04").on("change", function () {
                 let selectedFiles = $("#inputGroupFile04")[0].files;
                 if (selectedFiles.length > 0) {
-                    let a = $("#file-block-body")[0].innerHTML;
-                    $("#file-block-body")[0].innerHTML = a + figureStr.format(selectedFiles[0].name);
+                    let fileTable = $("#file-block-body")[0];
+                    fileTable.innerHTML += figureStr.format(selectedFiles[0].name);
                     files.push(selectedFiles[0]);
                 }
             });
 
-            let form = $(".needs-validation")[0];
+            // Add event listener to Add Contrast button
+            let form = $('.needs-validation')[0];
             form.addEventListener('submit', addContrast);
 
             let coordinate_form = $("#coordinate-input-block")[0];
@@ -354,45 +363,32 @@
                 event.preventDefault();
                 event.stopPropagation();
                 addCoordinates();
-            })
+            });
+
+            loadExperiment();
         });
 
-        function requestStimuli() {
-            let urls = window.location.href.split("experiment/");
-            if (urls.length > 1) {
-                let parts = urls[1].split("/");
-                if (parts.length > 0) {
-                    experimentId = parts[0];
-                    $.get('/api/stimulus/' + experimentId, function (data) {
-                        if (data.length === 0) {
-                            alert("Cannot any stimuli data, please add stimuli in the previous page or contact administrator");
-                            return;
-                        }
-                        stimuli = data;
-                        for (let i = 0; i < stimuli.length; i++) {
-                            stimuliMap[stimuli[i].id] = stimuli[i];
-                        }
-                        showStimuli();
+
+        function loadExperiment() {
+            $.ajax({
+                type: 'GET',
+                url: '/api/contrasts/' + experimentId,
+            }).done(function (resp) {
+                let contrast_list = [];
+                for (let i = 0; i < resp.length; i++) {
+                    let contrast = resp[i];
+                    contrast_list.push({
+                        "title": contrast.contrast_name,
+                        "condition1": contrast.condition1.name,
+                        "condition2": contrast.condition2.name,
+                        "stimuli1": contrast.condition1.stimuli_list,
+                        "stimuli2": contrast.condition2.stimuli_list,
+                        "coordinates": JSON.parse(JSON.stringify(coordinates))
                     });
-                } else {
-                    alert("Error on getting stimuli data, cannot get experiment id");
                 }
-            } else {
-                alert("Error on getting stimuli data, cannot get experiment id");
-            }
+            });
         }
 
-        function showStimuli() {
-            let stimuliInput1 = $("#stimuli_1");
-            let stimuliInput2 = $("#stimuli_2");
-            for (let i = 0; i < stimuli.length; i++) {
-                let optionStr = stimuliStr.format(stimuli[i].id, stimuli[i].stimuli_name);
-                stimuliInput1.append(optionStr);
-                stimuliInput2.append(optionStr);
-            }
-            stimuliInput1.selectpicker('refresh');
-            stimuliInput2.selectpicker('refresh');
-        }
 
         function deleteFile(btn) {
             let tr = $(btn).parent().parent();
@@ -411,70 +407,15 @@
             let cond2 = $("#condition-2-input").val();
             let stim2 = $("#stimuli_2").val();
 
-            let figures = [];
-            for (let i = 0; i < files.length; i++) {
-                figures.push(files[i])
-            }
-
             return {
                 "title": title,
                 "condition1": cond1,
                 "condition2": cond2,
                 "stimuli1": stim1,
                 "stimuli2": stim2,
-                "figures": figures,
+                "figures": files.map(f => f),
                 "coordinates": JSON.parse(JSON.stringify(coordinates))
             };
-        }
-
-        function buildContrastRecord(contrast) {
-
-            //stimuli
-            let stimuli1Names = [];
-            for (let i = 0; i < contrast.stimuli1.length; i++) {
-                stimuli1Names.push(stimuliMap[contrast.stimuli1[i]].stimuli_name);
-            }
-            let stimuli2Names = [];
-            for (let i = 0; i < contrast.stimuli2.length; i++) {
-                stimuli2Names.push(stimuliMap[contrast.stimuli2[i]].stimuli_name);
-            }
-
-            //selected files
-            let fileNamesStr = "";
-            if (contrast.figures.length > 0) {
-                for (let i = 0; i < contrast.figures.length; i++) {
-                    fileNamesStr += "<li>{0}</li>".format(contrast.figures[i].name)
-                }
-                fileNamesStr = "<ul>" + fileNamesStr + "</ul>";
-            }
-
-            //coordinates
-            let coordinatesStr = "";
-            if (contrast.coordinates.length > 0) {
-                let coords = [];
-                for (let i = 0; i < contrast.coordinates.length; i++) {
-                    let coordinate = contrast.coordinates[i];
-                    coords.push({
-                        "name": coordinate.name,
-                        "xyz": [parseFloat(coordinate.x), parseFloat(coordinate.y), parseFloat(coordinate.z)],
-                        "tscore": parseFloat(coordinate.tscore),
-                        "zscore": parseFloat(coordinate.zscore),
-                        "voxel": parseFloat(coordinate.zscore),
-                    })
-                }
-                coordinatesStr = "<code>" + JSON.stringify(coords) + "</code>";
-            }
-
-            //build a record
-            return contrastStr.format(
-                contrast.title,
-                contrast.condition1,
-                stimuli1Names.join(),
-                contrast.condition2,
-                stimuli2Names.join(),
-                fileNamesStr,
-                coordinatesStr
-            );
         }
 
         function clearFilesCoords() {
@@ -499,13 +440,13 @@
         }
 
         function buildCoordinate() {
-            let values = [];
             let fields = ["name-coord", "x-coord", "y-coord", "z-coord", "ts-coord", "zs-coord", "v-coord"];
-            for (let i = 0; i < fields.length; i++) {
-                let input = $("#" + fields[i])[0];
-                values.push(input.value);
+            let values = fields.map(f => {
+                let input = $("#" + f)[0];
+                let res = input.value;
                 input.value = 0;
-            }
+                return res;
+            });
             $("#" + fields[0])[0].value = "";
             return {
                 "name": values[0],
@@ -518,20 +459,7 @@
             }
         }
 
-        function buildCoordinateRecord(coordinate) {
-            return coordStr.format(
-                coordinate.name,
-                coordinate.x,
-                coordinate.y,
-                coordinate.z,
-                coordinate.tscore,
-                coordinate.zscore,
-                coordinate.voxel
-            );
-        }
-
         function addCoordinates() {
-
             let coordinate = buildCoordinate();
             coordinates.push(coordinate);
             let table = $("#coord-table");
@@ -583,8 +511,7 @@
             let form = $(".needs-validation")[0];
             form.removeEventListener("submit", addContrast);
             form.addEventListener("submit", editDone);
-            let addContrastBtn = $("#add-contrast-btn")[0];
-            addContrastBtn.innerHTML = "Edit Done";
+            $("#add-contrast-btn")[0].innerHTML = "Edit Done";
 
             //hide all remove buttons
             $(".del-contrast-btn").attr('hidden', true);
@@ -609,19 +536,13 @@
             condition2Input.value = contrastData.condition2;
             stimuli1Input.selectpicker('val', contrastData.stimuli1);
             stimuli2Input.selectpicker('val', contrastData.stimuli2);
-            files = [];
-            fileTable[0].innerHTML = "";
-            for (let i = 0; i < contrastData.figures.length; i++) {
-                files.push(contrastData.figures[i]);
-                fileTable.append(figureStr.format(contrastData.figures[i].name));
-            }
+            fileTable.append(contrastData.figures.map(f => figureStr.format(f.name)).join(""));
+            coordTable.append(contrastData.coordinates.map(c => {
+                return coordStr.format(c.name, c.x, c.y, c.z, c.tscore, c.zscore, c.voxel)
+            }).join(""));
 
+            files = contrastData.figures.map(f => f);
             coordinates = JSON.parse(JSON.stringify(contrastData.coordinates));
-            coordTable[0].innerHTML = "";
-            for (let i = 0; i < contrastData.coordinates.length; i++) {
-                let c = contrastData.coordinates[i];
-                coordTable.append(coordStr.format(c.name, c.x, c.y, c.z, c.tscore, c.zscore, c.voxel));
-            }
         }
 
         function deleteContrast(event) {
@@ -656,7 +577,7 @@
                 return;
             }
 
-            showModal("Uploading ...", "<img src=\"/static/images/loading.gif\" style=\"width: 100%; heigth: auto;\">", 'Finished', dismissModal, true);
+            showModal("Uploading ...", loadingGIFStr, 'Finished', dismissModal, true);
 
             //upload contrast first
             let figures = [];
@@ -696,15 +617,9 @@
         }
 
         function sendSubmitRequest() {
-            let data = [];
             let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
-            for (let i = 0; i < contrasts.length; i++) {
-                let c = contrasts[i];
-                let figures = [];
-                for (let j = 0; j < c.figures.length; j++) {
-                    figures.push(c.figures[j].name)
-                }
-                data.push({
+            let data = contrasts.map(c => {
+                return {
                     "contrast_name": c.title,
                     "condition1": {
                         "name": c.condition1,
@@ -715,26 +630,26 @@
                         "stimuli_list": c.stimuli2
                     },
                     "coordinates": c.coordinates,
-                    "figures": figures,
-                });
-            }
+                    "figures": c.figures.map(f => f.name),
+                }
+            });
 
             $.ajax({
-                url: '/api/contrasts/' + experimentId,
-                headers: {"X-CSRFToken": csrfToken},
+                type: 'POST',
                 dataType: "json",
+                headers: {"X-CSRFToken": csrfToken},
+                url: '/api/contrasts/' + experimentId,
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(data),
-                type: 'POST',
             }).done(function (resp) {
-                console.log(resp)
+                console.log(resp);
                 if (resp.contrast_ids.length === contrasts.length) {
                     $(".modal-header .modal-title")[0].innerHTML = "Upload Finished";
                     $(".modal-body")[0].innerHTML = "Congratulations! Uploading succeed!";
 
                     $.ajax({
-                        type:"POST",
-                        url:"/api/email/"+experimentId,
+                        type: "POST",
+                        url: "/api/email/" + experimentId,
                         headers: {"X-CSRFToken": csrfToken},
                     });
 
@@ -782,24 +697,5 @@
         function approveExperiment() {
 
         }
-
-        /**
-         function createForm(figures) {
-            let form = document.createElement("form");
-            form.setAttribute("method", "POST");
-            form.setAttribute("action", "/upload_images");
-
-            for (let i = 0; i < figures.length; i++) {
-                let file = figures[i];
-                let input = document.createElement("input");
-                input.setAttribute('type', "hidden");
-                input.setAttribute("name", "file" + (i + 1));
-                input.setAttribute("value", file);
-                form.appendChild(input);
-            }
-
-            return form
-        }
-         */
     </script>
 {% endblock %}
