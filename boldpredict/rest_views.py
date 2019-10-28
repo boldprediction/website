@@ -153,6 +153,9 @@ def contrast_list(request, exp_id):
                                               contrast=contrast_obj)
 
             contrast_ids.append(str(contrast_obj.id))
+            sqs_api.send_contrast_message(sqs_api.create_contrast_message(
+                contrast_obj), exp.stimuli_type)
+
         return Response({'contrast_ids': contrast_ids})
 
     elif request.method == 'GET':
@@ -237,8 +240,4 @@ def experiment_approval(request, exp_id):
     data['is_approved'] = True
     experiment_api.update_experiment(**data)
     exp = experiment_api.get_experiment(exp_id)
-    for contrast in exp.contrasts.all():
-        sqs_api.send_contrast_message(sqs_api.create_contrast_message(
-            contrast), exp.stimuli_type)
-
     return Response(exp.serialize())
