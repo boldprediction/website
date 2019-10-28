@@ -128,9 +128,9 @@ def contrast_list(request, exp_id):
             hash_key = utils.generate_hash_key(**params)
             figures = contrast['figures'] if "figures" in contrast else []
             contrast_obj = Contrast.objects.create(contrast_title=contrast_title, baseline_choice=baseline_choice,
-                                                    permutation_choice=permutation_choice, experiment=exp,
-                                                    privacy_choice=privacy_choice, creator=request.user,
-                                                    hash_key=hash_key, figures_list=json.dumps(figures))
+                                                   permutation_choice=permutation_choice, experiment=exp,
+                                                   privacy_choice=privacy_choice, creator=request.user,
+                                                   hash_key=hash_key, figures_list=json.dumps(figures))
 
             condition1['contrast_id'] = contrast_obj.id
             condition2['contrast_id'] = contrast_obj.id
@@ -145,8 +145,12 @@ def contrast_list(request, exp_id):
                     y = coordinate['y']
                     z = coordinate['z']
                     zscore = coordinate['zscore']
+                    tscore = coordinate.get('tscore', 0)
+                    voxel = coordinate.get('voxel', 0)
                     Coordinate.objects.create(coordinate_name=coordinate_name,
-                                              x=x, y=y, z=z, zscore=zscore, contrast=contrast_obj)
+                                              x=x, y=y, z=z, zscore=zscore,
+                                              tscore=tscore, voxel=voxel,
+                                              contrast=contrast_obj)
 
             contrast_ids.append(str(contrast_obj.id))
         return Response({'contrast_ids': contrast_ids})
@@ -180,6 +184,8 @@ def contrast_list(request, exp_id):
             coordinates = []
             for coordinate in contrast.coordinates.all():
                 coordinate_dict = {}
+                coordinate_dict['voxel'] = coordinate.voxel
+                coordinate_dict['tscore'] = coordinate.tscore
                 coordinate_dict['zscore'] = coordinate.zscore
                 coordinate_dict['x'] = coordinate.x
                 coordinate_dict['y'] = coordinate.y
