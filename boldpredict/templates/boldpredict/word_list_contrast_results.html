@@ -3,12 +3,14 @@
 {% block content %}
 <section>
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="col-sm-6">
-                    <center>
-                        <h2>{{contrast_title}}</h2>
-                    </center>
+        <div class="row" id="id_word_lists">
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-3">
+                    </div>
+                    <h2>{{contrast_title}}</h2>
+                </div>
+                <div class="row">
                     <div class="col-sm-6">
                         <h3>{{list1_name}}</h3>
                         <p .pre-scrollable>{{list1}}</p>
@@ -17,46 +19,45 @@
                         <h3>{{list2_name}}</h3>
                         <p .pre-scrollable>{{list2}}</p>
                     </div>
-
                 </div>
-                <div class="col-sm-6">
-                    <p>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <button type='button' class="btn btn-danger btn-inverse" id="first_group">Subjects 1-4</button>
-                        &nbsp;
-                        {% if subject_num > 4%}
-                        <button type='button' class="btn btn-danger" id="second_group">Subjects 5-8</button>
-                        &nbsp;
-                        {% endif %}
-                        <button type='button' class="btn btn-danger" id="no_group">Close all subjects</button>
-                        &nbsp;
-                        <br>
-                        <br>
-                        <br>
-                        <button type='button' class="btn btn-primary btn-sm" id="fiducial"
-                            style="visibility:hidden">Fiducial View</button>
-                        &nbsp;
-                        <button type='button' class="btn btn-primary btn-sm" id="inflated"
-                            style="visibility:hidden">Inflated View</button>
-                        &nbsp;
-                        <button type='button' class="btn btn-primary btn-sm" id="flatten"
-                            style="visibility:hidden">Flat</button>
-                        &nbsp;
-                        <div id='roi_labels' style="visibility:hidden">
-                            <input type="checkbox" aria-label="..." id="labels_checkbox" checked="unchecked">
-                            <label for="labels_checkbox">Show ROI labels</label>
-                        </div>
-                    </p>
-                    <p><br></p>
-                </div>
-
-                <p> </p>
             </div>
+            <div class="col-sm-6">
+                <p>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <button type='button' class="btn btn-danger btn-inverse" id="first_group">Subjects 1-4</button>
+                    &nbsp;
+                    {% if subject_num > 4%}
+                    <button type='button' class="btn btn-danger" id="second_group">Subjects 5-8</button>
+                    &nbsp;
+                    {% endif %}
+                    <button type='button' class="btn btn-danger" id="no_group">Close all subjects</button>
+                    &nbsp;
+                    <br>
+                    <br>
+                    <br>
+                    <button type='button' class="btn btn-primary btn-sm" id="fiducial"
+                        style="visibility:hidden">Fiducial View</button>
+                    &nbsp;
+                    <button type='button' class="btn btn-primary btn-sm" id="inflated"
+                        style="visibility:hidden">Inflated View</button>
+                    &nbsp;
+                    <button type='button' class="btn btn-primary btn-sm" id="flatten"
+                        style="visibility:hidden">Flat</button>
+                    &nbsp;
+                    <div id='roi_labels' style="visibility:hidden">
+                        <input type="checkbox" aria-label="..." id="labels_checkbox" checked="unchecked">
+                        <label for="labels_checkbox">Show ROI labels</label>
+                    </div>
+                </p>
+                <p><br></p>
+            </div>
+
+            <p> </p>
         </div>
-        <div class="row">
+        <div class="row" id="id_view_buttons">
             <div class="col-sm-6">
                 <center>
                     <button type='button' class="btn btn-primary btn-sm" id="lateral_left">Lateral Left</button>
@@ -78,7 +79,7 @@
         </div>
         <br>
         <br>
-        <div class="row">
+        <div class="row" id="id_generated_imges">
             <div class="col-sm-6">
                 <center>
                     <p>
@@ -139,7 +140,8 @@
                 </div>
             </div>
         </div>
-    </div>
+        <div class="row" id="id_figures">
+        </div>
 </section>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -308,6 +310,37 @@
             }
         });
     });
+
+</script>
+<script type="text/javascript">
+    function loadFigures() {
+        var figure_num = parseInt("{{figure_num}}");
+        if (figure_num <= 0) {
+            return;
+        }
+        var figures = '{{figures_list | safe }}';
+        figures_list = JSON.parse(figures);
+        var figure_div = document.getElementById("id_figures");
+        var row_num = Math.floor(figure_num/2) ;
+        var html = "";
+        var image_url = "{{image_url}}";
+        for (var i = 0; i <= row_num; i++) {
+            html += "<div class='row'>";
+            for (var j = 0; j < 2; j++) {
+                html += "<div class='col-sm-6'>";
+                if ((i * 2 + j) > figure_num - 1) {
+                    break;
+                }
+                var figure_path = figures_list[i * 2 + j];
+                var template = "<img src='" + image_url + figure_path + "' style='width: 100%' />";
+                html += template;
+                html += "</div>";
+            }
+            html += "</div>";
+        }
+        figure_div.innerHTML = html
+    }
+    window.onload = loadFigures();
 </script>
 
 {% endblock %}

@@ -28,8 +28,8 @@ def check_contrast_in_cache(key):
     client = base.Client((settings.MAMCACHED_SERVER, settings.MAMCACHED_PORT))
     # Connect to the client
     try:
-        logger.info('try to get record with key ' + key + ' from Memcache' )
-        result = client.get(key)
+        logger.info('try to get record with key ' + str(key) + ' from Memcache' )
+        result = client.get(str(key))
         if result is None:
             return None
         return json.loads(result)
@@ -45,10 +45,10 @@ def delete_contrast_in_cache(id_key,hash_key):
     client = base.Client((settings.MAMCACHED_SERVER, settings.MAMCACHED_PORT))
     # Connect to the client
     try:
-        result = client.delete(id_key)
-        logger.info('Delete record with key ' + id_key + ' from Memcache' )
-        result = client.delete(hash_key)
-        logger.info('Delete record with key ' + hash_key + ' from Memcache' )
+        result = client.delete(str(id_key))
+        logger.info('Delete record with key ' + str(id_key) + ' from Memcache' )
+        result = client.delete(str(hash_key))
+        logger.info('Delete record with key ' + str(hash_key) + ' from Memcache' )
         return result
     except ConnectionRefusedError as cre:
         logger.error('Memcache connection error, cache did not start' )
