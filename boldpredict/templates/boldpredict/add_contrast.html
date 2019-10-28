@@ -350,7 +350,11 @@
                 if (selectedFiles.length > 0) {
                     let fileTable = $("#file-block-body")[0];
                     fileTable.innerHTML += figureStr.format(selectedFiles[0].name);
-                    files.push(selectedFiles[0]);
+                    files.push({
+                        "name": selectedFiles[0].name,
+                        "file": selectedFiles[0],
+                        "uploaded": false,
+                    });
                 }
             });
 
@@ -358,6 +362,7 @@
             let form = $('.needs-validation')[0];
             form.addEventListener('submit', addContrast);
 
+            // Add event listener to Add Coordinate button
             let coordinate_form = $("#coordinate-input-block")[0];
             coordinate_form.addEventListener('submit', function (event) {
                 event.preventDefault();
@@ -365,30 +370,12 @@
                 addCoordinates();
             });
 
-            loadExperiment();
-        });
-
-
-        function loadExperiment() {
-            $.ajax({
-                type: 'GET',
-                url: '/api/contrasts/' + experimentId,
-            }).done(function (resp) {
-                let contrast_list = [];
-                for (let i = 0; i < resp.length; i++) {
-                    let contrast = resp[i];
-                    contrast_list.push({
-                        "title": contrast.contrast_name,
-                        "condition1": contrast.condition1.name,
-                        "condition2": contrast.condition2.name,
-                        "stimuli1": contrast.condition1.stimuli_list,
-                        "stimuli2": contrast.condition2.stimuli_list,
-                        "coordinates": JSON.parse(JSON.stringify(coordinates))
-                    });
-                }
+            // load previous data
+            loadExperiment(function (contrast_list) {
+                contrasts = contrast_list;
+                reloadContrastTable();
             });
-        }
-
+        });
 
         function deleteFile(btn) {
             let tr = $(btn).parent().parent();
@@ -487,7 +474,7 @@
 
             contrasts[editingContrastIndex] = buildContrast();
             clearFilesCoords();
-            refreshContrastTable();
+            reloadContrastTable();
             editingContrastIndex = -1;
             $(".del-contrast-btn").attr('hidden', false);
         }
@@ -554,10 +541,10 @@
             }
             let index = $(".del-contrast-btn").index(btn);
             contrasts.splice(index, 1);
-            refreshContrastTable();
+            reloadContrastTable();
         }
 
-        function refreshContrastTable() {
+        function reloadContrastTable() {
             let contrastTable = $("#contrast-table tbody");
             contrastTable[0].innerHTML = "";
             for (let i = 0; i < contrasts.length; i++) {
@@ -583,7 +570,9 @@
             let figures = [];
             for (let i = 0; i < contrasts.length; i++) {
                 for (let j = 0; j < contrasts[i].figures.length; j++) {
-                    figures.push(contrasts[i].figures[j]);
+                    if (!contrasts[i].figures[j].uploaded) {
+                        figures.push(contrasts[i].figures[j]);
+                    }
                 }
             }
             if (figures.length > 0) {

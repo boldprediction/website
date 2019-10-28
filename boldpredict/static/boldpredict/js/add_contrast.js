@@ -80,3 +80,30 @@ function requestStimuli(callback) {
         alert("Error on getting stimuli data, cannot get experiment id");
     }
 }
+
+
+function loadExperiment(callback) {
+    $.ajax({
+        type: 'GET',
+        url: '/api/contrasts/' + experimentId,
+    }).done(function (resp) {
+        let contrast_list = resp.map(c => {
+            return {
+                "title": c.contrast_name,
+                "condition1": c.condition1.name,
+                "condition2": c.condition2.name,
+                "stimuli1": c.condition1.stimuli_list,
+                "stimuli2": c.condition2.stimuli_list,
+                "figures": c.figures.map(f => {
+                    return {
+                        "name": f,
+                        "uploaded": true,
+                    }
+                }),
+                "coordinates": JSON.parse(JSON.stringify(coordinates))
+            }
+        });
+        callback(contrast_list);
+    });
+
+}
