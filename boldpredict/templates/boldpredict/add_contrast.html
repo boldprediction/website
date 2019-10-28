@@ -590,7 +590,7 @@
             formData.append('csrfmiddlewaretoken', csrfToken);
 
             for (let i = 0; i < figures.length; i++) {
-                let file = figures[i];
+                let file = figures[i].file;
                 formData.append(file.name, file, file.name);
             }
 
