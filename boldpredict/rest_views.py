@@ -104,6 +104,10 @@ def contrast_list(request, exp_id):
     if request.method == 'POST':
         contrasts = request.data
         contrast_ids = []
+#       delete previous contrasts
+        for contrast in exp.contrasts.all():
+            contrast.delete()
+
         for contrast in contrasts:
             contrast_title = contrast["contrast_name"]
             condition1 = contrast['condition1']
@@ -124,9 +128,9 @@ def contrast_list(request, exp_id):
             hash_key = utils.generate_hash_key(**params)
             figures = contrast['figures'] if "figures" in contrast else []
             contrast_obj = Contrast.objects.create(contrast_title=contrast_title, baseline_choice=baseline_choice,
-                                                   permutation_choice=permutation_choice, experiment=exp,
-                                                   privacy_choice=privacy_choice, creator=request.user,
-                                                   hash_key=hash_key, figures_list=json.dumps(figures))
+                                                    permutation_choice=permutation_choice, experiment=exp,
+                                                    privacy_choice=privacy_choice, creator=request.user,
+                                                    hash_key=hash_key, figures_list=json.dumps(figures))
 
             condition1['contrast_id'] = contrast_obj.id
             condition2['contrast_id'] = contrast_obj.id
