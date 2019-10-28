@@ -168,7 +168,7 @@ def experiment_detail(request,exp_id):
 @login_required
 def experiment_edit(request,exp_id):
     exp = Experiment.objects.get(pk=exp_id)
-    if not (exp.is_published and exp.creator == request.user):
+    if not (exp.creator == request.user or request.user.is_superuser):
         raise Http404
     stimuli_types = constants.STIMULI_TYPES
     model_types = constants.MODEL_TYPES
