@@ -112,7 +112,7 @@ def contrast_list(request, exp_id):
             contrast_title = contrast["contrast_name"]
             condition1 = contrast['condition1']
             condition2 = contrast['condition2']
-            privacy_choice = contrast.get('privacy_choice', PRIVATE)
+            privacy_choice = contrast.get('privacy_choice', PUBLIC)
             baseline_choice = contrast.get('baseline_choice', False)
             permutation_choice = contrast.get('permutation_choice', False)
 
