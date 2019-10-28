@@ -1,0 +1,129 @@
+{% extends "boldpredict/base.html" %}
+
+{% block staticfiles %}
+{% load staticfiles %}
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script>
+    var model_types_setting = "{{ model_types | safe}}";
+    model_types_setting = model_types_setting.replace(/'/gi, '"').toString();
+    var model_type_obj = JSON.parse(model_types_setting);
+    // var model_types_setting = JSON.parse("{{ model_types}}");
+    var page_setting = "{{ settings | safe}}";
+    page_setting = page_setting.replace(/'/gi, '"').toString();
+    var page_setting_obj = JSON.parse(page_setting);
+</script>
+<script src="{% static 'boldpredict/js/new_contrast.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+
+{% block header %}
+<section>
+    <div class="wrapper topSection">
+        <div id="Header">
+            <h2>New published Experiment</h2>
+        </div>
+    </div>
+</section>
+{% endblock%}
+
+
+
+{% block content %}
+<section>
+    <div class="container">
+        <form method="post" action="{% url 'save_experiment' %}">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <h3> Coordinate Space
+                        </h3>
+                    </div>
+                    <div class="row" id="id_coordinate_space">
+                        {% for coordinate_key,coordinate_value in coordinate_types.items %}
+                        <div class="col-md-3">
+                            <input class="radio_button" type="radio" name="coordinate_space" value="{{coordinate_key}}"
+                                id="id_space_{{coordinate_key}}" /> {{coordinate_value}} <br />
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <br>
+                    <div class="row">
+                        <h3> Select stimuli Type
+                        </h3>
+                    </div>
+                    <div class="row" id="id_stimuli_types">
+                        {% for stimuli_key,stimuli_value in stimulis.items %}
+                        <div class="col-md-3">
+                            <input class="radio_button" type="radio" name="stimuli_type" value="{{stimuli_key}}"
+                                id="id_stimuli_{{stimuli_key}}" onclick="chooseStimuli('{{stimuli_key}}')" />
+                            {{stimuli_value}} <br />
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <br>
+                    <div class="row">
+                        <h3>
+                            Select model Type
+                        </h3>
+                    </div>
+                    <div class="row" id="id_model_types">
+                    </div>
+                    <br>
+                    <br />
+                    <br />
+                </div>
+
+                <div class="col-md-5">
+                    <div class="row">
+                        {% if error %}
+                        <span style="color: red">
+                            {{error}}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="row"></div>
+                    <div class="row">
+                        <h5> Experiment Title
+                        </h5>
+                        <input type="text" class="form-control" name="experiment_title" value="{{experiment_title}}">
+                    </div>
+                    <br>
+                    <div class="row"></div>
+                    <div class="row">
+                        <h5> Authors
+                        </h5>
+                        <input class="form-control" type="input" name="authors" value="{{authors}}">
+                    </div>
+                    <br>
+                    <div class="row"></div>
+                    <div class="row">
+                        <h5> DOI
+                        </h5>
+                        <input class="form-control" type="input" name="DOI" value="{{DOI}}">
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <div class="row">
+                        <input class="btn" type="submit" value="Next">
+                    </div>
+                </div>
+
+            </div>
+            {% csrf_token%}
+            {% if exp_id %}
+                <input type="hidden" value="{{exp_id}}" name="exp_id">
+            {% endif %}
+        </form>
+    </div>
+</section>
+<br>
+<br>
+<br>
+<br>
+<script type="text/javascript">
+    window.onload = loadData();
+</script>
+{% endblock%}

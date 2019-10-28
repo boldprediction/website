@@ -6,6 +6,7 @@ PRIVACY_CHOICES = [(PRIVATE, 'Private'), (PUBLIC, 'Public')]
 #coordinate space
 MNI = 'mni'
 TALAI = 'TALA'
+COORDINATE_TYPES = {MNI: "MNI", TALAI: "talairach"}
 COORDINATE_SPACE_CHOICE = [(MNI, 'mni'), (TALAI, 'talairach')]
 
 #stimuli type
