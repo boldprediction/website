@@ -159,3 +159,8 @@ def check_existing_contrast(*args, **kwargs):
         return contrast_dict['c_id'], True, hash_key
     return None, False, hash_key
 
+
+def delete_contrast(contrast_id):
+    contrast = Contrast.objects.get(id = contrast_id)
+    cache_api.delete_contrast_in_cache(contrast_id,contrast.hash_key)
+    contrast.delete()

@@ -106,7 +106,7 @@ def contrast_list(request, exp_id):
         contrast_ids = []
 #       delete previous contrasts
         for contrast in exp.contrasts.all():
-            contrast.delete()
+            contrast_api.delete_contrast(contrast.id)
 
         for contrast in contrasts:
             contrast_title = contrast["contrast_name"]
