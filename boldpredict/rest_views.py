@@ -68,11 +68,22 @@ def experiment_details(request, exp_id):
         experiment.delete()
 
 
-@api_view(['DELETE'])
+@api_view(['DELETE', 'POST','GET'])
+@login_required
 def contrast_details(request, c_id):
     contrast = Contrast.objects.get(id=c_id)
-    contrast.delete()
-    return Response({'id': c_id})
+    if request.method == 'DELETE':
+        contrast.delete()
+        return Response(contrast.serialize())
+    elif request.method == 'POST':
+        contrast_data = request.data
+        for key, value in contrast_data.items():
+            if hasattr(contrast, key):
+                setattr(contrast, key, value)
+        contrast.save()
+        return Response(contrast.serialize())
+    elif request.method == 'GET':
+        return Response(contrast.serialize())
 
 
 @api_view(['DELETE'])
@@ -217,7 +228,8 @@ def user_contrast_list(request, username):
     if request.user.username != username:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    contrasts = Contrast.objects.filter(experiment__is_published = False).filter(creator__username=username)
+    contrasts = Contrast.objects.filter(
+        experiment__is_published=False).filter(creator__username=username)
     contrast_list = [con.serialize() for con in contrasts.all()]
     return Response(contrast_list)
 
