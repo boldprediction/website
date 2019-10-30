@@ -148,7 +148,8 @@ def index(request):
 
 
 def experiment_action(request):
-    published_exps = Experiment.objects.filter(is_published = True ).filter( is_approved = True )
+    # published_exps = Experiment.objects.filter(is_published = True ).filter( is_approved = True )
+    published_exps = Experiment.objects.filter(is_published = True ).filter( status = constants.APPROVED )
     txt = ''
     template = '<br> <h4> <li> <a  href={0}> {1} </a> </li> </h4> <br> '
     for exp in published_exps:

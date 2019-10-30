@@ -50,3 +50,10 @@ WORD_LIST_CONDITIONS = {
 
 SUBJECT_JSON_SUFFIX = "_[inflated]_mg2_9d_['rois'].json"
 
+
+# Experiment status choices
+REJECT = "REJECT"
+CREATED = "CREATED"
+APPROVED = "APPROVED"
+STATUS_CHOICE = [(CREATED, "Created"),
+                       (APPROVED, "Approved"), (REJECT, "Reject")]

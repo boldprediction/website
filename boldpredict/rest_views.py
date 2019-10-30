@@ -50,7 +50,7 @@ def stimuli_list(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'DELETE'])
 def experiment_details(request, exp_id):
     experiment = experiment_api.get_experiment(exp_id)
     if experiment is None:
@@ -64,6 +64,8 @@ def experiment_details(request, exp_id):
         experiment_api.update_experiment(**data)
         experiment = experiment_api.get_experiment(exp_id)
         return Response(experiment.serialize())
+    elif request.method == 'DELETE':
+        experiment.delete()
 
 
 @api_view(['DELETE'])
@@ -155,7 +157,6 @@ def contrast_list(request, exp_id):
             contrast_ids.append(str(contrast_obj.id))
             sqs_api.send_contrast_message(sqs_api.create_contrast_message(
                 contrast_obj), exp.stimuli_type)
-
         return Response({'contrast_ids': contrast_ids})
 
     elif request.method == 'GET':
@@ -210,6 +211,17 @@ def get_text(condition):
     return ','.join(text)
 
 
+@api_view(['GET'])
+@login_required
+def user_contrast_list(request, username):
+    if request.user.username != username:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    contrasts = Contrast.objects.filter(experiment__is_published = False).filter(creator__username=username)
+    contrast_list = [con.serialize() for con in contrasts.all()]
+    return Response(contrast_list)
+
+
 @api_view(['POST'])
 @login_required
 def experiment_email(request, exp_id):
@@ -233,11 +245,39 @@ def experiment_email(request, exp_id):
 @login_required
 def experiment_approval(request, exp_id):
     if request.user.is_superuser == False:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     data = {}
     data['exp_id'] = exp_id
-    data['is_approved'] = True
+    # data['is_approved'] = True
+    data['status'] = constants.APPROVED
     experiment_api.update_experiment(**data)
     exp = experiment_api.get_experiment(exp_id)
     return Response(exp.serialize())
+
+
+@api_view(['POST'])
+@login_required
+def experiment_reject(request, exp_id):
+    if request.user.is_superuser == False:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    data = {}
+    data['exp_id'] = exp_id
+    # data['is_approved'] = True
+    data['status'] = constants.REJECT
+    experiment_api.update_experiment(**data)
+    exp = experiment_api.get_experiment(exp_id)
+    return Response(exp.serialize())
+
+
+@api_view(['GET'])
+@login_required
+def experiment_list(request, username):
+    if request.user.username != username:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    exps = Experiment.objects.filter(
+        is_published=True).filter(creator__username=username)
+    experiments = [exp.serialize() for exp in exps.all()]
+    return Response(experiments)
