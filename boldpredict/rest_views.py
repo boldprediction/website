@@ -68,7 +68,7 @@ def experiment_details(request, exp_id):
         experiment.delete()
 
 
-@api_view(['DELETE', 'POST','GET'])
+@api_view(['DELETE', 'POST', 'GET'])
 @login_required
 def contrast_details(request, c_id):
     contrast = Contrast.objects.get(id=c_id)
@@ -291,5 +291,17 @@ def experiment_list(request, username):
 
     exps = Experiment.objects.filter(
         is_published=True).filter(creator__username=username)
+    experiments = [exp.serialize() for exp in exps.all()]
+    return Response(experiments)
+
+
+@api_view(['GET'])
+@login_required
+def created_experiments(request):
+    if request.user.is_superuser == False:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    exps = Experiment.objects.filter(
+        is_published=True).filter(status=constants.CREATED)
     experiments = [exp.serialize() for exp in exps.all()]
     return Response(experiments)
