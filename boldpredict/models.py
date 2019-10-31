@@ -186,11 +186,13 @@ class ConditionCombination(models.Model):
 
 class Coordinate(models.Model):
     coordinate_name = models.TextField('roi name', max_length=50)
-    x = models.IntegerField('x')
-    y = models.IntegerField('y')
-    z = models.IntegerField('z')
+    x = models.FloatField('x')
+    y = models.FloatField('y')
+    z = models.FloatField('z')
     contrast = models.ForeignKey(Contrast, on_delete=models.CASCADE, related_name="coordinates")
     zscore = models.FloatField('zcore',null=True)
+    tscore = models.FloatField('tcore',null=True)
+    voxel = models.FloatField('voxel',null=True)
     # coordinates_holder = models.ForeignKey(Coordinates_holder)
 
 # for coordinate analysis
