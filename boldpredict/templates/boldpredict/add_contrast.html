@@ -391,9 +391,6 @@
 
         function buildContrast() {
             let title = $("#contrast_title_input").val();
-            if (!title || title.length === 0) {
-                title = (contrasts.length + 1) + '@' + randID(7)
-            }
             let cond1 = $("#condition-1-input").val();
             let stim1 = $("#stimuli_1").val();
             let cond2 = $("#condition-2-input").val();
