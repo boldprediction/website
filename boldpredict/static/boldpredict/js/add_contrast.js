@@ -105,5 +105,4 @@ function loadExperiment(callback) {
         });
         callback(contrast_list);
     });
-
 }

@@ -104,7 +104,8 @@
                                     data-toggle="modal" data-target="#modal">Approve Experiment
                             </button>
                         {% else %}
-                            <button type="button" id="upload-btn" class="btn btn-warning" onclick="submitExperiment()"
+                            <button type="button" id="upload-btn" class="btn btn-warning"
+                                    onclick="clickSubmitExperiment()"
                                     data-toggle="modal" data-target="#modal">Submit Experiment
                             </button>
                         {% endif %}
@@ -328,6 +329,7 @@
         let coordinates = [];
         let experimentId = -1;
         let editingContrastIndex = -1;
+        let CSRFToken = null;
 
 
         $(document).ready(function () {
@@ -369,6 +371,9 @@
                 event.stopPropagation();
                 addCoordinates();
             });
+
+            // CSRF Token
+            CSRFToken = $('[name="csrfmiddlewaretoken"]').val();
 
             // load previous data
             loadExperiment(function (contrast_list) {
@@ -431,10 +436,10 @@
             let values = fields.map(f => {
                 let input = $("#" + f)[0];
                 let res = input.value;
-                input.value = 0;
+                input.value = "";
                 return res;
             });
-            $("#" + fields[0])[0].value = "";
+            //$("#" + fields[0])[0].value = "";
             return {
                 "name": values[0],
                 "x": values[1],
@@ -553,7 +558,15 @@
             $(".del-contrast-btn").on('click', deleteContrast);
         }
 
-        function submitExperiment() {
+        function clickSubmitExperiment() {
+            submitExperiment(function () {
+                replaceEventListener("#modal-ok-btn", 'click', function () {
+                    window.location.href = "/experiment"
+                });
+            });
+        }
+
+        function submitExperiment(success) {
             if (editingContrastIndex !== -1) {
                 showModal("Error", "Please finish edit first!");
                 return;
@@ -571,27 +584,34 @@
             for (let i = 0; i < contrasts.length; i++) {
                 for (let j = 0; j < contrasts[i].figures.length; j++) {
                     if (!contrasts[i].figures[j].uploaded) {
-                        figures.push(contrasts[i].figures[j]);
+                        figures.push({
+                            "i": i,
+                            "j": j,
+                            "f": contrasts[i].figures[j]
+                        });
                     }
                 }
             }
             if (figures.length > 0) {
                 uploadFiles(figures, function (resp) {
-                    sendSubmitRequest();
+                    sendSubmitRequest(success);
                 });
             } else {
-                sendSubmitRequest();
+                sendSubmitRequest(success);
             }
         }
 
         function uploadFiles(figures, callback) {
             let formData = new FormData();
-            let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
-            formData.append('csrfmiddlewaretoken', csrfToken);
 
-            for (let i = 0; i < figures.length; i++) {
-                let file = figures[i].file;
-                formData.append(file.name, file, file.name);
+            formData.append('csrfmiddlewaretoken', CSRFToken);
+            formData.append('experiment_id', experimentId+"");
+
+            for (let k = 0; k < figures.length; k++) {
+                let i = figures[k].i;
+                let j = figures[k].j;
+                let file = figures[k].f.file;
+                formData.append(i+"@"+j+"@"+file.name, file, file.name);
             }
 
             $.ajax({
@@ -601,12 +621,28 @@
                 processData: false,
                 contentType: false,
             }).done(function (resp) {
-                callback(resp);
+                resp = JSON.parse(resp);
+                if (resp.length === figures.length){
+                    for (let k =0; k < resp.length; k++){
+                        let i = parseInt(resp[k].i);
+                        let j = parseInt(resp[k].j);
+                        let name = resp[k].name;
+                        let old = contrasts[i].figures[j];
+                        contrasts[i].figures[j] = {
+                            "name": name,
+                            "file": old.file,
+                            "uploaded": true,
+                        }
+                    }
+                    callback(resp);
+                }else{
+                    console.log("Failed to upload some of files")
+                    //TODO: show modal
+                }
             });
         }
 
-        function sendSubmitRequest() {
-            let csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+        function sendSubmitRequest(success) {
             let data = contrasts.map(c => {
                 return {
                     "contrast_name": c.title,
@@ -626,7 +662,7 @@
             $.ajax({
                 type: 'POST',
                 dataType: "json",
-                headers: {"X-CSRFToken": csrfToken},
+                headers: {"X-CSRFToken": CSRFToken},
                 url: '/api/contrasts/' + experimentId,
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(data),
@@ -635,19 +671,12 @@
                 if (resp.contrast_ids.length === contrasts.length) {
                     $(".modal-header .modal-title")[0].innerHTML = "Upload Finished";
                     $(".modal-body")[0].innerHTML = "Congratulations! Uploading succeed!";
-
                     $.ajax({
                         type: "POST",
                         url: "/api/email/" + experimentId,
-                        headers: {"X-CSRFToken": csrfToken},
+                        headers: {"X-CSRFToken": CSRFToken},
                     });
-
-                    let oldBtn = $("#modal-ok-btn")[0];
-                    let newBtn = oldBtn.cloneNode(true);
-                    newBtn.addEventListener('click', function () {
-                        window.location.href = "/experiment"
-                    });
-                    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+                    success();
                 } else {
                     $(".modal-header .modal-title")[0].innerHTML = "Error occurred";
                     $(".modal-body")[0].innerHTML = "An error occurred during uploading, please contact administrator!";
@@ -665,11 +694,10 @@
 
             $(".modal-header .modal-title")[0].innerHTML = title;
             $(".modal-body")[0].innerHTML = body;
-            let oldBtn = $("#modal-ok-btn")[0];
-            let newBtn = oldBtn.cloneNode(true);
+
+            let newBtn = replaceEventListener("#modal-ok-btn", 'click', okFunc);
             newBtn.innerHTML = okHTML;
-            newBtn.addEventListener('click', okFunc);
-            oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+
             $("#modal").modal({
                 backdrop: 'static',
                 keyboard: false
@@ -685,6 +713,17 @@
 
         function approveExperiment() {
 
+            submitExperiment(function () {
+                $.ajax({
+                    type: 'POST',
+                    headers: {"X-CSRFToken": CSRFToken},
+                    url: '/api/experiment/'+experimentId+'/approval',
+                }).done(function () {
+                    let newBtn = replaceEventListener("#modal-ok-btn", 'click', function () {
+                        window.location.href = "/experiment";
+                    });
+                });
+            });
         }
     </script>
 {% endblock %}
