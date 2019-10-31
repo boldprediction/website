@@ -100,7 +100,7 @@ function loadExperiment(callback) {
                         "uploaded": true,
                     }
                 }),
-                "coordinates": JSON.parse(JSON.stringify(coordinates))
+                "coordinates": JSON.parse(JSON.stringify(c.coordinates))
             }
         });
         callback(contrast_list);
