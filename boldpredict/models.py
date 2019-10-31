@@ -22,6 +22,27 @@ class Experiment(models.Model):
     model_type = models.CharField(
         'Model Type', choices=MODEL_TYPE_CHOICE, max_length=20, default=ENG1000)
 
+    is_published = models.BooleanField(
+        'Is this a published experiment', default=False)
+    
+    is_approved = models.BooleanField(
+        'If it is a published experiment, is this experiment approved', default=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "experiment_title": self.experiment_title,
+            "authors": self.authors,
+            "DOI": self.DOI,
+            "creator": self.creator.username if self.creator is not None else "",
+            "stimuli_type": self.stimuli_type,
+            "coordinate_space": self.coordinate_space,
+            "model_type": self.model_type,
+            "is_published": self.is_published,
+            "is_approved" : self.is_approved,
+            "stimuli": [ stimuli.serialize() for stimuli in self.stimulus.all() ]
+        }
+
 
 class Stimuli(models.Model):
     stimuli_name = models.TextField('name of stimuli', max_length=50)
@@ -30,12 +51,19 @@ class Stimuli(models.Model):
     experiment = models.ForeignKey(
         Experiment, related_name="stimulus", on_delete=models.CASCADE)
 
+    def serialize(self):
+        if self.stimuli_type == WORD_LIST:
+            return {
+                "id": self.id,
+                "stimuli_type": self.stimuli_type,
+                "stimuli_name": self.stimuli_name,
+                "stimuli_content": self.word_list_stimuli.word_list if hasattr(self,'word_list_stimuli') else ""
+            }
 
 class WordListStimuli(models.Model):
     word_list = models.TextField(max_length=10000)
     parent_stimuli = models.OneToOneField(
         Stimuli, related_name='word_list_stimuli', on_delete=models.CASCADE)
-
 
 # Create your models here.
 class Contrast(models.Model):
@@ -52,9 +80,11 @@ class Contrast(models.Model):
         'Result generated or not', default=False)
     creator = models.ForeignKey(
         User, related_name='has_contrasts', on_delete=models.CASCADE, null=True)
-    hash_key = models.CharField('Hash Key', max_length=56,db_index=True)
+    hash_key = models.CharField('Hash Key', max_length=56, db_index=True)
     created_at = models.DateTimeField(default=timezone.now)
     result_generated_at = models.DateTimeField(null=True)
+    figures_list = models.TextField('Contrast related figures', default = '[]')
+
 
     def serialize(self):
         if self.experiment.stimuli_type == WORD_LIST:
@@ -62,7 +92,7 @@ class Contrast(models.Model):
 
     def serialize_in_word_list(self):
         conditions = self.conditions.all()
-        condition1, condition2 = None, None 
+        condition1, condition2 = None, None
         if len(conditions) == 2:
             condition1 = conditions[0]
             condition2 = conditions[1]
@@ -85,7 +115,7 @@ class Contrast(models.Model):
         contrast_dict['list2'] = list2_text
         contrast_dict['do_perm'] = self.permutation_choice
         contrast_dict['c_id'] = str(self.id)
-        contrast_dict['contrast_title'] =  self.contrast_title
+        contrast_dict['contrast_title'] = self.contrast_title
         contrast_dict['result_generated'] = self.result_generated
         contrast_dict['stimuli_type'] = WORD_LIST
         contrast_dict['coordinate_space'] = self.experiment.coordinate_space
@@ -93,16 +123,17 @@ class Contrast(models.Model):
         contrast_dict['hash_key'] = self.hash_key
         contrast_dict['created_at'] = str(self.created_at)
         contrast_dict['result_generated_at'] = str(self.result_generated_at)
-        
+        contrast_dict['figures_list'] = self.figures_list
+        contrast_dict['figure_num'] = len(json.loads(self.figures_list))
+
         # collect subjects result
         subjects_dict = {}
         subjects = self.subjects.all()
         for subject in subjects:
             subjects_dict[subject.name] = subject.serialize()
         contrast_dict['subjects'] = subjects_dict
-        
-        return contrast_dict
 
+        return contrast_dict
 
 
 class Subject_Result(models.Model):
@@ -113,7 +144,7 @@ class Subject_Result(models.Model):
     def serialize(self):
         subject_dict = {}
         analyses = self.analyses.all()
-        for analysis in  analyses:
+        for analysis in analyses:
             subject_dict[analysis.name] = analysis.result
         return subject_dict
 
@@ -124,13 +155,14 @@ class Analysis_Result(models.Model):
         Subject_Result, related_name="analyses", on_delete=models.CASCADE)
     result = models.TextField('Analysis Result', null=False)
 
+
 class Condition(models.Model):
     condition_name = models.TextField('Condition name', max_length=50)
     stimulus = models.ManyToManyField(Stimuli, through='ConditionCombination',
                                       through_fields=('condition', 'stimuli'))
     contrast = models.ForeignKey(
         Contrast, related_name="conditions", on_delete=models.CASCADE)
-    
+
     def serialize(self):
         if self.contrast.experiment.stimuli_type == WORD_LIST:
             return self.serialize_in_word_list()
@@ -140,7 +172,8 @@ class Condition(models.Model):
         condition_dict['name'] = self.condition_name
         text = ""
         stimulus = self.stimulus.all()
-        word_lists = [stimuli.word_list_stimuli.word_list for stimuli in stimulus]
+        word_lists = [
+            stimuli.word_list_stimuli.word_list for stimuli in stimulus]
         text = ','.join(word_lists)
         condition_dict['list_text'] = text
         return condition_dict
@@ -153,10 +186,13 @@ class ConditionCombination(models.Model):
 
 class Coordinate(models.Model):
     coordinate_name = models.TextField('roi name', max_length=50)
-    x = models.IntegerField('x')
-    y = models.IntegerField('y')
-    z = models.IntegerField('z')
-    contrast = models.ForeignKey(Contrast, on_delete=models.CASCADE)
+    x = models.FloatField('x')
+    y = models.FloatField('y')
+    z = models.FloatField('z')
+    contrast = models.ForeignKey(Contrast, on_delete=models.CASCADE, related_name="coordinates")
+    zscore = models.FloatField('zscore',null=True)
+    tscore = models.FloatField('tscore',null=True)
+    voxel = models.FloatField('voxel',null=True)
     # coordinates_holder = models.ForeignKey(Coordinates_holder)
 
 # for coordinate analysis

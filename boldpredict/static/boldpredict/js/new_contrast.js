@@ -1,3 +1,15 @@
+function loadData(){
+    stimuli_type  = page_setting_obj['stimuli_type'];
+    model_type  = page_setting_obj['model_type'];
+    coordinate_space  = page_setting_obj['coordinate_space'];
+    chooseStimuli(stimuli_type);
+    stimuli_obj = document.getElementById('id_stimuli_'+stimuli_type);
+    stimuli_obj.checked = "checked"
+    space_obj = document.getElementById('id_space_'+coordinate_space);
+    space_obj.checked = "checked"
+    model_obj = document.getElementById('id_model_'+model_type);
+    model_obj.checked = "checked"
+}
 function chooseStimuli(stimuli_type) {
     model_element = document.getElementById('id_model_types')
     model_element.innerHTML = ""
@@ -6,7 +18,7 @@ function chooseStimuli(stimuli_type) {
         console.log(models[i]);
         div_str = " <div class='col-md-3'>" +
             "<input class='radio_button' type='radio' name='model_type' value='" + models[i] +
-            "'>  " + models[i] + " <br> </div>";
+            "'  id='id_model_" + models[i] + "' >  " + models[i] + " <br> </div>";
         model_element.innerHTML += div_str;
         console.log(models[i]);
     }

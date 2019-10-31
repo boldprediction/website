@@ -2,3 +2,5 @@ django==2.1.5
 django-hashid-field
 djangorestframework
 pymemcache
+boto3==1.9.19
+coverage
