@@ -218,7 +218,10 @@ REGION_NAME = 'us-east-2'
 
 SUBJECTS_URL = '/static/boldpredict/subjects/'
 DATA_URL = '/static/boldpredict/data/'
-IMAGE_URL = '/Users/zl/Desktop/'
+# IMAGE_URL = '/Users/zl/Desktop/'
+IMAGE_URL = '/static/outputs/uploaded_images/'
+UPLOAD_IMAGE_ROOT = os.path.join(STATIC_ROOT, 'outputs/uploaded_images/')
+
 
 SUBJECTS = ["JGfs", "MLfs2",  "AHfs"]
 SUBJECT_NUM = len(SUBJECTS)

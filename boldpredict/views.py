@@ -252,7 +252,7 @@ def upload_images(request):
             res.append({"i": i, "j": j, "name": name})
 
             # write file onto the disk
-            with open(settings.IMAGE_URL + name, 'wb+') as destination:
+            with open(settings.UPLOAD_IMAGE_ROOT + name, 'wb+') as destination:
                 for chunk in v.chunks():
                     destination.write(chunk)
 
