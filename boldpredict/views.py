@@ -246,7 +246,7 @@ def upload_images(request):
 
             # add extra information like experiment and time onto the file name
             name = '.'.join(parts[:-1]) + "@" + str(experiment_id) + "@" + datetime.now().strftime(
-                '%Y-%m-%dT%H#%M#%S') + '.' + parts[-1]
+                '%Y-%m-%dT%H-%M-%S') + '.' + parts[-1]
 
             # store the to-be-returned information
             res.append({"i": i, "j": j, "name": name})
