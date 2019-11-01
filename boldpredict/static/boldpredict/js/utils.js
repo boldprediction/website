@@ -4,7 +4,7 @@ String.prototype.format = function () {
         self = self.replace(new RegExp("\\{" + k + "\\}", 'g'), arguments[k]);
     }
     return self
-}
+};
 
 randID = function(length) {
    let result           = '';
@@ -14,4 +14,12 @@ randID = function(length) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
    }
    return result;
-}
+};
+
+replaceEventListener = function(selector, event, listener) {
+    let older = $(selector)[0];
+    let newer = older.cloneNode(true);
+    newer.addEventListener(event, listener);
+    older.parentNode.replaceChild(newer, older);
+    return newer;
+};
