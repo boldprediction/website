@@ -588,7 +588,18 @@ def create_contrast(request):
     
     return HttpResponse(json.dumps({'contrast_id':str(contrast.id),'hash_key':str(contrast.hash_key)}), content_type='application/json')
 
+class Toggle(models.Model):
+    is_published = models.BooleanField()
+    is_draft = models.BooleanField()
 
+    def save(self, *args, **kwargs):
+        # apply the rules, change the data, etc
+        if self.is_published:
+            self.draft = False
+        if self.draft:
+            self.published = False
+        # call the actual save method
+        super().save(*args, **kwargs)
 
 
 
