@@ -1,0 +1,69 @@
+[
+    {
+      
+        "baseline_choice": false,
+        "permutation_choice" : false,
+        "privacy_choice" : true,
+        "contrast_name": "contrast1",
+        "condition1": {
+            "name": "condition1name",
+            "stimuli_list": [
+                "103",
+                "104"
+            ]
+        },
+        "condition2": {
+            "name": "condition2name",
+            "stimuli_list": [
+                "105"
+            ]
+        },
+        "coordinates": [
+            {
+                "name": "L posterior middle temporal gyrus",
+                "x": -63,
+                "y": -42,
+                "z": -3,
+                "zscore": 4.48
+            },
+            {
+                "name": "L anterior fusiform gyrus",
+                "x": -45,
+                "y" : -42,
+                "z" : 12,
+                "zscore": 3.74
+            }
+        ],
+        "figures": [
+            "images/Davis2004/Davis2004Figure1.pdf"
+        ]
+    },
+    {
+        "contrast_name": "contrast2",
+        "condition1": {
+            "name": "condition1name",
+            "stimuli_list": [
+                "105",
+                "103"
+            ]
+        },
+        "condition2": {
+            "name": "condition3name",
+            "stimuli_list": [
+                "104"
+            ]
+        },
+        "coordinates": [
+            {
+                "name": "L posterior middle temporal gyrus",
+                "x": -54,
+                "y":-48,
+                "z":-6,
+                "zscore": 4.94
+            }
+        ],
+        "figures": [
+            "images/Davis2004/Davis2004Figure1.pdf"
+        ]
+    }
+]
