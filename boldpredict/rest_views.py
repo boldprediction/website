@@ -168,6 +168,8 @@ def contrast_list(request, exp_id):
             contrast_ids.append(str(contrast_obj.id))
             sqs_api.send_contrast_message(sqs_api.create_contrast_message(
                 contrast_obj), exp.stimuli_type)
+            exp.status = constants.SUBMITTED
+            exp.save()
         return Response({'contrast_ids': contrast_ids})
 
     elif request.method == 'GET':
@@ -297,11 +299,11 @@ def experiment_list(request, username):
 
 @api_view(['GET'])
 @login_required
-def created_experiments(request):
+def submitted_experiments(request):
     if request.user.is_superuser == False:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     exps = Experiment.objects.filter(
-        is_published=True).filter(status=constants.CREATED)
+        is_published=True).filter(status=constants.SUBMITTED)
     experiments = [exp.serialize() for exp in exps.all()]
     return Response(experiments)

@@ -55,6 +55,6 @@ urlpatterns = [
          rest_views.experiment_reject),
     path('api/experiments/<slug:username>',
          rest_views.experiment_list),
-     path('api/created_experiments',
-         rest_views.created_experiments),
+     path('api/submitted_experiments',
+         rest_views.submitted_experiments),
 ]

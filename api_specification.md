@@ -198,7 +198,6 @@ doesn't need body content
 API: DELETE /api/contrast/c_id
 Example: DELETE /api/contrast/xkazYeJ
 
-
 ## TODO
 ### Implement upload contrast 
 Note: add contrast URL have changed to http://127.0.0.1:8000/experiment/experiment_id/edit_contrasts
@@ -222,3 +221,156 @@ Use "delete a certain contrast" API to delete a certain contrast
 
 ### Implement coordinates input
 Implement the coordinates input, the submission of coordinates is combined with the contrast upload.
+
+
+
+
+## API specification for Experiment manager
+
+### get contrast list of a user
+GET /api/contrasts/<slug:username>
+e.g. GET /api/contrasts/hww19920718
+
+Result example:
+c_id is contrast_id;
+privacy_choice is privacy setting, PR for private, PU for public;
+contrast_title is contrast title;
+```
+[
+    {
+        "privacy_choice": "PR",
+        "baseline_choice": false,
+        "list1_name": "number",
+        "list2_name": "quantity",
+        "list1": "one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, twenty, thirty, forty, fifty, hundred, thousand, million, half, quarter, pair, few, several, many, some, less, more",
+        "list2": "coin, coins, cent, cents, penny, pennies, nickel, nickels, dime, dimes, quarter, quarters, dollar, dollars, ounce, ounces, pound, pounds, millimeter, millimeters, centimeter, centimeters, meter, meters, inch, inches, foot, feet, yard, yards, mile, miles, kilometer, kilometers, gram, grams, kilogram, kilograms",
+        "do_perm": false,
+        "c_id": "pmbk5ez",
+        "contrast_title": "number-quantity",
+        "result_generated": false,
+        "stimuli_type": "word_list",
+        "coordinate_space": "mni",
+        "model_type": "english1000",
+        "hash_key": "71aa5c1f357a0f9dfd3e780ce7dc976e2d38c57350d6b2ed696c6d9f",
+        "created_at": "2019-09-12 22:28:39.645308+00:00",
+        "result_generated_at": "None",
+        "figures_list": "",
+        "figure_num": 0,
+        "subjects": {}
+    }
+]
+```
+
+### change contrast privacy setting attribute
+POST /api/contrast/c_id
+e.g. POST /api/contrast/pmbk5ez
+change privacy attribute to public, use body:
+```
+{
+    "privacy_choice":"PU"
+}
+```
+change privacy attribute to private, use body
+```
+{
+    "privacy_choice":"PR"
+}
+```
+
+### get user's published experiment list
+GET  /api/experiments/<slug:username>
+e.g. GET /api/experiments/admin
+
+Experiment has 4 status, created, submitted, approved, reject.
+Result example:
+```
+[
+    {
+        "id": 1,
+        "experiment_title": "Neural responses to morphological, syntactic, and semantic properties of single words: An fMRI study",
+        "authors": "M.H. Davis, F. Meunier, W.D. Marslen-Wilson",
+        "DOI": "10.1016/S0093-934X(03)00471-1",
+        "creator": "admin",
+        "stimuli_type": "word_list",
+        "coordinate_space": "mni",
+        "model_type": "english1000",
+        "is_published": true,
+        "status": "CREATED",
+        "stimuli": []
+    }
+]
+```
+
+### reject an experiment
+API: POST /api/experiment/experiment_id/reject
+Example: POST /api/experiment/140/reject
+doesn't need body content
+
+### get a the administrators approval list of experiment
+GET /api/submitted_experiments
+
+This api filter out experiments with submitted status.
+response example:
+```
+[
+    {
+        "id": 170,
+        "experiment_title": "test",
+        "authors": "vivi",
+        "DOI": "123",
+        "creator": "hww19920718",
+        "stimuli_type": "word_list",
+        "coordinate_space": "mni",
+        "model_type": "english1000",
+        "is_published": true,
+        "status": "SUBMITTED",
+        "stimuli": [
+            {
+                "id": 150,
+                "stimuli_type": "word_list",
+                "stimuli_name": "sdfadf",
+                "stimuli_content": "saf"
+            },
+            {
+                "id": 151,
+                "stimuli_type": "word_list",
+                "stimuli_name": "sdf",
+                "stimuli_content": "saffsdf"
+            }
+        ]
+    }
+]
+```
+
+### delete experiment
+DELETE /api/experiment/exp_id
+e.g. DELETE /api/experiment/166
+do not need any body content
+
+### delete a certain contrast
+API: DELETE /api/contrast/c_id
+Example: DELETE /api/contrast/xkazYeJ
+
+## Front-end TODO for experiment manager
+
+## A list of user's contrast
+use "get contrast list of a user" API to get the contrast list.
+Show
+contrast title, contrast privacy setting, available actions to users.
+Actions include "view" (jump to contrast display page), delete (delete this contrast), change attribute(change to privacy/public).
+
+### A list of user's published experiment
+
+use  "get user's published experiment list" to get a list of experiments created by the user.
+Show,
+experiment title, experiment status, actions.
+Allowed actions are view,edit,delete.
+
+### a list of submitted experiment (only for administrators)
+Use "get a the administrators approval list of experiment" api to get the experiment list.
+Show,
+experiment title, creator, status, actions.
+Allowed actions are view, edit, delete, approve, reject.
+
+
+

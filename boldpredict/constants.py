@@ -55,5 +55,6 @@ SUBJECT_JSON_SUFFIX = "_[inflated]_mg2_9d_['rois'].json"
 REJECT = "REJECT"
 CREATED = "CREATED"
 APPROVED = "APPROVED"
+SUBMITTED = "SUBMITTED"
 STATUS_CHOICE = [(CREATED, "Created"),
-                       (APPROVED, "Approved"), (REJECT, "Reject")]
+                       (APPROVED, "Approved"), (REJECT, "Reject"), (SUBMITTED, "Submitted")]
