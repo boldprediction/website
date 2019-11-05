@@ -219,6 +219,9 @@ REGION_NAME = 'us-east-2'
 SUBJECTS_URL = '/static/boldpredict/subjects/'
 DATA_URL = '/static/boldpredict/data/'
 IMAGE_URL = '/Users/zl/Desktop/'
+# IMAGE_URL = '/static/outputs/uploaded_images/'
+UPLOAD_IMAGE_ROOT = '/Users/zl/Desktop/'
+
 
 SUBJECTS = ["JGfs", "MLfs2",  "AHfs"]
 SUBJECT_NUM = len(SUBJECTS)
@@ -231,4 +234,4 @@ CACHE_EXPIRATION_TIME = 86400
 REFRESH_INTERVAL = 1000
 TIMEOUT_INTERVAL = 50000
 
-# ADMINISTRATORS = [ 'admin', 'hww19920718'  ]
+# ADMINISTRATORS = ['admin', 'hww19920718']

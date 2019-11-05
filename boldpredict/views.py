@@ -19,10 +19,11 @@ from django.core.mail import send_mail
 from django.conf import settings
 import json
 from boldpredict.models import *
-from boldpredict.api import contrast_api, sqs_api, cache_api, experiment_api,stimuli_api
+from boldpredict.api import contrast_api, sqs_api, cache_api, experiment_api, stimuli_api
 
 # constants
 from boldpredict import constants
+from datetime import datetime
 
 from django.http import JsonResponse
 
@@ -32,9 +33,6 @@ from rest_framework.response import Response
 from rest_framework import status
 
 import base64
-
-
-
 
 
 # Create your views here.
@@ -119,17 +117,16 @@ def word_list_start_contrast(request):
             context['conditions'].append(condition)
         return render(request, 'boldpredict/contrast_filler.html', context)
 
-
     params = request.POST.dict()
     params['baseline_choice'] = form.clean_baseline_choice()
     params['permutation_choice'] = form.clean_permutation_choice()
     if request.user.is_authenticated:
         params['owner'] = request.user
-    
-    c_id, find,hash_key = contrast_api.check_existing_contrast(**params)
+
+    c_id, find, hash_key = contrast_api.check_existing_contrast(**params)
     if find:
-        return redirect(reverse('contrast_results_view',kwargs={'contrast_id':c_id}))
-    
+        return redirect(reverse('contrast_results_view', kwargs={'contrast_id': c_id}))
+
     params['hash_key'] = hash_key
     contrast = contrast_api.create_word_list_contrast(**params)
     sqs_api.send_contrast_message(sqs_api.create_contrast_message(
@@ -153,23 +150,26 @@ def experiment_action(request):
     txt = ''
     template = '<br> <h4> <li> <a  href={0}> {1} </a> </li> </h4> <br> '
     for exp in published_exps:
-        txt += template.format('/experiment/{0}'.format(exp.id),exp.experiment_title)
-    return render(request, 'boldpredict/experiment_list.html', {'txt':txt})
+        txt += template.format('/experiment/{0}'.format(exp.id), exp.experiment_title)
+    return render(request, 'boldpredict/experiment_list.html', {'txt': txt})
 
-def experiment_detail(request,exp_id):
+
+def experiment_detail(request, exp_id):
     exp = Experiment.objects.get(pk=exp_id)
     template = '<br> <h4>  <li> <a target="_parent" href={0}> {1} </a> </li> </h4> '
     txt = ''
-    contrasts = exp.contrasts.all() 
+    contrasts = exp.contrasts.all()
     for contrast in contrasts:
-        txt+= template.format('/contrast_results/{0}'.format(contrast.id),contrast.contrast_title)
-    return render(request, 'boldpredict/experiment.html', {'title':exp.experiment_title,
-                                                        'DOI':exp.DOI, 'authors':exp.authors,
-                                                        'txt':txt})
+        txt += template.format('/contrast_results/{0}'.format(contrast.id), contrast.contrast_title)
+    return render(request, 'boldpredict/experiment.html', {'title': exp.experiment_title,
+                                                           'DOI': exp.DOI, 'authors': exp.authors,
+                                                           'txt': txt})
+
+
 @login_required
-def experiment_edit(request,exp_id):
+def experiment_edit(request, exp_id):
     exp = Experiment.objects.get(pk=exp_id)
-    if not (exp.is_published and ( exp.creator.username == request.user.username or request.user.is_superuser )):
+    if not (exp.is_published and (exp.creator.username == request.user.username or request.user.is_superuser)):
         raise Http404
     stimuli_types = constants.STIMULI_TYPES
     model_types = constants.MODEL_TYPES
@@ -177,12 +177,12 @@ def experiment_edit(request,exp_id):
     context = {}
     context['stimulis'] = stimuli_types
     context['model_types'] = model_types
-    context['coordinate_types'] = coordinate_types  
-    context['settings']  = {
+    context['coordinate_types'] = coordinate_types
+    context['settings'] = {
         'coordinate_space': exp.coordinate_space,
         'stimuli_type': exp.stimuli_type,
         'model_type': exp.model_type
-    } 
+    }
     context['experiment_title'] = exp.experiment_title
     context['authors'] = exp.authors
     context['DOI'] = exp.DOI
@@ -198,14 +198,13 @@ def new_experiment(request):
     context = {}
     context['stimulis'] = stimuli_types
     context['model_types'] = model_types
-    context['coordinate_types'] = coordinate_types  
-    context['settings']  = {
+    context['coordinate_types'] = coordinate_types
+    context['settings'] = {
         'coordinate_space': MNI,
         'stimuli_type': WORD_LIST,
         'model_type': ENG1000
-    }  
+    }
     return render(request, 'boldpredict/new_experiment.html', context)
-
 
 
 @login_required
@@ -220,23 +219,44 @@ def add_contrast(request):
 
 
 @login_required
-def edit_contrasts(request,exp_id):
+def edit_contrasts(request, exp_id):
     exp = Experiment.objects.get(pk=exp_id)
-    if not (exp.is_published and ( exp.creator.username == request.user.username or request.user.is_superuser )):
+    if not (exp.is_published and (exp.creator.username == request.user.username or request.user.is_superuser)):
         raise Http404
     stimuli_type = exp.stimuli_type
-    return render(request, 'boldpredict/add_contrast.html', {'exp_id':exp_id})
+    return render(request, 'boldpredict/add_contrast.html', {'exp_id': exp_id})
 
 
 @login_required
 def upload_images(request):
     if request.method == 'POST':
+        experiment_id = request.POST['experiment_id']
         res = []
         for k, v in request.FILES.items():
-            res.append(k)
-            with open(settings.IMAGE_URL + k, 'wb+') as destination:
+            # get index information, front end needs this information back
+            parts = k.split("@")
+            if len(parts) < 3:
+                continue
+            i, j = parts[0], parts[1]
+            filename = '@'.join(parts[2:])
+
+            # get the real file name
+            parts = filename.split(".")
+            if len(parts) < 2:
+                continue
+
+            # add extra information like experiment and time onto the file name
+            name = '.'.join(parts[:-1]) + "@" + str(experiment_id) + "@" + datetime.now().strftime(
+                '%Y-%m-%dT%H-%M-%S') + '.' + parts[-1]
+
+            # store the to-be-returned information
+            res.append({"i": i, "j": j, "name": name})
+
+            # write file onto the disk
+            with open(settings.UPLOAD_IMAGE_ROOT + name, 'wb+') as destination:
                 for chunk in v.chunks():
                     destination.write(chunk)
+
     return HttpResponse(json.dumps(res))
 
 
@@ -251,40 +271,40 @@ def save_experiment(request):
     error_context = {}
     error_context['stimulis'] = stimuli_types
     error_context['model_types'] = model_types
-    error_context['coordinate_types'] = coordinate_types   
-    error_context['settings']  = {
+    error_context['coordinate_types'] = coordinate_types
+    error_context['settings'] = {
         'coordinate_space': request.POST.get('coordinate_space', MNI),
         'stimuli_type': request.POST.get('stimuli_type', WORD_LIST),
         'model_type': request.POST.get('model_type', ENG1000)
-    }  
+    }
     error_context['experiment_title'] = request.POST.get('experiment_title', "")
     error_context['authors'] = request.POST.get('authors', "")
     error_context['DOI'] = request.POST.get('DOI', "")
 
     if 'experiment_title' not in request.POST or not len(request.POST['experiment_title']):
-        error_context['error']= "Please input experiment title"
+        error_context['error'] = "Please input experiment title"
         return render(request, 'boldpredict/new_experiment.html', error_context)
-    
+
     if 'authors' not in request.POST or not len(request.POST['authors']):
-        error_context['error']= "Please input authors"
+        error_context['error'] = "Please input authors"
         return render(request, 'boldpredict/new_experiment.html', error_context)
-    
-    if 'DOI' not in request.POST  or not len(request.POST['DOI']):
-        error_context['error']= "Please input DOI"
+
+    if 'DOI' not in request.POST or not len(request.POST['DOI']):
+        error_context['error'] = "Please input DOI"
         return render(request, 'boldpredict/new_experiment.html', error_context)
-    
+
     if 'coordinate_space' not in request.POST:
-        error_context['error']= "Please choose a coordinate space"
+        error_context['error'] = "Please choose a coordinate space"
         return render(request, 'boldpredict/new_experiment.html', error_context)
-    
+
     if 'stimuli_type' not in request.POST:
-        error_context['error']= "Please choose a type of stimulus"
+        error_context['error'] = "Please choose a type of stimulus"
         return render(request, 'boldpredict/new_experiment.html', error_context)
-    
+
     if 'model_type' not in request.POST:
-        error_context['error']= "Please choose a model type"
+        error_context['error'] = "Please choose a model type"
         return render(request, 'boldpredict/new_experiment.html', error_context)
-    
+
     params = request.POST.dict()
     if request.user.is_authenticated:
         params['creator'] = request.user
@@ -295,19 +315,19 @@ def save_experiment(request):
         params['exp_id'] = request.POST['exp_id']
         exp = experiment_api.update_experiment(**params)
         return redirect(reverse('edit_stimulus', args=(int(request.POST['exp_id']),)))
-    
+
     exp = experiment_api.create_experiment(**params)
     return redirect(reverse('edit_stimulus', args=(int(exp.id),)))
     # return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp.id, 'stimuli_type':params['stimuli_type']})
-    
+
+
 @login_required
-def edit_stimulus(request,exp_id):
+def edit_stimulus(request, exp_id):
     exp = Experiment.objects.get(pk=exp_id)
-    if not (exp.is_published and ( exp.creator.username == request.user.username  or request.user.is_superuser )):
+    if not (exp.is_published and (exp.creator.username == request.user.username or request.user.is_superuser)):
         raise Http404
     stimuli_type = exp.stimuli_type
-    return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp_id, 'stimuli_type': stimuli_type })
-
+    return render(request, 'boldpredict/add_stimuli.html', {'exp_id': exp_id, 'stimuli_type': stimuli_type})
 
 
 @login_required
@@ -378,6 +398,7 @@ def confirm_action(request, username, token):
 
     return render(request, 'boldpredict/confirmed.html', {})
 
+
 # Login Action
 
 
@@ -406,6 +427,7 @@ def login_action(request):
 
     login(request, new_user)
     return redirect(reverse('index'))
+
 
 # reset password
 
@@ -437,6 +459,7 @@ def resend(request):
     except ObjectDoesNotExist:
         messages.error("account not found")
         return redirect(reverse('login'))
+
 
 # note : There is an inherit flaw in this logic.
 
@@ -523,6 +546,7 @@ def get_contrast(request):
         raise Http404
     return HttpResponse(json.dumps(contrast), content_type='application/json')
 
+
 def subj_result_view(request, subj_name, contrast_id):
     context = {}
     subj_str = contrast_api.get_contrast_subj_webgl_strs(contrast_id, subj_name)
@@ -532,11 +556,12 @@ def subj_result_view(request, subj_name, contrast_id):
     context['subject_json_file'] = subj_name + constants.SUBJECT_JSON_SUFFIX
     return render(request, 'boldpredict/subject.html', context)
 
+
 def contrast_results_view(request, contrast_id):
     contrast = contrast_api.get_contrast_dict_by_id(contrast_id)
     contrast['subject_num'] = settings.SUBJECT_NUM
     for i in range(8):
-        subject_key = "subject" + str(i+1)
+        subject_key = "subject" + str(i + 1)
         if i < settings.SUBJECT_NUM:
             subject_name = settings.SUBJECTS[i]
             contrast[subject_key] = subject_name
@@ -563,13 +588,15 @@ def update_contrast(request):
         group_analyses = contrast_result['group_analyses']
         subjects_analyses = contrast_result['subjects_analyses']
         try:
-            print("contrast_id - ", contrast_id, " group_analyses = ", group_analyses, "subjects_analyses = ", subjects_analyses)
+            print("contrast_id - ", contrast_id, " group_analyses = ", group_analyses, "subjects_analyses = ",
+                  subjects_analyses)
             contrast_api.update_contrast_result(contrast_id, group_analyses, subjects_analyses)
             response_data['contrast_ids'].append(contrast_id)
         except:
             raise HttpResponseBadRequest
 
     return HttpResponse(json.dumps(response_data), content_type='application/json')
+
 
 @csrf_exempt
 def create_contrast(request):
@@ -578,19 +605,15 @@ def create_contrast(request):
 
     params = json.loads(request.body)
 
-    c_id, find,hash_key = contrast_api.check_existing_contrast(**params)
+    c_id, find, hash_key = contrast_api.check_existing_contrast(**params)
     if find:
-        return HttpResponse(json.dumps({'contrast_id':c_id,'hash_key':str(hash_key)}), content_type='application/json')
-    
+        return HttpResponse(json.dumps({'contrast_id': c_id, 'hash_key': str(hash_key)}),
+                            content_type='application/json')
+
     params['hash_key'] = hash_key
     contrast = contrast_api.create_contrast(**params)
     sqs_api.send_contrast_message(sqs_api.create_contrast_message(
         contrast), params['stimuli_type'])
-    
-    return HttpResponse(json.dumps({'contrast_id':str(contrast.id),'hash_key':str(contrast.hash_key)}), content_type='application/json')
 
-
-
-
-
-
+    return HttpResponse(json.dumps({'contrast_id': str(contrast.id), 'hash_key': str(contrast.hash_key)}),
+                        content_type='application/json')

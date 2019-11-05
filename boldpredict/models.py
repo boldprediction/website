@@ -198,11 +198,10 @@ class Coordinate(models.Model):
     x = models.FloatField('x')
     y = models.FloatField('y')
     z = models.FloatField('z')
-    contrast = models.ForeignKey(
-        Contrast, on_delete=models.CASCADE, related_name="coordinates")
-    zscore = models.FloatField('zcore', null=True)
-    tscore = models.FloatField('tcore', null=True)
-    voxel = models.FloatField('voxel', null=True)
+    contrast = models.ForeignKey(Contrast, on_delete=models.CASCADE, related_name="coordinates")
+    zscore = models.FloatField('zscore',null=True)
+    tscore = models.FloatField('tscore',null=True)
+    voxel = models.FloatField('voxel',null=True)
     # coordinates_holder = models.ForeignKey(Coordinates_holder)
 
 # for coordinate analysis
