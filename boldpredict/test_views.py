@@ -168,6 +168,17 @@ class ExperimentListAPITestCase(TestCase):
         response_data = response.data
         assert response_data[0]['id'] == self.exp_id
 
+    def test_update_experiment(self):
+        contet_params = {
+            'experiment_title': 'new experiment'
+        }
+        response = self.api_client.post(
+            '/api/experiment/'+str(self.exp_id),
+            contet_params,
+            format='json')
+        response_data = response.data
+        assert response_data['experiment_title'] == 'new experiment'
+
     def test_experiments_approve(self):
         response = self.api_client.post(
             '/api/experiment/'+str(self.exp_id)+"/approval", {}, format='json')
@@ -272,14 +283,26 @@ class ContrastListAPITestCase(TestCase):
 
     def testUpdateContrast(self):
         contet_params = {
-            'contrast_title': 'new contrast title'
+            'privacy_choice': 'PU'
         }
+        response = self.api_client.post(
+            '/api/contrast/'+str(self.contrast_id),
+        
+        contet_params,
+            format='json')
+        response_data = response.data
+        assert response_data['privacy_choice'] == 'PU'
+
+        contet_params = {
+            'privacy_choice': 'PR'
+        }
+
         response = self.api_client.post(
             '/api/contrast/'+str(self.contrast_id),
             contet_params,
             format='json')
         response_data = response.data
-        assert response_data['contrast_title'] == 'new contrast title'
+        assert response_data['privacy_choice'] == 'PR'
     
     def testDeleteContrast(self):
         response = self.api_client.delete(
