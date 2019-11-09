@@ -79,3 +79,7 @@ STATUS_CHOICE = [(CREATED, "Created"),
 CONTRAST_FILLER = {
     WORD_LIST: "word_list_contrast"
 }
+
+EXPERIMENT_STIMULI_FILLER = {
+    WORD_LIST: "word_edit_stimuli"
+}

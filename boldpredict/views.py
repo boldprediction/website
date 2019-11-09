@@ -323,19 +323,22 @@ def save_experiment(request):
         params['creator'] = request.user
     params['is_published'] = True
 
+    stimuli_type = request.POST['stimuli_type']
+    stimuli_page = constants.EXPERIMENT_STIMULI_FILLER[stimuli_type]
+
     if 'exp_id' in request.POST and len(request.POST['exp_id']) > 0:
         # save new content
         params['exp_id'] = request.POST['exp_id']
         exp = experiment_api.update_experiment(**params)
-        return redirect(reverse('edit_stimulus', args=(int(request.POST['exp_id']),)))
+        return redirect(reverse(stimuli_page, args=(int(request.POST['exp_id']),)))
 
     exp = experiment_api.create_experiment(**params)
-    return redirect(reverse('edit_stimulus', args=(int(exp.id),)))
+    return redirect(reverse(stimuli_page, args=(int(exp.id),)))
     # return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp.id, 'stimuli_type':params['stimuli_type']})
 
 
 @login_required
-def edit_stimulus(request, exp_id):
+def word_edit_stimuli(request, exp_id):
     exp = Experiment.objects.get(pk=exp_id)
     if not (exp.is_published and (exp.creator.username == request.user.username or request.user.is_superuser)):
         raise Http404
