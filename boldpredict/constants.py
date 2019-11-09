@@ -70,6 +70,12 @@ STATUS_CHOICE = [(CREATED, "Created"),
 
 
 # contrast filler page mapping
+# Example of adding new contrast stimuli submission mapping for new stimuli type 
+# CONTRAST_FILLER = {
+#     WORD_LIST: "word_list_contrast",
+#     IMAGE: "image_contrast",
+#     SENTENCE:"sentence_contrast"
+# }
 CONTRAST_FILLER = {
     WORD_LIST: "word_list_contrast"
 }
