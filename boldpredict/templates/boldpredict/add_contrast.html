@@ -1,185 +1,190 @@
 {% extends "boldpredict/base.html" %}
 
 {% block staticfiles %}
-    {% load staticfiles %}
+{% load staticfiles %}
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
-    <script src="{% static 'boldpredict/js/utils.js' %}" type="text/javascript"></script>
-    <script src="{% static 'boldpredict/js/add_stimuli.js' %}" type="text/javascript"></script>
+<script src="{% static 'boldpredict/js/utils.js' %}" type="text/javascript"></script>
+<script src="{% static 'boldpredict/js/add_stimuli.js' %}" type="text/javascript"></script>
 
-    <style>
+<style>
+    .container {
+        max-width: 90%;
+    }
 
-        .container {
-            max-width: 90%;
-        }
+    #inputGroupFile04:focus {
+        outline: none;
+    }
 
-        #inputGroupFile04:focus {
-            outline: none;
-        }
+    #inputGroupFile04 {
+        opacity: 0;
+    }
 
-        #inputGroupFile04 {
-            opacity: 0;
-        }
+    .btn-group .file-name {
+        background-color: rgba(0, 0, 0, 0);
+    }
 
-        .btn-group .file-name {
-            background-color: rgba(0, 0, 0, 0);
-        }
+    .input-group {
+        margin-bottom: 1rem;
+    }
 
-        .input-group {
-            margin-bottom: 1rem;
-        }
+    #upload-btn {
+        margin-top: 1rem;
+    }
 
-        #upload-btn {
-            margin-top: 1rem;
-        }
+    #file-block {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
 
-        #file-block {
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
+    label,
+    th,
+    td {
+        color: white;
+    }
 
-        label, th, td {
-            color: white;
-        }
+    #coordinate-header-block {
+        margin-bottom: 0.3rem;
+    }
 
-        #coordinate-header-block {
-            margin-bottom: 0.3rem;
-        }
+    #coord-table {
+        width: 100%;
+    }
 
-        #coord-table {
-            width: 100%;
-        }
+    #coord-table th,
+    #coord-table td {
+        border: #fff 1px solid;
+        text-align: center;
+    }
 
-        #coord-table th, #coord-table td {
-            border: #fff 1px solid;
-            text-align: center;
-        }
+    div label {
+        font-weight: bold;
+    }
 
-        div label {
-            font-weight: bold;
-        }
+    #contrast-table tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+    }
 
-        #contrast-table tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-        }
+    .selected-contrast {
+        background-color: rgba(255, 193, 7, 1);
+    }
 
-        .selected-contrast {
-            background-color: rgba(255, 193, 7, 1);
-        }
+    .selected-contrast td,
+    .selected-contrast code {
+        color: #0f0f0f;
+    }
 
-        .selected-contrast td, .selected-contrast code {
-            color: #0f0f0f;
-        }
-
-        #modal {
-            color: #000;
-        }
-
-    </style>
+    #modal {
+        color: #000;
+    }
+</style>
 
 
 {% endblock %}
 
 
 {% block header %}
-    <section>
-        <div class="wrapper topSection">
-            <div id="Header">
-                <div class="row">
-                    <div class="col-md-5"></div>
-                    <div class="col-md-2"><h2>Add Contrasts</h2></div>
-                    <div class="col-md-3"></div>
-                    <div class="col-md-2">
-                        {% if user.is_superuser %}
-                            <button type="button" id="approve-btn" class="btn btn-warning" onclick="approveExperiment()"
-                                    data-toggle="modal" data-target="#modal">Approve Experiment
-                            </button>
-                        {% else %}
-                            <button type="button" id="upload-btn" class="btn btn-warning"
-                                    onclick="clickSubmitExperiment()"
-                                    data-toggle="modal" data-target="#modal">Submit Experiment
-                            </button>
-                        {% endif %}
-                    </div>
+<section>
+    <div class="wrapper topSection">
+        <div id="Header">
+            <div class="row">
+                <div class="col-md-5"></div>
+                <div class="col-md-2">
+                    <h2>Add Contrasts</h2>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-2">
+                    {% if user.is_superuser %}
+                    <button type="button" id="reject-btn" class="btn btn-warning" onclick="rejectExperiment()"
+                        data-toggle="modal" data-target="#modal">Reject Experiment
+                    </button>
+                    <button type="button" id="approve-btn" class="btn btn-warning" onclick="approveExperiment()"
+                        data-toggle="modal" data-target="#modal">Approve Experiment
+                    </button>
+                    {% else %}
+                    <button type="button" id="upload-btn" class="btn btn-warning" onclick="clickSubmitExperiment()"
+                        data-toggle="modal" data-target="#modal">Submit Experiment
+                    </button>
+                    {% endif %}
                 </div>
             </div>
-
         </div>
-    </section>
+
+    </div>
+</section>
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <form class="needs-validation">
-                    <div id="contrast-block">
-                        <div id="contrast-title-block" class="d-flex justify-content-between align-items-baseline">
-                            <label for="contrast_title_input">Contrast Title</label>
-                            <div></div>
-                            <button type="submit" id="add-contrast-btn" class="btn btn-sm">Add
-                                Contrast
-                            </button>
-                        </div>
-                        <input type="text" class="form-control" placeholder="optional" id="contrast_title_input"/>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <form class="needs-validation">
+                <div id="contrast-block">
+                    <div id="contrast-title-block" class="d-flex justify-content-between align-items-baseline">
+                        <label for="contrast_title_input">Contrast Title</label>
+                        <div></div>
+                        <button type="submit" id="add-contrast-btn" class="btn btn-sm">Add
+                            Contrast
+                        </button>
                     </div>
-                    <div id="condition-1-block">
-                        <label>
-                            <label for="condition-1-input">Condition 1 Name</label>
-                        </label>
-                        <input type="text" class="form-control" placeholder="condition name 1" id="condition-1-input"
-                               required/>
+                    <input type="text" class="form-control" placeholder="optional" id="contrast_title_input" />
+                </div>
+                <div id="condition-1-block">
+                    <label>
+                        <label for="condition-1-input">Condition 1 Name</label>
+                    </label>
+                    <input type="text" class="form-control" placeholder="condition name 1" id="condition-1-input"
+                        required />
+                </div>
+                <div>
+                    <label>
+                        <label for="stimuli_1">Stimuli of Condition 1</label>
+                    </label>
+                    <select id="stimuli_1" class="selectpicker form-control" multiple data-live-search="true" required
+                        title="choose stimuli">
+                    </select>
+                </div>
+                <div id="condition-2-block">
+                    <label>
+                        <label for="condition-2-input">Condition 2 Name</label>
+                    </label>
+                    <input type="text" class="form-control" placeholder="condition name 2" id="condition-2-input"
+                        required />
+                </div>
+                <div>
+                    <label>
+                        <label for="stimuli_2">Stimuli of Condition 2</label>
+                    </label>
+                    <select id="stimuli_2" class="selectpicker form-control" multiple data-live-search="true" required
+                        title="choose stimuli">
+                    </select>
+                </div>
+                <div>
+                    <label>Figures</label>
+                </div>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputGroupFile04">
+                        <label class="custom-file-label" id="inputGroupFile04label" for="inputGroupFile04">Choose
+                            file</label>
                     </div>
-                    <div>
-                        <label>
-                            <label for="stimuli_1">Stimuli of Condition 1</label>
-                        </label>
-                        <select id="stimuli_1" class="selectpicker form-control" multiple data-live-search="true"
-                                required title="choose stimuli">
-                        </select>
-                    </div>
-                    <div id="condition-2-block">
-                        <label>
-                            <label for="condition-2-input">Condition 2 Name</label>
-                        </label>
-                        <input type="text" class="form-control" placeholder="condition name 2" id="condition-2-input"
-                               required/>
-                    </div>
-                    <div>
-                        <label>
-                            <label for="stimuli_2">Stimuli of Condition 2</label>
-                        </label>
-                        <select id="stimuli_2" class="selectpicker form-control" multiple data-live-search="true"
-                                required title="choose stimuli">
-                        </select>
-                    </div>
-                    <div>
-                        <label>Figures</label>
-                    </div>
-                    <div class="input-group">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputGroupFile04">
-                            <label class="custom-file-label" id="inputGroupFile04label" for="inputGroupFile04">Choose
-                                file</label>
-                        </div>
-                    </div>
-                    <table id="file-block">
-                        <tbody id="file-block-body">
-                        </tbody>
-                    </table>
-                    <div>
-                        <label>Coordinates</label>
-                        <table id="coord-table">
-                            <thead>
+                </div>
+                <table id="file-block">
+                    <tbody id="file-block-body">
+                    </tbody>
+                </table>
+                <div>
+                    <label>Coordinates</label>
+                    <table id="coord-table">
+                        <thead>
                             <tr>
                                 <th style="width: 1rem;">name</th>
                                 <th>x</th>
@@ -190,27 +195,27 @@
                                 <th>V</th>
                                 <th style="width: 1rem;">Del</th>
                             </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </form>
-                <div style="height: 20px"></div>
-                <form id="coordinate-input-block">
-                    <div id="coordinate-header-block" class="d-flex justify-content-between align-items-baseline">
-                        <div class="input-group input-group-sm">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Name</span>
-                            </div>
-                            <input type="text" placeholder="coordinate name" class="form-control" id="name-coord"
-                                   required/>
-                        </div>
-                        <div style="width: 1rem"></div>
-                        <button type="submit" class="btn btn-sm">Add</button>
-                    </div>
-                    <table>
+                        </thead>
                         <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+            <div style="height: 20px"></div>
+            <form id="coordinate-input-block">
+                <div id="coordinate-header-block" class="d-flex justify-content-between align-items-baseline">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Name</span>
+                        </div>
+                        <input type="text" placeholder="coordinate name" class="form-control" id="name-coord"
+                            required />
+                    </div>
+                    <div style="width: 1rem"></div>
+                    <button type="submit" class="btn btn-sm">Add</button>
+                </div>
+                <table>
+                    <tbody>
                         <tr>
                             <td>
                                 <div class="input-group input-group-sm">
@@ -218,8 +223,7 @@
                                         <span class="input-group-text">X:</span>
                                     </div>
                                     <input type="number" step="0.01" placeholder="x value" class="form-control"
-                                           id="x-coord"
-                                           required/>
+                                        id="x-coord" required />
                                 </div>
                             </td>
                             <td>
@@ -228,8 +232,7 @@
                                         <span class="input-group-text">TScore:</span>
                                     </div>
                                     <input type="number" step="0.01" placeholder="t score" class="form-control"
-                                           id="ts-coord"
-                                           required/>
+                                        id="ts-coord" required />
                                 </div>
                             </td>
                         </tr>
@@ -240,8 +243,7 @@
                                         <span class="input-group-text">Y:</span>
                                     </div>
                                     <input type="number" step="0.01" placeholder="y value" class="form-control"
-                                           id="y-coord"
-                                           required/>
+                                        id="y-coord" required />
                                 </div>
                             </td>
                             <td>
@@ -250,8 +252,7 @@
                                         <span class="input-group-text">ZScore:</span>
                                     </div>
                                     <input type="number" step="0.01" placeholder="z score" class="form-control"
-                                           id="zs-coord"
-                                           required/>
+                                        id="zs-coord" required />
                                 </div>
                             </td>
                         </tr>
@@ -262,8 +263,7 @@
                                         <span class="input-group-text">Z:</span>
                                     </div>
                                     <input type="number" step="0.01" placeholder="z value" class="form-control"
-                                           id="z-coord"
-                                           required/>
+                                        id="z-coord" required />
                                 </div>
                             </td>
                             <td>
@@ -272,18 +272,17 @@
                                         <span class="input-group-text">Voxel:</span>
                                     </div>
                                     <input type="number" step="0.01" placeholder="voxel" class="form-control"
-                                           id="v-coord"
-                                           required/>
+                                        id="v-coord" required />
                                 </div>
                             </td>
                         </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <div class="col-md-9">
-                <table class="table" id="contrast-table">
-                    <thead>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <div class="col-md-9">
+            <table class="table" id="contrast-table">
+                <thead>
                     <tr>
                         <th>name</th>
                         <th>cond1</th>
@@ -294,459 +293,478 @@
                         <th>coordinates</th>
                         <th>&nbsp;</th>
                     </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
-        {% csrf_token %}
-        <!-- Modal -->
-        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Uploading ...</h5>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="modal-ok-btn">OK</button>
-                    </div>
+    </div>
+    {% csrf_token %}
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Uploading ...</h5>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="modal-ok-btn">OK</button>
                 </div>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="{% static 'boldpredict/js/add_contrast.js' %}"></script>
-    <script type="text/javascript">
+</div>
+<script type="text/javascript" src="{% static 'boldpredict/js/add_contrast.js' %}"></script>
+<script type="text/javascript">
 
-        let files = [];
-        let stimuli = [];
-        let stimuliMap = {};
-        let contrasts = [];
-        let coordinates = [];
-        let experimentId = -1;
-        let editingContrastIndex = -1;
-        let CSRFToken = null;
+    let files = [];
+    let stimuli = [];
+    let stimuliMap = {};
+    let contrasts = [];
+    let coordinates = [];
+    let experimentId = -1;
+    let editingContrastIndex = -1;
+    let CSRFToken = null;
 
 
-        $(document).ready(function () {
-            // Request stimuli data, and then update the page.
-            requestStimuli(function () {
-                let stimuliInput1 = $("#stimuli_1");
-                let stimuliInput2 = $("#stimuli_2");
-                for (let i = 0; i < stimuli.length; i++) {
-                    let optionStr = stimuliStr.format(stimuli[i].id, stimuli[i].stimuli_name);
-                    stimuliInput1.append(optionStr);
-                    stimuliInput2.append(optionStr);
-                }
-                stimuliInput1.selectpicker('refresh');
-                stimuliInput2.selectpicker('refresh');
-            });
-
-            // Add event listener to file button
-            $("#inputGroupFile04").on("change", function () {
-                let selectedFiles = $("#inputGroupFile04")[0].files;
-                if (selectedFiles.length > 0) {
-                    let fileTable = $("#file-block-body")[0];
-                    fileTable.innerHTML += figureStr.format(selectedFiles[0].name);
-                    files.push({
-                        "name": selectedFiles[0].name,
-                        "file": selectedFiles[0],
-                        "uploaded": false,
-                    });
-                }
-            });
-
-            // Add event listener to Add Contrast button
-            let form = $('.needs-validation')[0];
-            form.addEventListener('submit', addContrast);
-
-            // Add event listener to Add Coordinate button
-            let coordinate_form = $("#coordinate-input-block")[0];
-            coordinate_form.addEventListener('submit', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                addCoordinates();
-            });
-
-            // CSRF Token
-            CSRFToken = $('[name="csrfmiddlewaretoken"]').val();
-
-            // load previous data
-            loadExperiment(function (contrast_list) {
-                contrasts = contrast_list;
-                reloadContrastTable();
-            });
+    $(document).ready(function () {
+        // Request stimuli data, and then update the page.
+        requestStimuli(function () {
+            let stimuliInput1 = $("#stimuli_1");
+            let stimuliInput2 = $("#stimuli_2");
+            for (let i = 0; i < stimuli.length; i++) {
+                let optionStr = stimuliStr.format(stimuli[i].id, stimuli[i].stimuli_name);
+                stimuliInput1.append(optionStr);
+                stimuliInput2.append(optionStr);
+            }
+            stimuliInput1.selectpicker('refresh');
+            stimuliInput2.selectpicker('refresh');
         });
 
-        function deleteFile(btn) {
-            let tr = $(btn).parent().parent();
-            let index = $(".file-name").index(btn);
-            files.splice(index, 1);
-            tr.remove()
-        }
-
-        function buildContrast() {
-            let title = $("#contrast_title_input").val();
-            let cond1 = $("#condition-1-input").val();
-            let stim1 = $("#stimuli_1").val();
-            let cond2 = $("#condition-2-input").val();
-            let stim2 = $("#stimuli_2").val();
-
-            if (title == null || title.length === 0) {
-                title = cond1 + "-" + cond2;
-            }
-
-            return {
-                "title": title,
-                "condition1": cond1,
-                "condition2": cond2,
-                "stimuli1": stim1,
-                "stimuli2": stim2,
-                "figures": files.map(f => f),
-                "coordinates": JSON.parse(JSON.stringify(coordinates))
-            };
-        }
-
-        function clearFilesCoords() {
-            files = [];
-            coordinates = [];
-            $("#file-block tbody")[0].innerHTML = "";
-            $("#coord-table tbody")[0].innerHTML = "";
-        }
-
-        function addContrast(event) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            let contrast = buildContrast()
-            contrasts.push(contrast);
-            clearFilesCoords();
-
-            let contrastRecord = buildContrastRecord(contrast)
-            $("#contrast-table").append(contrastRecord);
-            let btns = $(".del-contrast-btn");
-            btns[btns.length - 1].addEventListener('click', deleteContrast);
-        }
-
-        function buildCoordinate() {
-            let fields = ["name-coord", "x-coord", "y-coord", "z-coord", "ts-coord", "zs-coord", "v-coord"];
-            let values = fields.map(f => {
-                let input = $("#" + f)[0];
-                let res = input.value;
-                input.value = "";
-                return res;
-            });
-            //$("#" + fields[0])[0].value = "";
-            return {
-                "name": values[0],
-                "x": values[1],
-                "y": values[2],
-                "z": values[3],
-                "tscore": values[4],
-                "zscore": values[5],
-                "voxel": values[6]
-            }
-        }
-
-        function addCoordinates() {
-            let coordinate = buildCoordinate();
-            coordinates.push(coordinate);
-            let table = $("#coord-table");
-            let line = buildCoordinateRecord(coordinate);
-            table.append(line);
-        }
-
-        function deleteCoord(btn) {
-            let tr = $(btn).parent().parent();
-            let index = $(".coord-btn").index(btn);
-            coordinates.splice(index, 1);
-            tr.remove();
-        }
-
-        function editDone(event) {
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            let form = $(".needs-validation")[0];
-            let btn = $("#add-contrast-btn")[0];
-            form.removeEventListener("submit", editDone);
-            form.addEventListener("submit", addContrast);
-            btn.innerHTML = "Add Contrast";
-
-            contrasts[editingContrastIndex] = buildContrast();
-            clearFilesCoords();
-            reloadContrastTable();
-            editingContrastIndex = -1;
-            $(".del-contrast-btn").attr('hidden', false);
-        }
-
-        function editContrast(row) {
-
-            if (row.className.includes(selectedContrastClassName)) {
-                return;
-            }
-
-            // change contrast table style
-            let re = new RegExp(" " + selectedContrastClassName, "g");
-            let tbody = $("#contrast-table tbody")
-            let rows = tbody.children();
-            for (let i = 0; i < rows.length; i++) {
-                rows[i].className = rows[i].className.replace(re, "");
-            }
-            row.className += " " + selectedContrastClassName;
-
-            //change Edit/Add button style
-            let form = $(".needs-validation")[0];
-            form.removeEventListener("submit", addContrast);
-            form.addEventListener("submit", editDone);
-            $("#add-contrast-btn")[0].innerHTML = "Edit Done";
-
-            //hide all remove buttons
-            $(".del-contrast-btn").attr('hidden', true);
-
-            // find the index and data
-            let index = $(".contrast-record").index(row);
-            let contrastData = contrasts[index];
-            editingContrastIndex = index;
-
-            // get controls
-            let contrastTitleInput = $("#contrast_title_input")[0];
-            let condition1Input = $("#condition-1-input")[0];
-            let condition2Input = $("#condition-2-input")[0];
-            let stimuli1Input = $("#stimuli_1");
-            let stimuli2Input = $("#stimuli_2");
-            let fileTable = $("#file-block tbody");
-            let coordTable = $("#coord-table tbody");
-            fileTable[0].innerHTML = "";
-            coordTable[0].innerHTML = "";
-
-            // refill the data
-            contrastTitleInput.value = contrastData.title;
-            condition1Input.value = contrastData.condition1;
-            condition2Input.value = contrastData.condition2;
-            stimuli1Input.selectpicker('val', contrastData.stimuli1);
-            stimuli2Input.selectpicker('val', contrastData.stimuli2);
-            fileTable.append(contrastData.figures.map(f => figureStr.format(f.name)).join(""));
-            coordTable.append(contrastData.coordinates.map(c => {
-                return coordStr.format(c.name, c.x, c.y, c.z, c.tscore, c.zscore, c.voxel)
-            }).join(""));
-
-            files = contrastData.figures.map(f => f);
-            coordinates = JSON.parse(JSON.stringify(contrastData.coordinates));
-        }
-
-        function deleteContrast(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            let btn = $(event.target);
-            if (btn[0].nodeName === "span" || btn[0].nodeName === "SPAN") {
-                btn = btn.parent();
-            }
-            let index = $(".del-contrast-btn").index(btn);
-            contrasts.splice(index, 1);
-            reloadContrastTable();
-        }
-
-        function reloadContrastTable() {
-            let contrastTable = $("#contrast-table tbody");
-            contrastTable[0].innerHTML = "";
-            for (let i = 0; i < contrasts.length; i++) {
-                contrastTable.append(buildContrastRecord(contrasts[i]));
-            }
-            $(".del-contrast-btn").on('click', deleteContrast);
-        }
-
-        function clickSubmitExperiment() {
-            submitExperiment(function () {
-                replaceEventListener("#modal-ok-btn", 'click', function () {
-                    window.location.href = "/experiment"
+        // Add event listener to file button
+        $("#inputGroupFile04").on("change", function () {
+            let selectedFiles = $("#inputGroupFile04")[0].files;
+            if (selectedFiles.length > 0) {
+                let fileTable = $("#file-block-body")[0];
+                fileTable.innerHTML += figureStr.format(selectedFiles[0].name);
+                files.push({
+                    "name": selectedFiles[0].name,
+                    "file": selectedFiles[0],
+                    "uploaded": false,
                 });
-            });
+            }
+        });
+
+        // Add event listener to Add Contrast button
+        let form = $('.needs-validation')[0];
+        form.addEventListener('submit', addContrast);
+
+        // Add event listener to Add Coordinate button
+        let coordinate_form = $("#coordinate-input-block")[0];
+        coordinate_form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            addCoordinates();
+        });
+
+        // CSRF Token
+        CSRFToken = $('[name="csrfmiddlewaretoken"]').val();
+
+        // load previous data
+        loadExperiment(function (contrast_list) {
+            contrasts = contrast_list;
+            reloadContrastTable();
+        });
+    });
+
+    function deleteFile(btn) {
+        let tr = $(btn).parent().parent();
+        let index = $(".file-name").index(btn);
+        files.splice(index, 1);
+        tr.remove()
+    }
+
+    function buildContrast() {
+        let title = $("#contrast_title_input").val();
+        let cond1 = $("#condition-1-input").val();
+        let stim1 = $("#stimuli_1").val();
+        let cond2 = $("#condition-2-input").val();
+        let stim2 = $("#stimuli_2").val();
+
+        if (title == null || title.length === 0) {
+            title = cond1 + "-" + cond2;
         }
 
-        function submitExperiment(success) {
-            if (editingContrastIndex !== -1) {
-                showModal("Error", "Please finish edit first!");
-                return;
-            }
+        return {
+            "title": title,
+            "condition1": cond1,
+            "condition2": cond2,
+            "stimuli1": stim1,
+            "stimuli2": stim2,
+            "figures": files.map(f => f),
+            "coordinates": JSON.parse(JSON.stringify(coordinates))
+        };
+    }
 
-            if (contrasts.length < 1) {
-                showModal("Error", "Please create at least one contrast first!");
-                return;
-            }
+    function clearFilesCoords() {
+        files = [];
+        coordinates = [];
+        $("#file-block tbody")[0].innerHTML = "";
+        $("#coord-table tbody")[0].innerHTML = "";
+    }
 
-            showModal("Uploading ...", loadingGIFStr, 'Finished', dismissModal, true);
+    function addContrast(event) {
+        event.preventDefault();
+        event.stopPropagation();
 
-            //upload contrast first
-            let figures = [];
-            for (let i = 0; i < contrasts.length; i++) {
-                for (let j = 0; j < contrasts[i].figures.length; j++) {
-                    if (!contrasts[i].figures[j].uploaded) {
-                        figures.push({
-                            "i": i,
-                            "j": j,
-                            "f": contrasts[i].figures[j]
-                        });
-                    }
-                }
-            }
-            if (figures.length > 0) {
-                uploadFiles(figures, function (resp) {
-                    sendSubmitRequest(success);
-                });
-            } else {
-                sendSubmitRequest(success);
-            }
+        let contrast = buildContrast()
+        contrasts.push(contrast);
+        clearFilesCoords();
+
+        let contrastRecord = buildContrastRecord(contrast)
+        $("#contrast-table").append(contrastRecord);
+        let btns = $(".del-contrast-btn");
+        btns[btns.length - 1].addEventListener('click', deleteContrast);
+    }
+
+    function buildCoordinate() {
+        let fields = ["name-coord", "x-coord", "y-coord", "z-coord", "ts-coord", "zs-coord", "v-coord"];
+        let values = fields.map(f => {
+            let input = $("#" + f)[0];
+            let res = input.value;
+            input.value = "";
+            return res;
+        });
+        //$("#" + fields[0])[0].value = "";
+        return {
+            "name": values[0],
+            "x": values[1],
+            "y": values[2],
+            "z": values[3],
+            "tscore": values[4],
+            "zscore": values[5],
+            "voxel": values[6]
+        }
+    }
+
+    function addCoordinates() {
+        let coordinate = buildCoordinate();
+        coordinates.push(coordinate);
+        let table = $("#coord-table");
+        let line = buildCoordinateRecord(coordinate);
+        table.append(line);
+    }
+
+    function deleteCoord(btn) {
+        let tr = $(btn).parent().parent();
+        let index = $(".coord-btn").index(btn);
+        coordinates.splice(index, 1);
+        tr.remove();
+    }
+
+    function editDone(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        let form = $(".needs-validation")[0];
+        let btn = $("#add-contrast-btn")[0];
+        form.removeEventListener("submit", editDone);
+        form.addEventListener("submit", addContrast);
+        btn.innerHTML = "Add Contrast";
+
+        contrasts[editingContrastIndex] = buildContrast();
+        clearFilesCoords();
+        reloadContrastTable();
+        editingContrastIndex = -1;
+        $(".del-contrast-btn").attr('hidden', false);
+    }
+
+    function editContrast(row) {
+
+        if (row.className.includes(selectedContrastClassName)) {
+            return;
         }
 
-        function uploadFiles(figures, callback) {
-            let formData = new FormData();
+        // change contrast table style
+        let re = new RegExp(" " + selectedContrastClassName, "g");
+        let tbody = $("#contrast-table tbody")
+        let rows = tbody.children();
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].className = rows[i].className.replace(re, "");
+        }
+        row.className += " " + selectedContrastClassName;
 
-            formData.append('csrfmiddlewaretoken', CSRFToken);
-            formData.append('experiment_id', experimentId + "");
+        //change Edit/Add button style
+        let form = $(".needs-validation")[0];
+        form.removeEventListener("submit", addContrast);
+        form.addEventListener("submit", editDone);
+        $("#add-contrast-btn")[0].innerHTML = "Edit Done";
 
-            for (let k = 0; k < figures.length; k++) {
-                let i = figures[k].i;
-                let j = figures[k].j;
-                let file = figures[k].f.file;
-                formData.append(i + "@" + j + "@" + file.name, file, file.name);
-            }
+        //hide all remove buttons
+        $(".del-contrast-btn").attr('hidden', true);
 
-            $.ajax({
-                url: '/upload_images',
-                data: formData,
-                type: 'POST',
-                processData: false,
-                contentType: false,
-                success: function (resp) {
-                    resp = JSON.parse(resp);
-                    if (resp.length !== figures.length) {
-                        return showErrOnModal("Failed to upload some of files. Try again or contact administrators");
-                    }
-                    for (let k = 0; k < resp.length; k++) {
-                        let i = parseInt(resp[k].i);
-                        let j = parseInt(resp[k].j);
-                        let name = resp[k].name;
-                        let old = contrasts[i].figures[j];
-                        contrasts[i].figures[j] = {
-                            "name": name,
-                            "file": old.file,
-                            "uploaded": true,
-                        }
-                    }
-                    callback(resp);
-                },
-                error: function (err) {
-                    console.log(err);
-                    showErrOnModal(err.error().statusText);
-                }
+        // find the index and data
+        let index = $(".contrast-record").index(row);
+        let contrastData = contrasts[index];
+        editingContrastIndex = index;
+
+        // get controls
+        let contrastTitleInput = $("#contrast_title_input")[0];
+        let condition1Input = $("#condition-1-input")[0];
+        let condition2Input = $("#condition-2-input")[0];
+        let stimuli1Input = $("#stimuli_1");
+        let stimuli2Input = $("#stimuli_2");
+        let fileTable = $("#file-block tbody");
+        let coordTable = $("#coord-table tbody");
+        fileTable[0].innerHTML = "";
+        coordTable[0].innerHTML = "";
+
+        // refill the data
+        contrastTitleInput.value = contrastData.title;
+        condition1Input.value = contrastData.condition1;
+        condition2Input.value = contrastData.condition2;
+        stimuli1Input.selectpicker('val', contrastData.stimuli1);
+        stimuli2Input.selectpicker('val', contrastData.stimuli2);
+        fileTable.append(contrastData.figures.map(f => figureStr.format(f.name)).join(""));
+        coordTable.append(contrastData.coordinates.map(c => {
+            return coordStr.format(c.name, c.x, c.y, c.z, c.tscore, c.zscore, c.voxel)
+        }).join(""));
+
+        files = contrastData.figures.map(f => f);
+        coordinates = JSON.parse(JSON.stringify(contrastData.coordinates));
+    }
+
+    function deleteContrast(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        let btn = $(event.target);
+        if (btn[0].nodeName === "span" || btn[0].nodeName === "SPAN") {
+            btn = btn.parent();
+        }
+        let index = $(".del-contrast-btn").index(btn);
+        contrasts.splice(index, 1);
+        reloadContrastTable();
+    }
+
+    function reloadContrastTable() {
+        let contrastTable = $("#contrast-table tbody");
+        contrastTable[0].innerHTML = "";
+        for (let i = 0; i < contrasts.length; i++) {
+            contrastTable.append(buildContrastRecord(contrasts[i]));
+        }
+        $(".del-contrast-btn").on('click', deleteContrast);
+    }
+
+    function clickSubmitExperiment() {
+        submitExperiment(function () {
+            replaceEventListener("#modal-ok-btn", 'click', function () {
+                window.location.href = "/experiment"
             });
+        });
+    }
+
+    function submitExperiment(success) {
+        if (editingContrastIndex !== -1) {
+            showModal("Error", "Please finish edit first!");
+            return;
         }
 
-        function sendSubmitRequest(success) {
-            let data = contrasts.map(c => {
-                return {
-                    "contrast_name": c.title,
-                    "condition1": {
-                        "name": c.condition1,
-                        "stimuli_list": c.stimuli1
-                    },
-                    "condition2": {
-                        "name": c.condition2,
-                        "stimuli_list": c.stimuli2
-                    },
-                    "coordinates": c.coordinates,
-                    "figures": c.figures.map(f => f.name),
-                }
-            });
+        if (contrasts.length < 1) {
+            showModal("Error", "Please create at least one contrast first!");
+            return;
+        }
 
-            $.ajax({
-                type: 'POST',
-                dataType: "json",
-                headers: {"X-CSRFToken": CSRFToken},
-                url: '/api/contrasts/' + experimentId,
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(data),
-                success: function (resp) {
-                    console.log(resp);
+        showModal("Uploading ...", loadingGIFStr, 'Finished', dismissModal, true);
 
-                    if (resp.contrast_ids.length !== contrasts.length) {
-                        return showErrOnModal("An error occurred during uploading, please contact administrator!");
-                    }
-
-                    $(".modal-header .modal-title")[0].innerHTML = "Upload Finished";
-                    $(".modal-body")[0].innerHTML = "Congratulations! Uploading succeed!";
-                    $.ajax({
-                        type: "POST",
-                        url: "/api/email/" + experimentId,
-                        headers: {"X-CSRFToken": CSRFToken},
+        //upload contrast first
+        let figures = [];
+        for (let i = 0; i < contrasts.length; i++) {
+            for (let j = 0; j < contrasts[i].figures.length; j++) {
+                if (!contrasts[i].figures[j].uploaded) {
+                    figures.push({
+                        "i": i,
+                        "j": j,
+                        "f": contrasts[i].figures[j]
                     });
-                    success();
-                    $("#modal-ok-btn").prop('disabled', false);
-                    $('#modal').modal('handleUpdate');
+                }
+            }
+        }
+        if (figures.length > 0) {
+            uploadFiles(figures, function (resp) {
+                sendSubmitRequest(success);
+            });
+        } else {
+            sendSubmitRequest(success);
+        }
+    }
+
+    function uploadFiles(figures, callback) {
+        let formData = new FormData();
+
+        formData.append('csrfmiddlewaretoken', CSRFToken);
+        formData.append('experiment_id', experimentId + "");
+
+        for (let k = 0; k < figures.length; k++) {
+            let i = figures[k].i;
+            let j = figures[k].j;
+            let file = figures[k].f.file;
+            formData.append(i + "@" + j + "@" + file.name, file, file.name);
+        }
+
+        $.ajax({
+            url: '/upload_images',
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            success: function (resp) {
+                resp = JSON.parse(resp);
+                if (resp.length !== figures.length) {
+                    return showErrOnModal("Failed to upload some of files. Try again or contact administrators");
+                }
+                for (let k = 0; k < resp.length; k++) {
+                    let i = parseInt(resp[k].i);
+                    let j = parseInt(resp[k].j);
+                    let name = resp[k].name;
+                    let old = contrasts[i].figures[j];
+                    contrasts[i].figures[j] = {
+                        "name": name,
+                        "file": old.file,
+                        "uploaded": true,
+                    }
+                }
+                callback(resp);
+            },
+            error: function (err) {
+                console.log(err);
+                showErrOnModal(err.error().statusText);
+            }
+        });
+    }
+
+    function sendSubmitRequest(success) {
+        let data = contrasts.map(c => {
+            return {
+                "contrast_name": c.title,
+                "condition1": {
+                    "name": c.condition1,
+                    "stimuli_list": c.stimuli1
+                },
+                "condition2": {
+                    "name": c.condition2,
+                    "stimuli_list": c.stimuli2
+                },
+                "coordinates": c.coordinates,
+                "figures": c.figures.map(f => f.name),
+            }
+        });
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            headers: { "X-CSRFToken": CSRFToken },
+            url: '/api/contrasts/' + experimentId,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(data),
+            success: function (resp) {
+                console.log(resp);
+
+                if (resp.contrast_ids.length !== contrasts.length) {
+                    return showErrOnModal("An error occurred during uploading, please contact administrator!");
+                }
+
+                $(".modal-header .modal-title")[0].innerHTML = "Upload Finished";
+                $(".modal-body")[0].innerHTML = "Congratulations! Uploading succeed!";
+                $.ajax({
+                    type: "POST",
+                    url: "/api/email/" + experimentId,
+                    headers: { "X-CSRFToken": CSRFToken },
+                });
+                success();
+                $("#modal-ok-btn").prop('disabled', false);
+                $('#modal').modal('handleUpdate');
+            },
+            error: function (err) {
+                console.log(err);
+                showErrOnModal(err.error().statusText);
+            }
+        });
+    }
+
+    function rejectExperiment() {
+        submitExperiment(function () {
+            $.ajax({
+                type: 'POST',
+                headers: { "X-CSRFToken": CSRFToken },
+                url: '/api/experiment/' + experimentId + '/reject',
+                success: function (resp) {
+                    replaceEventListener("#modal-ok-btn", 'click', function () {
+                        window.location.href = "/experiment";
+                    });
                 },
                 error: function (err) {
                     console.log(err);
                     showErrOnModal(err.error().statusText);
                 }
             });
-        }
+        });
+    }
 
-        function approveExperiment() {
-            submitExperiment(function () {
-                $.ajax({
-                    type: 'POST',
-                    headers: {"X-CSRFToken": CSRFToken},
-                    url: '/api/experiment/' + experimentId + '/approval',
-                    success: function (resp) {
-                        replaceEventListener("#modal-ok-btn", 'click', function () {
-                            window.location.href = "/experiment";
-                        });
-                    },
-                    error: function (err) {
-                        console.log(err);
-                        showErrOnModal(err.error().statusText);
-                    }
-                });
+    function approveExperiment() {
+        submitExperiment(function () {
+            $.ajax({
+                type: 'POST',
+                headers: { "X-CSRFToken": CSRFToken },
+                url: '/api/experiment/' + experimentId + '/approval',
+                success: function (resp) {
+                    replaceEventListener("#modal-ok-btn", 'click', function () {
+                        window.location.href = "/experiment";
+                    });
+                },
+                error: function (err) {
+                    console.log(err);
+                    showErrOnModal(err.error().statusText);
+                }
             });
+        });
+    }
+
+    function showModal(title, body, okHTML, okFunc, okDisabled) {
+
+        okHTML = typeof okHTML != 'undefined' ? okHTML : 'OK';
+        okFunc = typeof okFunc != 'undefined' ? okFunc : dismissModal;
+        okDisabled = typeof okDisabled != 'undefined' ? okDisabled : false;
+
+        $(".modal-header .modal-title")[0].innerHTML = title;
+        $(".modal-body")[0].innerHTML = body;
+
+        let newBtn = replaceEventListener("#modal-ok-btn", 'click', okFunc);
+        newBtn.innerHTML = okHTML;
+
+        $("#modal").modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+        if (okDisabled) {
+            $(newBtn).prop('disabled', true);
         }
+    }
 
-        function showModal(title, body, okHTML, okFunc, okDisabled) {
+    function showErrOnModal(msg) {
+        $(".modal-header .modal-title")[0].innerHTML = "Error occurred";
+        $(".modal-body")[0].innerHTML = msg;
+        $("#modal-ok-btn").prop('disabled', false);
+        replaceEventListener("#modal-ok-btn", 'click', dismissModal);
+        $('#modal').modal('handleUpdate');
+    }
 
-            okHTML = typeof okHTML != 'undefined' ? okHTML : 'OK';
-            okFunc = typeof okFunc != 'undefined' ? okFunc : dismissModal;
-            okDisabled = typeof okDisabled != 'undefined' ? okDisabled : false;
-
-            $(".modal-header .modal-title")[0].innerHTML = title;
-            $(".modal-body")[0].innerHTML = body;
-
-            let newBtn = replaceEventListener("#modal-ok-btn", 'click', okFunc);
-            newBtn.innerHTML = okHTML;
-
-            $("#modal").modal({
-                backdrop: 'static',
-                keyboard: false
-            });
-            if (okDisabled) {
-                $(newBtn).prop('disabled', true);
-            }
-        }
-
-        function showErrOnModal(msg) {
-            $(".modal-header .modal-title")[0].innerHTML = "Error occurred";
-            $(".modal-body")[0].innerHTML = msg;
-            $("#modal-ok-btn").prop('disabled', false);
-            replaceEventListener("#modal-ok-btn", 'click', dismissModal);
-            $('#modal').modal('handleUpdate');
-        }
-
-        function dismissModal() {
-            $("#modal").modal('hide');
-        }
-    </script>
+    function dismissModal() {
+        $("#modal").modal('hide');
+    }
+</script>
 {% endblock %}
