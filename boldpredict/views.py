@@ -324,7 +324,9 @@ def save_experiment(request):
     params['is_published'] = True
 
     stimuli_type = request.POST['stimuli_type']
-    stimuli_page = constants.EXPERIMENT_STIMULI_FILLER[stimuli_type]
+    stimuli_page = constants.EXPERIMENT_STIMULI_FILLER.get(stimuli_type,None)
+    if stimuli_page is None:
+        return redirect(reverse('not_implement'))
 
     if 'exp_id' in request.POST and len(request.POST['exp_id']) > 0:
         # save new content
@@ -587,8 +589,7 @@ def contrast_results_view(request, contrast_id):
     if contrast and contrast['stimuli_type'] == WORD_LIST:
         contrast['image_url'] = settings.IMAGE_URL
         return render(request, 'boldpredict/word_list_contrast_results.html', contrast)
-    return render(request, 'boldpredict/index.html', {})
-
+    return redirect(reverse('not_implement'))
 
 @csrf_exempt
 def update_contrast(request):
