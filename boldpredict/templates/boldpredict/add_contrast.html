@@ -100,20 +100,22 @@
                 <div class="col-md-2">
                     <h2>Add Contrasts</h2>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-3">
                 </div>
                 <div class="col-md-2">
                     {% if user.is_superuser %}
-                    <button type="button" id="reject-btn" class="btn btn-warning" onclick="rejectExperiment()"
-                        data-toggle="modal" data-target="#modal">Reject Experiment
-                    </button>
-                    {% endif %}
-                </div>
-                <div class="col-md-2">
-                    {% if user.is_superuser %}
-                    <button type="button" id="approve-btn" class="btn btn-warning" onclick="approveExperiment()"
-                        data-toggle="modal" data-target="#modal">Approve Experiment
-                    </button>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="button" id="reject-btn" class="btn btn-warning" onclick="rejectExperiment()"
+                                data-toggle="modal" data-target="#modal">Reject
+                            </button>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" id="approve-btn" class="btn btn-warning" onclick="approveExperiment()"
+                                data-toggle="modal" data-target="#modal">Approve
+                            </button>
+                        </div>
+                    </div>
                     {% else %}
                     <button type="button" id="upload-btn" class="btn btn-warning" onclick="clickSubmitExperiment()"
                         data-toggle="modal" data-target="#modal">Submit Experiment
