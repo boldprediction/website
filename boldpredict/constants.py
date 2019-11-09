@@ -6,7 +6,9 @@ PRIVACY_CHOICES = [(PRIVATE, 'Private'), (PUBLIC, 'Public')]
 #coordinate space
 MNI = 'mni'
 TALAI = 'TALA'
-COORDINATE_TYPES = {MNI: "MNI", TALAI: "talairach"}
+# Example of adding new coordinates to the system
+# COORDINATE_TYPES = {MNI: "MNI", TALAI: "talairach"}
+COORDINATE_TYPES = {MNI: "MNI"}
 COORDINATE_SPACE_CHOICE = [(MNI, 'mni'), (TALAI, 'talairach')]
 
 #stimuli type
@@ -15,7 +17,9 @@ IMAGE = "image"
 SENTENCE = "sentence"
 STIMULI_TYPE_CHOICE = [(WORD_LIST, "Word List"),
                        (IMAGE, "Images"), (SENTENCE, "Sentences")]
-STIMULI_TYPES = {WORD_LIST: "Word List", IMAGE: "Image", SENTENCE: "Sentence"}
+# Example of adding new stimuli type to the system
+# STIMULI_TYPES = {WORD_LIST: "Word List", IMAGE: "Image", SENTENCE: "Sentence"}
+STIMULI_TYPES = {WORD_LIST: "Word List"}
 
 #model types
 ENG1000 = "english1000"
@@ -25,10 +29,15 @@ BERT = "BERT"
 CNN = "CNN"
 MODEL_TYPE_CHOICE = [(ENG1000,  "english1000"), (WORD2VEC,
                                                  "word2vec"), (ELMo, "ELMo"), (BERT, "BERT"), (CNN, "CNN")]
+
+# Example of adding corresponding new model type options of a certain stimuli type to the system
+# MODEL_TYPES = {
+#     WORD_LIST: [ENG1000, WORD2VEC],
+#     SENTENCE: [ELMo, BERT],
+#     IMAGE: [CNN, ENG1000]
+# }
 MODEL_TYPES = {
-    WORD_LIST: [ENG1000, WORD2VEC],
-    SENTENCE: [ELMo, BERT],
-    IMAGE: [CNN, ENG1000]
+    WORD_LIST: [ENG1000, WORD2VEC]
 }
 
 
@@ -58,3 +67,9 @@ APPROVED = "APPROVED"
 SUBMITTED = "SUBMITTED"
 STATUS_CHOICE = [(CREATED, "Created"),
                        (APPROVED, "Approved"), (REJECT, "Reject"), (SUBMITTED, "Submitted")]
+
+
+# contrast filler page mapping
+CONTRAST_FILLER = {
+    WORD_LIST: "word_list_contrast_filler.html"
+}

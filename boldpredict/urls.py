@@ -26,6 +26,7 @@ urlpatterns = [
     path('add_contrast', views.add_contrast, name="add_contrast"),
     path('upload_images', views.upload_images, name="upload_images"),
     path('my_profile', views.my_profile_action, name='my_profile'),
+    path('not_implement', views.not_implement, name='not_implement'),
     path('register', views.register_action, name='register'),
     path('confirm-registration/<slug:username>/<slug:token>',
          views.confirm_action, name='confirm'),
