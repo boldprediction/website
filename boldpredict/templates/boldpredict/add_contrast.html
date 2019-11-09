@@ -702,21 +702,19 @@
     }
 
     function rejectExperiment() {
-        submitExperiment(function () {
-            $.ajax({
-                type: 'POST',
-                headers: { "X-CSRFToken": CSRFToken },
-                url: '/api/experiment/' + experimentId + '/reject',
-                success: function (resp) {
-                    replaceEventListener("#modal-ok-btn", 'click', function () {
-                        window.location.href = "/experiment";
-                    });
-                },
-                error: function (err) {
-                    console.log(err);
-                    showErrOnModal(err.error().statusText);
-                }
-            });
+        $.ajax({
+            type: 'POST',
+            headers: { "X-CSRFToken": CSRFToken },
+            url: '/api/experiment/' + experimentId + '/reject',
+            success: function (resp) {
+                replaceEventListener("#modal-ok-btn", 'click', function () {
+                    window.location.href = "/experiment";
+                });
+            },
+            error: function (err) {
+                console.log(err);
+                showErrOnModal(err.error().statusText);
+            }
         });
     }
 
