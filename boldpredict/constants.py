@@ -80,6 +80,12 @@ CONTRAST_FILLER = {
     WORD_LIST: "word_list_contrast"
 }
 
+# experiment stimuli adding page mapping
+# EXPERIMENT_STIMULI_FILLER = {
+#     WORD_LIST: "word_edit_stimuli",
+#     IMAGE: "image_edit_stimuli",
+#     SENTENCE:"sentence_edit_stimuli"
+# }
 EXPERIMENT_STIMULI_FILLER = {
     WORD_LIST: "word_edit_stimuli"
 }

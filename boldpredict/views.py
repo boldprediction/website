@@ -342,7 +342,7 @@ def word_edit_stimuli(request, exp_id):
     if not (exp.is_published and (exp.creator.username == request.user.username or request.user.is_superuser)):
         raise Http404
     stimuli_type = exp.stimuli_type
-    return render(request, 'boldpredict/add_stimuli.html', {'exp_id': exp_id, 'stimuli_type': stimuli_type})
+    return render(request, 'boldpredict/word_add_stimuli.html', {'exp_id': exp_id, 'stimuli_type': stimuli_type})
 
 
 @login_required
