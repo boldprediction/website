@@ -54,8 +54,28 @@ def contrast_action(request):
     context['model_types'] = model_types
     return render(request, 'boldpredict/contrast_type.html', context)
 
+
 def not_implement(request):
     return render(request, 'boldpredict/not_implemented.html', {})
+
+
+def word_list_contrast(request,model_type):
+    context = {}
+    context['word_list_suggestions'] = json.dumps(
+        constants.WORD_LIST_CONDITIONS)
+    context['conditions'] = []
+    for condition_key, condition_value in constants.WORD_LIST_CONDITIONS.items():
+        condition = {}
+        condition['name'] = condition_key
+        condition['brief_part1'] = condition_value[:25]
+        condition['brief_part2'] = condition_value[25:50]
+        context['conditions'].append(condition)
+    context['form'] = WordListForm()
+    context['public'] = True
+    context['model_type'] = model_type
+    context['stimuli_type'] = stimuli_type
+    return render(request, 'boldpredict/word_list_contrast_filler.html', context)
+
 
 def new_contrast(request):
     context = {}
@@ -72,23 +92,7 @@ def new_contrast(request):
     page_name = constants.CONTRAST_FILLER.get(stimuli_type, None)
     if page_name is None:
         return redirect(reverse('not_implement'))
-
-    return redirect(reverse('contrast'))
-    context['word_list_suggestions'] = json.dumps(
-        constants.WORD_LIST_CONDITIONS)
-    context['conditions'] = []
-    for condition_key, condition_value in constants.WORD_LIST_CONDITIONS.items():
-        condition = {}
-        condition['name'] = condition_key
-        condition['brief_part1'] = condition_value[:25]
-        condition['brief_part2'] = condition_value[25:50]
-        context['conditions'].append(condition)
-    context['form'] = WordListForm()
-    context['public'] = True
-    context['model_type'] = model_type
-    context['stimuli_type'] = stimuli_type
-    return render(request, 'boldpredict/'+page_name, context)
-
+    return redirect(reverse(page_name, kwargs={'model_type': model_type}))
 
 
 def word_list_start_contrast(request):

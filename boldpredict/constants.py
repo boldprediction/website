@@ -71,5 +71,5 @@ STATUS_CHOICE = [(CREATED, "Created"),
 
 # contrast filler page mapping
 CONTRAST_FILLER = {
-    WORD_LIST: "word_list_contrast_filler.html"
+    WORD_LIST: "word_list_contrast"
 }

@@ -11,6 +11,8 @@ urlpatterns = [
     path('new_contrast', views.new_contrast, name='new_contrast'),
     path('word_list_start_contrast', views.word_list_start_contrast,
          name='word_list_start_contrast'),
+    path('word_list_contrast/<slug:model_type>', views.word_list_contrast,
+         name='word_list_contrast'),
     path('experiment', views.experiment_action, name='experiment'),
     path('experiment/<int:exp_id>',
          views.experiment_detail, name='experiment_detail'),
