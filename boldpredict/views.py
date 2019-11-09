@@ -73,7 +73,7 @@ def word_list_contrast(request,model_type):
     context['form'] = WordListForm()
     context['public'] = True
     context['model_type'] = model_type
-    context['stimuli_type'] = stimuli_type
+    context['stimuli_type'] = constants.WORD_LIST
     return render(request, 'boldpredict/word_list_contrast_filler.html', context)
 
 
