@@ -334,7 +334,6 @@ def save_experiment(request):
 
     exp = experiment_api.create_experiment(**params)
     return redirect(reverse(stimuli_page, args=(int(exp.id),)))
-    # return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp.id, 'stimuli_type':params['stimuli_type']})
 
 
 @login_required
