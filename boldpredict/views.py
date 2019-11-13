@@ -59,7 +59,7 @@ def not_implement(request):
     return render(request, 'boldpredict/not_implemented.html', {})
 
 
-def word_list_contrast(request,model_type):
+def word_list_contrast(request, model_type):
     context = {}
     context['word_list_suggestions'] = json.dumps(
         constants.WORD_LIST_CONDITIONS)
@@ -324,7 +324,7 @@ def save_experiment(request):
     params['is_published'] = True
 
     stimuli_type = request.POST['stimuli_type']
-    stimuli_page = constants.EXPERIMENT_STIMULI_FILLER.get(stimuli_type,None)
+    stimuli_page = constants.EXPERIMENT_STIMULI_FILLER.get(stimuli_type, None)
     if stimuli_page is None:
         return redirect(reverse('not_implement'))
 
@@ -359,6 +359,25 @@ def my_profile_action(request):
     context['email'] = user.email
 
     return render(request, 'boldpredict/my_profile.html', context)
+
+
+@login_required
+def my_profile_experiment_list(request):
+    exps = Experiment.objects.filter(
+        is_published=True).filter(creator__username=request.user.username)
+    experiments = [exp.serialize() for exp in exps.all()]
+    context = {"experiments": experiments}
+    return render(request, "boldpredict/my_profile_experiment_list.html", context)
+
+
+@login_required
+def my_profile_contrast_list(request):
+    pass
+
+
+@login_required
+def my_profile_approval_list(request):
+    pass
 
 
 def register_action(request):
@@ -590,6 +609,7 @@ def contrast_results_view(request, contrast_id):
         contrast['image_url'] = settings.IMAGE_URL
         return render(request, 'boldpredict/word_list_contrast_results.html', contrast)
     return redirect(reverse('not_implement'))
+
 
 @csrf_exempt
 def update_contrast(request):

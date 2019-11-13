@@ -28,6 +28,9 @@ urlpatterns = [
     path('add_contrast', views.add_contrast, name="add_contrast"),
     path('upload_images', views.upload_images, name="upload_images"),
     path('my_profile', views.my_profile_action, name='my_profile'),
+    path('my_profile/experiment_list', views.my_profile_experiment_list, name="experiment_list"),
+    path('my_profile/contrast_list', views.my_profile_contrast_list, name="contrast_list"),
+    path('my_profile/approval_list', views.my_profile_approval_list, name="approval_list"),
     path('not_implement', views.not_implement, name='not_implement'),
     path('register', views.register_action, name='register'),
     path('confirm-registration/<slug:username>/<slug:token>',
@@ -58,6 +61,6 @@ urlpatterns = [
          rest_views.experiment_reject),
     path('api/experiments/<slug:username>',
          rest_views.experiment_list),
-     path('api/submitted_experiments',
+    path('api/submitted_experiments',
          rest_views.submitted_experiments),
 ]
