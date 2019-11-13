@@ -14,6 +14,10 @@
             text-align: center;
         }
 
+        td:nth-child(4) {
+            width: 20%;
+        }
+
         #modal {
             color: #000;
         }
@@ -55,6 +59,8 @@
                             <td>{{ e.experiment_title }}</td>
                             <td>{{ e.status }}</td>
                             <td>
+                                <button type="button" class="btn btn-warning edit-btn">Edit</button>
+                                <div style="display: inline-block; width: 10%"></div>
                                 <button type="button" class="btn btn-danger del-btn">Delete</button>
                             </td>
                         </tr>
@@ -105,19 +111,28 @@
                     keyboard: false
                 });
             });
+
             $("tr").on('click', function (event) {
                 let tr = $(event.target).parent();
                 let id = $(tr).children()[0].innerHTML;
                 console.log(id);
                 window.location.href = "/experiment/" + id;
             });
+
+            $(".edit-btn").on('click',function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                let tr = $(e.target).parent().parent();
+                let id = tr.children()[0].innerHTML;
+                window.location.href = "/experiment/"+id+"/edit"
+            })
         });
 
         function deleteExp(id, ele) {
             $.ajax({
                 url: '/api/experiment/' + id,
                 type: 'DELETE',
-                headers: { "X-CSRFToken": CSRFToken },
+                headers: {"X-CSRFToken": CSRFToken},
                 success: function (resp) {
                     $("#modal .modal-body")[0].innerHTML = "Experiment " + id + " has been deleted successfully."
                     replaceEventListener("#modal-ok-btn", 'click', function () {
