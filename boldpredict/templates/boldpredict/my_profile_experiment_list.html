@@ -97,7 +97,7 @@
                 replaceEventListener("#modal-ok-btn", 'click', function () {
                     $("#modal").modal('hide');
                     setTimeout(function () {
-                        deleteExp(id)
+                        deleteExp(id, tr)
                     }, 500)
                 });
                 $("#modal").modal({
@@ -113,7 +113,7 @@
             });
         });
 
-        function deleteExp(id) {
+        function deleteExp(id, ele) {
             $.ajax({
                 url: '/api/experiment/' + id,
                 type: 'DELETE',
@@ -127,6 +127,7 @@
                         backdrop: 'static',
                         keyboard: false
                     });
+                    ele.remove();
                 },
                 error: function (err) {
                     $("#modal .modal-body")[0].innerHTML = "Delete experiment " + id + " failed";
