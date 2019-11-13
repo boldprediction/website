@@ -43,7 +43,7 @@ def stimuli_list(request):
     """
     if request.method == 'POST':
         request_data = request.data
-        if 'stimuli_name' in request_data and 'stimuli_type' in request_data   \
+        if 'stimuli_name' in request_data and 'stimuli_type' in request_data \
                 and 'stimuli_content' in request_data and 'exp_id' in request_data:
             stimuli = stimuli_api.create_stimuli(**request_data)
             return Response(stimuli.serialize(), status=status.HTTP_201_CREATED)
@@ -66,6 +66,7 @@ def experiment_details(request, exp_id):
         return Response(experiment.serialize())
     elif request.method == 'DELETE':
         experiment.delete()
+        return Response({"success": True, "exp_id": exp_id})
 
 
 @api_view(['DELETE', 'POST', 'GET'])
@@ -117,7 +118,7 @@ def contrast_list(request, exp_id):
     if request.method == 'POST':
         contrasts = request.data
         contrast_ids = []
-#       delete previous contrasts
+        #       delete previous contrasts
         for contrast in exp.contrasts.all():
             contrast_api.delete_contrast(contrast.id)
 
@@ -246,7 +247,7 @@ def experiment_email(request, exp_id):
     Please click the link below to edit and approve the submitted published experiment:
     http://{host}{path}
     """.format(host=request.get_host(),
-               path=reverse('experiment_edit', args=(exp_id, )))
+               path=reverse('experiment_edit', args=(exp_id,)))
     send_mail(subject="Approve published experiment" + exp.experiment_title,
               message=email_body,
               from_email="boldpredictionscmu@gmail.com",
