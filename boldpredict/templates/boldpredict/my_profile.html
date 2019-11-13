@@ -69,11 +69,11 @@
                     <a href="my_profile/experiment_list"><button type="button" class="btn btn-warning">Experiment List</button></a>
                 </div>
                 <div class="col-md-2">
-                    <a href=""><button type="button" class="btn btn-info">Contrast List</button></a>
+                    <a href="my_profile/contrast_list"><button type="button" class="btn btn-info">Contrast List</button></a>
                 </div>
                 {% if user.is_superuser %}
                     <div class="col-md-2">
-                        <a href=""><button type="button" class="btn btn-danger">Approval List</button></a>
+                        <a href="my_profile/approval_list"><button type="button" class="btn btn-danger">Approval List</button></a>
                     </div>
                     <div class="col-md-3"></div>
                 {% else %}

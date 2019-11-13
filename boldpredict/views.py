@@ -372,7 +372,11 @@ def my_profile_experiment_list(request):
 
 @login_required
 def my_profile_contrast_list(request):
-    pass
+    contrasts = Contrast.objects.filter(
+        experiment__is_published=False).filter(creator__username=request.user.username)
+    contrast_list = [con.serialize() for con in contrasts.all()]
+    context = {"contrasts": contrast_list}
+    return render(request, "boldpredict/my_profile_contrast_list.html", context)
 
 
 @login_required
