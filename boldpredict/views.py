@@ -319,8 +319,6 @@ def save_experiment(request):
         return render(request, 'boldpredict/new_experiment.html', error_context)
 
     params = request.POST.dict()
-    if request.user.is_authenticated:
-        params['creator'] = request.user
     params['is_published'] = True
 
     stimuli_type = request.POST['stimuli_type']
@@ -333,7 +331,9 @@ def save_experiment(request):
         params['exp_id'] = request.POST['exp_id']
         exp = experiment_api.update_experiment(**params)
         return redirect(reverse(stimuli_page, args=(int(request.POST['exp_id']),)))
-
+    
+    if request.user.is_authenticated:
+        params['creator'] = request.user
     exp = experiment_api.create_experiment(**params)
     return redirect(reverse(stimuli_page, args=(int(exp.id),)))
 
