@@ -381,7 +381,14 @@ def my_profile_contrast_list(request):
 
 @login_required
 def my_profile_approval_list(request):
-    pass
+    if not request.user.is_superuser:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    exps = Experiment.objects.filter(
+        is_published=True).filter(status=constants.SUBMITTED)
+    experiments = [exp.serialize() for exp in exps.all()]
+    context = {"experiments": experiments}
+    return render(request, 'boldpredict/my_profile_approval_list.html', context)
 
 
 def register_action(request):

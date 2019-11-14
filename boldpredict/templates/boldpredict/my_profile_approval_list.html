@@ -31,7 +31,7 @@
     <section>
         <div id="Content" class="wrapper topSection">
             <div id="Header">
-                <h2>My Experiments</h2>
+                <h2>Approval List</h2>
             </div>
         </div>
     </section>
@@ -48,7 +48,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Experiment Title</th>
-                        <th>Status</th>
+                        <th>Creator</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -57,7 +57,7 @@
                         <tr>
                             <td>{{ e.id }}</td>
                             <td>{{ e.experiment_title }}</td>
-                            <td>{{ e.status }}</td>
+                            <td>{{ e.creator }}</td>
                             <td>
                                 <button type="button" class="btn btn-warning edit-btn">Edit</button>
                                 <div style="display: inline-block; width: 10%"></div>
@@ -76,10 +76,9 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Deleting an experiment</h5>
+                        <h5 class="modal-title"></h5>
                     </div>
                     <div class="modal-body">
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -99,16 +98,11 @@
                 e.stopPropagation();
                 let tr = $(e.target).parent().parent();
                 let id = tr.children()[0].innerHTML;
-                $("#modal .modal-body")[0].innerHTML = "Experiment " + id + " is going to be deleted, are you sure with this deletion?"
-                replaceEventListener("#modal-ok-btn", 'click', function () {
+                showModal("Delete Experiment", "Experiment " + id + " is going to be deleted, are you sure with this deletion?", function () {
                     $("#modal").modal('hide');
                     setTimeout(function () {
-                        deleteContrast(id, tr)
+                        deleteExp(id, tr)
                     }, 500)
-                });
-                $("#modal").modal({
-                    backdrop: 'static',
-                    keyboard: false
                 });
             });
 
@@ -119,41 +113,41 @@
                 window.location.href = "/experiment/" + id;
             });
 
-            $(".edit-btn").on('click',function (e) {
+            $(".edit-btn").on('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 let tr = $(e.target).parent().parent();
                 let id = tr.children()[0].innerHTML;
-                window.location.href = "/experiment/"+id+"/edit"
-            })
+                window.location.href = "/experiment/" + id + "/edit"
+            });
+
         });
 
-        function deleteContrast(id, ele) {
+        function deleteExp(id, ele) {
             $.ajax({
                 url: '/api/experiment/' + id,
                 type: 'DELETE',
                 headers: {"X-CSRFToken": CSRFToken},
                 success: function (resp) {
-                    $("#modal .modal-body")[0].innerHTML = "Experiment " + id + " has been deleted successfully."
-                    replaceEventListener("#modal-ok-btn", 'click', function () {
-                        $("#modal").modal('hide');
-                    });
-                    $("#modal").modal({
-                        backdrop: 'static',
-                        keyboard: false
-                    });
+                    showModal("Delete Experiment", "Experiment " + id + " has been deleted successfully.");
                     ele.remove();
                 },
                 error: function (err) {
-                    $("#modal .modal-body")[0].innerHTML = "Delete experiment " + id + " failed";
-                    replaceEventListener("#modal-ok-btn", 'click', function () {
-                        $("#modal").modal('hide');
-                    });
-                    $("#modal").modal({
-                        backdrop: 'static',
-                        keyboard: false
-                    });
+                    showModal("Delete Experiment", "Delete experiment " + id + " failed");
                 }
+            });
+        }
+
+        function showModal(title, msg, okFunc) {
+            let ok = typeof okFunc !== 'undefined' ? okFunc : function () {
+                $("#modal").modal('hide');
+            };
+            $("#modal .modal-body")[0].innerHTML = msg;
+            $(".modal-header .modal-title")[0].innerHTML = title;
+            replaceEventListener("#modal-ok-btn", 'click', ok);
+            $("#modal").modal({
+                backdrop: 'static',
+                keyboard: false
             });
         }
     </script>
