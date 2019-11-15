@@ -59,6 +59,10 @@ def not_implement(request):
     return render(request, 'boldpredict/not_implemented.html', {})
 
 
+def no_auth(request):
+    return render(request, 'boldpredict/no_auth.html', {})
+
+
 def word_list_contrast(request, model_type):
     context = {}
     context['word_list_suggestions'] = json.dumps(
@@ -167,6 +171,8 @@ def experiment_action(request):
 
 def experiment_detail(request, exp_id):
     exp = Experiment.objects.get(pk=exp_id)
+    if not exp.status == constants.APPROVED and (request.user != exp.creator ) and (not request.user.is_superuser):
+        return redirect(reverse('no_auth'))
     template = '<br> <h4>  <li> <a target="_parent" href={0}> {1} </a> </li> </h4> '
     txt = ''
     contrasts = exp.contrasts.all()
@@ -331,7 +337,7 @@ def save_experiment(request):
         params['exp_id'] = request.POST['exp_id']
         exp = experiment_api.update_experiment(**params)
         return redirect(reverse(stimuli_page, args=(int(request.POST['exp_id']),)))
-    
+
     if request.user.is_authenticated:
         params['creator'] = request.user
     exp = experiment_api.create_experiment(**params)
@@ -607,6 +613,11 @@ def subj_result_view(request, subj_name, contrast_id):
 
 def contrast_results_view(request, contrast_id):
     contrast = contrast_api.get_contrast_dict_by_id(contrast_id)
+    print("contrast = ", contrast)
+    if not(contrast['privacy_choice'] == constants.PUBLIC or (request.user.is_authenticated and \
+        (contrast['creator'] == request.user.username or request.user.is_superuser == True))):
+        return redirect(reverse('no_auth'))
+
     contrast['subject_num'] = settings.SUBJECT_NUM
     for i in range(8):
         subject_key = "subject" + str(i + 1)

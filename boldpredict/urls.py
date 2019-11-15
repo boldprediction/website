@@ -32,6 +32,7 @@ urlpatterns = [
     path('my_profile/contrast_list', views.my_profile_contrast_list, name="contrast_list"),
     path('my_profile/approval_list', views.my_profile_approval_list, name="approval_list"),
     path('not_implement', views.not_implement, name='not_implement'),
+     path('no_auth', views.no_auth, name='no_auth'),
     path('register', views.register_action, name='register'),
     path('confirm-registration/<slug:username>/<slug:token>',
          views.confirm_action, name='confirm'),

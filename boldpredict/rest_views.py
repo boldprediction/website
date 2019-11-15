@@ -74,10 +74,12 @@ def experiment_details(request, exp_id):
 def contrast_details(request, c_id):
     contrast = Contrast.objects.get(id=c_id)
     if request.method == 'DELETE':
-        contrast.delete()
+        contrast_api.delete_contrast(c_id)
+        # contrast.delete()
         return Response(contrast.serialize())
     elif request.method == 'POST':
         contrast_data = request.data
+        cache_api.delete_contrast_in_cache(contrast.id,contrast.hash_key)
         for key, value in contrast_data.items():
             if hasattr(contrast, key):
                 setattr(contrast, key, value)

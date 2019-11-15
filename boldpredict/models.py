@@ -117,6 +117,7 @@ class Contrast(models.Model):
         contrast_dict = {}
         contrast_dict['privacy_choice'] = self.privacy_choice
         contrast_dict['baseline_choice'] = self.baseline_choice
+        contrast_dict['creator'] = self.creator.username
         contrast_dict['list1_name'] = list1_name
         contrast_dict['list2_name'] = list2_name
         contrast_dict['list1'] = list1_text
