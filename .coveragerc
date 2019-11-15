@@ -1,7 +1,7 @@
 [run]
 include = */boldpredict/*
-omit = */config/*, *tests*, */boldpredict/forms.py, */boldpredict/views.py
+omit =*/boldpredict/test_*, */boldpredict/migrations/*, */config/*, *tests*, */boldpredict/forms.py, */boldpredict/views.py
 
 [report]
 include = */boldpredict/*
-omit = */config/*, *tests*, */boldpredict/forms.py
+omit = */boldpredict/test_*, */boldpredict/migrations/*, */config/*, *tests*, */boldpredict/forms.py

@@ -101,7 +101,7 @@ class ExperimentCreationAPITestCase(TestCase):
 
         get_response = self.api_client.get(
             '/api/contrasts/' + str(self.exp_id), {}, format='json')
-        
+
         contrasts = get_response.data
         for contrast in contrasts:
             assert contrast['id'] in contrast_ids
@@ -130,6 +130,66 @@ class ExperimentCreationAPITestCase(TestCase):
         assert response.status_code == 200
         assert response_data['id'] == self.stimuli_id1
 
+
+class ExperimentListAPITestCase(TestCase):
+    def setUp(self):
+        user = User.objects.create_superuser(
+            username='test', password="test", email="test@boldpredict.com")
+        self.api_client = APIClient(enforce_csrf_checks=True)
+        self.api_client.force_authenticate(user=user)
+        self.input_params = {'model_type': WORD2VEC,
+                             'stimuli_type': WORD_LIST,
+                             'coordinate_space': MNI,
+                             'experiment_title': 'test experiment',
+                             'authors': 'vivi',
+                             'DOI': '10.1162/0898929054021102',
+                             'is_published': True,
+                             }
+        self.experiment = experiment_api.create_experiment(**self.input_params)
+        self.exp_id = self.experiment.id
+        self.experiment.creator = user
+        self.experiment.save()
+
+    def test_experiments_list(self):
+        response = self.api_client.get(
+            '/api/experiments/test', {}, format='json')
+        response_data = response.data
+        assert response_data[0]['id'] == self.exp_id
+
+    def test_approval_list(self):
+        response = self.api_client.get(
+            '/api/submitted_experiments', {}, format='json')
+        response_data = response.data
+        assert len(response_data) == 0
+        self.experiment.status = SUBMITTED
+        self.experiment.save()
+        response = self.api_client.get(
+            '/api/submitted_experiments', {}, format='json')
+        response_data = response.data
+        assert response_data[0]['id'] == self.exp_id
+
+    def test_update_experiment(self):
+        contet_params = {
+            'experiment_title': 'new experiment'
+        }
+        response = self.api_client.post(
+            '/api/experiment/'+str(self.exp_id),
+            contet_params,
+            format='json')
+        response_data = response.data
+        assert response_data['experiment_title'] == 'new experiment'
+
+    def test_experiments_approve(self):
+        response = self.api_client.post(
+            '/api/experiment/'+str(self.exp_id)+"/approval", {}, format='json')
+        response_data = response.data
+        assert response_data['status'] == APPROVED
+
+    def test_experiments_reject(self):
+        response = self.api_client.post(
+            '/api/experiment/'+str(self.exp_id)+"/reject", {}, format='json')
+        response_data = response.data
+        assert response_data['status'] == REJECT
 
 
 class ContrastAPITestCase(TestCase):
@@ -177,3 +237,83 @@ class ContrastAPITestCase(TestCase):
         contrast_ids = json.loads(response.content)['contrast_ids']
         cache_api.delete_contrast_in_cache(contrast_id, contrast_hash_key)
         assert contrast_id in contrast_ids
+
+
+class ContrastListAPITestCase(TestCase):
+    def setUp(self):
+        user = User.objects.create(
+            username='test', password="test")
+        self.api_client = APIClient(enforce_csrf_checks=True)
+        self.api_client.force_authenticate(user=user)
+        self.input_params = {'model_type': ENG1000,
+                             'stimuli_type': WORD_LIST,
+                             'coordinate_space': MNI,
+                             'list1_name': 'fruit',
+                             'list1_text': 'apple, peach, grapes',
+                             'list2_name': 'action',
+                             'list2_text': 'run, walk, smile, cry',
+                             'contrast_type': PUBLIC,
+                             'contrast_title': 'contrast test',
+                             }
+
+        c_id, find, hash_key = contrast_api.check_existing_contrast(
+            **self.input_params)
+        if find:
+            cache_api.delete_contrast_in_cache(c_id, hash_key)
+
+        response = self.api_client.post(
+            '/api/create_contrast', self.input_params, format='json')
+
+        self.contrast_id = json.loads(response.content)['contrast_id']
+        contrast = Contrast.objects.get(id=self.contrast_id)
+        contrast.creator = user
+        contrast.save()
+
+    def testContrastList(self):
+        response = self.api_client.get(
+            '/api/contrasts/test', {}, format='json')
+        response_data = response.data
+        assert response_data[0]['c_id'] == self.contrast_id
+
+    def testGetContrast(self):
+        response = self.api_client.get(
+            '/api/contrast/'+str(self.contrast_id), {}, format='json')
+        response_data = response.data
+        assert response_data['c_id'] == self.contrast_id
+
+    def testUpdateContrast(self):
+        contet_params = {
+            'privacy_choice': 'PU'
+        }
+        response = self.api_client.post(
+            '/api/contrast/'+str(self.contrast_id),
+        
+        contet_params,
+            format='json')
+        response_data = response.data
+        assert response_data['privacy_choice'] == 'PU'
+
+        contet_params = {
+            'privacy_choice': 'PR'
+        }
+
+        response = self.api_client.post(
+            '/api/contrast/'+str(self.contrast_id),
+            contet_params,
+            format='json')
+        response_data = response.data
+        assert response_data['privacy_choice'] == 'PR'
+    
+    def testDeleteContrast(self):
+        response = self.api_client.delete(
+            '/api/contrast/'+str(self.contrast_id),
+            {},
+            format='json')
+        
+        try:
+            response = self.api_client.get(
+                '/api/contrast/'+str(self.contrast_id), {}, format='json')
+            assert False
+        except Contrast.DoesNotExist:
+            assert True
+

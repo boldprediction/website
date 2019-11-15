@@ -32,12 +32,12 @@ class ExperimentTestCase(TestCase):
         self.assertEqual(exp.coordinate_space, MNI)
         self.assertEqual(exp.DOI, '10.1162/0898929054021102')
         self.assertEqual(exp.is_published, True)
+        assert exp.status == CREATED
 
         exp_dict = {'exp_id': exp_id, "privacy_choice": 'PR',
                     'experiment_title': "changed title"}
         new_exp = experiment_api.update_experiment(**exp_dict)
         assert new_exp.title == "changed title"
-
 
 
 class ContrastTestCase(TestCase):
