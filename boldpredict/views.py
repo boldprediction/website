@@ -55,6 +55,32 @@ def contrast_action(request):
     return render(request, 'boldpredict/contrast_type.html', context)
 
 
+def not_implement(request):
+    return render(request, 'boldpredict/not_implemented.html', {})
+
+
+def no_auth(request):
+    return render(request, 'boldpredict/no_auth.html', {})
+
+
+def word_list_contrast(request, model_type):
+    context = {}
+    context['word_list_suggestions'] = json.dumps(
+        constants.WORD_LIST_CONDITIONS)
+    context['conditions'] = []
+    for condition_key, condition_value in constants.WORD_LIST_CONDITIONS.items():
+        condition = {}
+        condition['name'] = condition_key
+        condition['brief_part1'] = condition_value[:25]
+        condition['brief_part2'] = condition_value[25:50]
+        context['conditions'].append(condition)
+    context['form'] = WordListForm()
+    context['public'] = True
+    context['model_type'] = model_type
+    context['stimuli_type'] = constants.WORD_LIST
+    return render(request, 'boldpredict/word_list_contrast_filler.html', context)
+
+
 def new_contrast(request):
     context = {}
     if request.method != 'GET':
@@ -67,23 +93,10 @@ def new_contrast(request):
 
     stimuli_type = request.GET['stimuli_type']
     model_type = request.GET['model_type']
-    if stimuli_type == constants.WORD_LIST:
-        context['word_list_suggestions'] = json.dumps(
-            constants.WORD_LIST_CONDITIONS)
-        context['conditions'] = []
-        for condition_key, condition_value in constants.WORD_LIST_CONDITIONS.items():
-            condition = {}
-            condition['name'] = condition_key
-            condition['brief_part1'] = condition_value[:25]
-            condition['brief_part2'] = condition_value[25:50]
-            context['conditions'].append(condition)
-        context['form'] = WordListForm()
-        context['public'] = True
-        context['model_type'] = model_type
-        context['stimuli_type'] = stimuli_type
-        return render(request, 'boldpredict/word_list_contrast_filler.html', context)
-
-    return redirect(reverse('contrast'))
+    page_name = constants.CONTRAST_FILLER.get(stimuli_type, None)
+    if page_name is None:
+        return redirect(reverse('not_implement'))
+    return redirect(reverse(page_name, kwargs={'model_type': model_type}))
 
 
 def word_list_start_contrast(request):
@@ -145,21 +158,27 @@ def index(request):
 
 
 def experiment_action(request):
-    published_exps = Experiment.objects.filter(is_published=True).filter(is_approved=True)
+    # published_exps = Experiment.objects.filter(is_published = True ).filter( is_approved = True )
+    published_exps = Experiment.objects.filter(
+        is_published=True).filter(status=constants.APPROVED)
     txt = ''
     template = '<br> <h4> <li> <a  href={0}> {1} </a> </li> </h4> <br> '
     for exp in published_exps:
-        txt += template.format('/experiment/{0}'.format(exp.id), exp.experiment_title)
+        txt += template.format('/experiment/{0}'.format(exp.id),
+                               exp.experiment_title)
     return render(request, 'boldpredict/experiment_list.html', {'txt': txt})
 
 
 def experiment_detail(request, exp_id):
     exp = Experiment.objects.get(pk=exp_id)
+    if not exp.status == constants.APPROVED and (request.user != exp.creator ) and (not request.user.is_superuser):
+        return redirect(reverse('no_auth'))
     template = '<br> <h4>  <li> <a target="_parent" href={0}> {1} </a> </li> </h4> '
     txt = ''
     contrasts = exp.contrasts.all()
     for contrast in contrasts:
-        txt += template.format('/contrast_results/{0}'.format(contrast.id), contrast.contrast_title)
+        txt += template.format('/contrast_results/{0}'.format(
+            contrast.id), contrast.contrast_title)
     return render(request, 'boldpredict/experiment.html', {'title': exp.experiment_title,
                                                            'DOI': exp.DOI, 'authors': exp.authors,
                                                            'txt': txt})
@@ -276,7 +295,8 @@ def save_experiment(request):
         'stimuli_type': request.POST.get('stimuli_type', WORD_LIST),
         'model_type': request.POST.get('model_type', ENG1000)
     }
-    error_context['experiment_title'] = request.POST.get('experiment_title', "")
+    error_context['experiment_title'] = request.POST.get(
+        'experiment_title', "")
     error_context['authors'] = request.POST.get('authors', "")
     error_context['DOI'] = request.POST.get('DOI', "")
 
@@ -305,28 +325,32 @@ def save_experiment(request):
         return render(request, 'boldpredict/new_experiment.html', error_context)
 
     params = request.POST.dict()
-    if request.user.is_authenticated:
-        params['creator'] = request.user
     params['is_published'] = True
 
+    stimuli_type = request.POST['stimuli_type']
+    stimuli_page = constants.EXPERIMENT_STIMULI_FILLER.get(stimuli_type, None)
+    if stimuli_page is None:
+        return redirect(reverse('not_implement'))
+
     if 'exp_id' in request.POST and len(request.POST['exp_id']) > 0:
-        # save new content    
+        # save new content
         params['exp_id'] = request.POST['exp_id']
         exp = experiment_api.update_experiment(**params)
-        return redirect(reverse('edit_stimulus', args=(int(request.POST['exp_id']),)))
+        return redirect(reverse(stimuli_page, args=(int(request.POST['exp_id']),)))
 
+    if request.user.is_authenticated:
+        params['creator'] = request.user
     exp = experiment_api.create_experiment(**params)
-    return redirect(reverse('edit_stimulus', args=(int(exp.id),)))
-    # return render(request, 'boldpredict/add_stimuli.html', {'exp_id':exp.id, 'stimuli_type':params['stimuli_type']})
+    return redirect(reverse(stimuli_page, args=(int(exp.id),)))
 
 
 @login_required
-def edit_stimulus(request, exp_id):
+def word_edit_stimuli(request, exp_id):
     exp = Experiment.objects.get(pk=exp_id)
     if not (exp.is_published and (exp.creator.username == request.user.username or request.user.is_superuser)):
         raise Http404
     stimuli_type = exp.stimuli_type
-    return render(request, 'boldpredict/add_stimuli.html', {'exp_id': exp_id, 'stimuli_type': stimuli_type})
+    return render(request, 'boldpredict/word_add_stimuli.html', {'exp_id': exp_id, 'stimuli_type': stimuli_type})
 
 
 @login_required
@@ -341,6 +365,36 @@ def my_profile_action(request):
     context['email'] = user.email
 
     return render(request, 'boldpredict/my_profile.html', context)
+
+
+@login_required
+def my_profile_experiment_list(request):
+    exps = Experiment.objects.filter(
+        is_published=True).filter(creator__username=request.user.username)
+    experiments = [exp.serialize() for exp in exps.all()]
+    context = {"experiments": experiments}
+    return render(request, "boldpredict/my_profile_experiment_list.html", context)
+
+
+@login_required
+def my_profile_contrast_list(request):
+    contrasts = Contrast.objects.filter(
+        experiment__is_published=False).filter(creator__username=request.user.username)
+    contrast_list = [con.serialize() for con in contrasts.all()]
+    context = {"contrasts": contrast_list}
+    return render(request, "boldpredict/my_profile_contrast_list.html", context)
+
+
+@login_required
+def my_profile_approval_list(request):
+    if not request.user.is_superuser:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    exps = Experiment.objects.filter(
+        is_published=True).filter(status=constants.SUBMITTED)
+    experiments = [exp.serialize() for exp in exps.all()]
+    context = {"experiments": experiments}
+    return render(request, 'boldpredict/my_profile_approval_list.html', context)
 
 
 def register_action(request):
@@ -548,7 +602,8 @@ def get_contrast(request):
 
 def subj_result_view(request, subj_name, contrast_id):
     context = {}
-    subj_str = contrast_api.get_contrast_subj_webgl_strs(contrast_id, subj_name)
+    subj_str = contrast_api.get_contrast_subj_webgl_strs(
+        contrast_id, subj_name)
     context['subject_url'] = settings.SUBJECTS_URL
     context['subject_cstr'] = subj_str
     context['subject_name'] = subj_name
@@ -558,6 +613,11 @@ def subj_result_view(request, subj_name, contrast_id):
 
 def contrast_results_view(request, contrast_id):
     contrast = contrast_api.get_contrast_dict_by_id(contrast_id)
+    print("contrast = ", contrast)
+    if not(contrast['privacy_choice'] == constants.PUBLIC or (request.user.is_authenticated and \
+        (contrast['creator'] == request.user.username or request.user.is_superuser == True))):
+        return redirect(reverse('no_auth'))
+
     contrast['subject_num'] = settings.SUBJECT_NUM
     for i in range(8):
         subject_key = "subject" + str(i + 1)
@@ -570,7 +630,7 @@ def contrast_results_view(request, contrast_id):
     if contrast and contrast['stimuli_type'] == WORD_LIST:
         contrast['image_url'] = settings.IMAGE_URL
         return render(request, 'boldpredict/word_list_contrast_results.html', contrast)
-    return render(request, 'boldpredict/index.html', {})
+    return redirect(reverse('not_implement'))
 
 
 @csrf_exempt
@@ -589,7 +649,8 @@ def update_contrast(request):
         try:
             print("contrast_id - ", contrast_id, " group_analyses = ", group_analyses, "subjects_analyses = ",
                   subjects_analyses)
-            contrast_api.update_contrast_result(contrast_id, group_analyses, subjects_analyses)
+            contrast_api.update_contrast_result(
+                contrast_id, group_analyses, subjects_analyses)
             response_data['contrast_ids'].append(contrast_id)
         except:
             raise HttpResponseBadRequest

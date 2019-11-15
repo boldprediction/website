@@ -24,9 +24,12 @@ class Experiment(models.Model):
 
     is_published = models.BooleanField(
         'Is this a published experiment', default=False)
-    
-    is_approved = models.BooleanField(
-        'If it is a published experiment, is this experiment approved', default=False)
+
+    # is_approved = models.BooleanField(
+    #     'If it is a published experiment, is this experiment approved', default=False)
+
+    status = models.CharField(
+        'Stimuli Type', choices=STATUS_CHOICE, max_length=20, default=CREATED)
 
     def serialize(self):
         return {
@@ -39,8 +42,9 @@ class Experiment(models.Model):
             "coordinate_space": self.coordinate_space,
             "model_type": self.model_type,
             "is_published": self.is_published,
-            "is_approved" : self.is_approved,
-            "stimuli": [ stimuli.serialize() for stimuli in self.stimulus.all() ]
+            # "is_approved": self.is_approved,
+            "status": self.status,
+            "stimuli": [stimuli.serialize() for stimuli in self.stimulus.all()]
         }
 
 
@@ -57,8 +61,9 @@ class Stimuli(models.Model):
                 "id": self.id,
                 "stimuli_type": self.stimuli_type,
                 "stimuli_name": self.stimuli_name,
-                "stimuli_content": self.word_list_stimuli.word_list if hasattr(self,'word_list_stimuli') else ""
+                "stimuli_content": self.word_list_stimuli.word_list if hasattr(self, 'word_list_stimuli') else ""
             }
+
 
 class WordListStimuli(models.Model):
     word_list = models.TextField(max_length=10000)
@@ -66,6 +71,8 @@ class WordListStimuli(models.Model):
         Stimuli, related_name='word_list_stimuli', on_delete=models.CASCADE)
 
 # Create your models here.
+
+
 class Contrast(models.Model):
     id = HashidAutoField(primary_key=True)
     privacy_choice = models.CharField(
@@ -83,8 +90,7 @@ class Contrast(models.Model):
     hash_key = models.CharField('Hash Key', max_length=56, db_index=True)
     created_at = models.DateTimeField(default=timezone.now)
     result_generated_at = models.DateTimeField(null=True)
-    figures_list = models.TextField('Contrast related figures', default = '[]')
-
+    figures_list = models.TextField('Contrast related figures', default='[]')
 
     def serialize(self):
         if self.experiment.stimuli_type == WORD_LIST:
@@ -109,6 +115,9 @@ class Contrast(models.Model):
 
         # construct contrast dict
         contrast_dict = {}
+        contrast_dict['privacy_choice'] = self.privacy_choice
+        contrast_dict['baseline_choice'] = self.baseline_choice
+        contrast_dict['creator'] = self.creator.username if self.creator is not None else None
         contrast_dict['list1_name'] = list1_name
         contrast_dict['list2_name'] = list2_name
         contrast_dict['list1'] = list1_text
@@ -124,7 +133,8 @@ class Contrast(models.Model):
         contrast_dict['created_at'] = str(self.created_at)
         contrast_dict['result_generated_at'] = str(self.result_generated_at)
         contrast_dict['figures_list'] = self.figures_list
-        contrast_dict['figure_num'] = len(json.loads(self.figures_list))
+        contrast_dict['figure_num'] = len(json.loads(
+            self.figures_list)) if len(self.figures_list) != 0 else 0
 
         # collect subjects result
         subjects_dict = {}

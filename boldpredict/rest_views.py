@@ -43,14 +43,14 @@ def stimuli_list(request):
     """
     if request.method == 'POST':
         request_data = request.data
-        if 'stimuli_name' in request_data and 'stimuli_type' in request_data   \
+        if 'stimuli_name' in request_data and 'stimuli_type' in request_data \
                 and 'stimuli_content' in request_data and 'exp_id' in request_data:
             stimuli = stimuli_api.create_stimuli(**request_data)
             return Response(stimuli.serialize(), status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'DELETE'])
 def experiment_details(request, exp_id):
     experiment = experiment_api.get_experiment(exp_id)
     if experiment is None:
@@ -64,13 +64,29 @@ def experiment_details(request, exp_id):
         experiment_api.update_experiment(**data)
         experiment = experiment_api.get_experiment(exp_id)
         return Response(experiment.serialize())
+    elif request.method == 'DELETE':
+        experiment.delete()
+        return Response({"success": True, "exp_id": exp_id})
 
 
-@api_view(['DELETE'])
+@api_view(['DELETE', 'POST', 'GET'])
+@login_required
 def contrast_details(request, c_id):
     contrast = Contrast.objects.get(id=c_id)
-    contrast.delete()
-    return Response({'id': c_id})
+    if request.method == 'DELETE':
+        contrast_api.delete_contrast(c_id)
+        # contrast.delete()
+        return Response(contrast.serialize())
+    elif request.method == 'POST':
+        contrast_data = request.data
+        cache_api.delete_contrast_in_cache(contrast.id,contrast.hash_key)
+        for key, value in contrast_data.items():
+            if hasattr(contrast, key):
+                setattr(contrast, key, value)
+        contrast.save()
+        return Response(contrast.serialize())
+    elif request.method == 'GET':
+        return Response(contrast.serialize())
 
 
 @api_view(['DELETE'])
@@ -104,7 +120,7 @@ def contrast_list(request, exp_id):
     if request.method == 'POST':
         contrasts = request.data
         contrast_ids = []
-#       delete previous contrasts
+        #       delete previous contrasts
         for contrast in exp.contrasts.all():
             contrast_api.delete_contrast(contrast.id)
 
@@ -155,7 +171,8 @@ def contrast_list(request, exp_id):
             contrast_ids.append(str(contrast_obj.id))
             sqs_api.send_contrast_message(sqs_api.create_contrast_message(
                 contrast_obj), exp.stimuli_type)
-
+            exp.status = constants.SUBMITTED
+            exp.save()
         return Response({'contrast_ids': contrast_ids})
 
     elif request.method == 'GET':
@@ -210,6 +227,18 @@ def get_text(condition):
     return ','.join(text)
 
 
+@api_view(['GET'])
+@login_required
+def user_contrast_list(request, username):
+    if request.user.username != username:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    contrasts = Contrast.objects.filter(
+        experiment__is_published=False).filter(creator__username=username)
+    contrast_list = [con.serialize() for con in contrasts.all()]
+    return Response(contrast_list)
+
+
 @api_view(['POST'])
 @login_required
 def experiment_email(request, exp_id):
@@ -220,7 +249,7 @@ def experiment_email(request, exp_id):
     Please click the link below to edit and approve the submitted published experiment:
     http://{host}{path}
     """.format(host=request.get_host(),
-               path=reverse('experiment_edit', args=(exp_id, )))
+               path=reverse('experiment_edit', args=(exp_id,)))
     send_mail(subject="Approve published experiment" + exp.experiment_title,
               message=email_body,
               from_email="boldpredictionscmu@gmail.com",
@@ -233,11 +262,51 @@ def experiment_email(request, exp_id):
 @login_required
 def experiment_approval(request, exp_id):
     if request.user.is_superuser == False:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     data = {}
     data['exp_id'] = exp_id
-    data['is_approved'] = True
+    # data['is_approved'] = True
+    data['status'] = constants.APPROVED
     experiment_api.update_experiment(**data)
     exp = experiment_api.get_experiment(exp_id)
     return Response(exp.serialize())
+
+
+@api_view(['POST'])
+@login_required
+def experiment_reject(request, exp_id):
+    if request.user.is_superuser == False:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    data = {}
+    data['exp_id'] = exp_id
+    # data['is_approved'] = True
+    data['status'] = constants.REJECT
+    experiment_api.update_experiment(**data)
+    exp = experiment_api.get_experiment(exp_id)
+    return Response(exp.serialize())
+
+
+@api_view(['GET'])
+@login_required
+def experiment_list(request, username):
+    if request.user.username != username:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    exps = Experiment.objects.filter(
+        is_published=True).filter(creator__username=username)
+    experiments = [exp.serialize() for exp in exps.all()]
+    return Response(experiments)
+
+
+@api_view(['GET'])
+@login_required
+def submitted_experiments(request):
+    if request.user.is_superuser == False:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    exps = Experiment.objects.filter(
+        is_published=True).filter(status=constants.SUBMITTED)
+    experiments = [exp.serialize() for exp in exps.all()]
+    return Response(experiments)
