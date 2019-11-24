@@ -189,7 +189,9 @@ LOGIN_REDIRECT_URL = ''
 config = ConfigParser()
 print("\n\n\n" + BASE_DIR + "\n\n\n")
 
-config.read(os.path.join(BASE_DIR, '../website-config/config.ini'))
+# config.read(os.path.join(BASE_DIR, '../website-config/config.ini'))
+config.read(os.path.join(BASE_DIR, 'config/config.ini'))
+
 
 EMAIL_HOST = config.get('Email', 'Host')
 EMAIL_PORT = int(config.get('Email', 'Port'))
@@ -226,4 +228,3 @@ CACHE_EXPIRATION_TIME = 86400
 REFRESH_INTERVAL = 1000
 TIMEOUT_INTERVAL = 50000
 
-# ADMINISTRATORS = [ 'admin', 'hww19920718'  ]
