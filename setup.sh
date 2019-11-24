@@ -9,6 +9,7 @@ touch config.ini
 cd ..
 pip install -r requirements.txt
 
+
 cd ..
 
 mkdir uwsgi

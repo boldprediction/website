@@ -204,7 +204,7 @@ print('Email host:port = {host}:{port}, user={user}'.format(
 SECRET_KEY = config.get('System', 'SECRET_KEY')
 HOST_IP = '3.15.123.123'
 APPLICATION_PORT = '8000'
-SQS_QUERY_URL = 'https://sqs.us-east-2.amazonaws.com/280175692519/bold_sqs'
+SQS_QUERY_URL = 'https://sqs.us-east-2.amazonaws.com/280175692519/sqs_bold_prod'
 
 AWS_ACCESS_KEY = config.get('System', 'AWS_ACCESS_KEY')
 AWS_SECRET_KEY = config.get('System', 'AWS_SECRET_KEY')
