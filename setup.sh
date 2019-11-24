@@ -10,11 +10,7 @@ touch config.ini
 touch uwsgi-config.ini
 cd ..
 
-
-python3 -m venv venv/
-source venv/bin/activate
 pip install -r requirements.txt
-deactivate
 
 # installation
 if ! [ -x "$(command -v memcached)" ]; then
