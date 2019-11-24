@@ -7,6 +7,8 @@ mkdir config
 cd config 
 touch config.ini
 cd ..
+pip install -r requirements.txt
+
 cd ..
 
 mkdir uwsgi
@@ -14,7 +16,6 @@ cd uwsgi
 touch uwsgi.ini
 cd ..
 
-pip install -r requirements.txt
 
 # # installation
 # if ! [ -x "$(command -v memcached)" ]; then
