@@ -4,11 +4,12 @@ cd logs
 touch website.log
 cd ..
 mkdir config
-mkdir uwsgi
 cd config 
 touch config.ini
 cd ..
+cd ..
 
+mkdir uwsgi
 cd uwsgi 
 touch uwsgi.ini
 cd ..
