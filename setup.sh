@@ -7,8 +7,10 @@ mkdir config
 mkdir uwsgi
 cd config 
 touch config.ini
-touch uwsgi-config.ini
 cd ..
+
+cd uwsgi 
+touch uwsgi.ini
 
 pip install -r requirements.txt
 
