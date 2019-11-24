@@ -11,6 +11,7 @@ cd ..
 
 cd uwsgi 
 touch uwsgi.ini
+cd ..
 
 pip install -r requirements.txt
 
