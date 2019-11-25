@@ -189,7 +189,7 @@ config = ConfigParser()
 print("\n\n\n" + BASE_DIR + "\n\n\n")
 
 # config.read(os.path.join(BASE_DIR, '../website-config/config.ini'))
-config.read(os.path.join(BASE_DIR, 'config/config.ini'))
+config.read(os.path.join(BASE_DIR, '../config/config.ini'))
 
 
 EMAIL_HOST = config.get('Email', 'Host')
