@@ -1,63 +1,87 @@
 {% extends "boldpredict/base.html" %}
 
-
 {% block header %}
-<section>
-    <div id="Content" class="wrapper topSection">
-        <div id="Header">
-            <h2>My Profile</h2>
+    <section>
+        <div id="Content" class="wrapper topSection">
+            <div id="Header">
+                <h2>My Profile</h2>
+            </div>
         </div>
-    </div>
-</section>
-{% endblock%}
+    </section>
+{% endblock %}
 
 
 {% block content %}
-{% load static %}
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-3">
-                User Name:
+    {% load static %}
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-3">
+                    User Name:
+                </div>
+                <div class="col-md-3">
+                    {{ username }}
+                </div>
+                <div class="col-md-2"></div>
             </div>
-            <div class="col-md-3">
-                {{username}}
-            </div>
-            <div class="col-md-2"></div>
-        </div>
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-3">
-                First Name:
-            </div>
-            <div class="col-md-3">
-                {{first_name}}
-            </div>
-            <div class="col-md-2"></div>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-3">
+                    First Name:
+                </div>
+                <div class="col-md-3">
+                    {{ first_name }}
+                </div>
+                <div class="col-md-2"></div>
 
-        </div>
-        <div class="row">
-            <div class="col-md-4"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"></div>
 
-            <div class="col-md-3">
-                Last Name:
+                <div class="col-md-3">
+                    Last Name:
+                </div>
+                <div class="col-md-3">
+                    {{ last_name }}
+                </div>
+                <div class="col-md-2"></div>
             </div>
-            <div class="col-md-3">
-                {{last_name}}
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-3">
+                    Email:
+                </div>
+                <div class="col-md-3">
+                    {{ email }}
+                </div>
+                <div class="col-md-2"></div>
             </div>
-            <div class="col-md-2"></div>
+            <div class="row" style="height: 3rem">
+            </div>
+            <div class="row">
+                {% if user.is_superuser %}
+                    <div class="col-md-3"></div>
+                {% else %}
+                    <div class="col-md-4"></div>
+                {% endif %}
+                <div class="col-md-2">
+                    <a href="my_profile/experiment_list"><button type="button" class="btn btn-warning">Experiment List</button></a>
+                </div>
+                <div class="col-md-2">
+                    <a href="my_profile/contrast_list"><button type="button" class="btn btn-info">Contrast List</button></a>
+                </div>
+                {% if user.is_superuser %}
+                    <div class="col-md-2">
+                        <a href="my_profile/approval_list"><button type="button" class="btn btn-danger">Approval List</button></a>
+                    </div>
+                    <div class="col-md-3"></div>
+                {% else %}
+                    <div class="col-md-4"></div>
+                {% endif %}
+            </div>
+            <div class="row" style="height: 3rem">
+            </div>
         </div>
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-3">
-                Email:
-            </div>
-            <div class="col-md-3">
-                {{email}}
-            </div>
-            <div class="col-md-2"></div>
-        </div>
-    </div>
-</section>
-{% endblock%}
+    </section>
+{% endblock %}

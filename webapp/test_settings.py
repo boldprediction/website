@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'boldpredict',
+    'boldpredict'
 ]
 
 MIDDLEWARE = [
@@ -189,7 +189,9 @@ LOGIN_REDIRECT_URL = ''
 config = ConfigParser()
 print("\n\n\n" + BASE_DIR + "\n\n\n")
 
-config.read(os.path.join(BASE_DIR, '../website-config/config.ini'))
+# config.read(os.path.join(BASE_DIR, '../website-config/config.ini'))
+config.read(os.path.join(BASE_DIR, '../config/config.ini'))
+
 
 EMAIL_HOST = config.get('Email', 'Host')
 EMAIL_PORT = int(config.get('Email', 'Port'))
@@ -207,10 +209,13 @@ SQS_QUERY_URL = 'https://sqs.us-east-2.amazonaws.com/280175692519/bold_sqs'
 
 AWS_ACCESS_KEY = config.get('System', 'AWS_ACCESS_KEY')
 AWS_SECRET_KEY = config.get('System', 'AWS_SECRET_KEY')
-REGION_NAME =  'us-east-2'
+REGION_NAME = 'us-east-2'
 
 SUBJECTS_URL = '/static/boldpredict/subjects/'
 DATA_URL = '/static/outputs/'
+IMAGE_URL = '/static/outputs/uploaded_images/'
+UPLOAD_IMAGE_ROOT = os.path.join(STATIC_ROOT, 'outputs/uploaded_images/')
+
 
 SUBJECTS = ["JGfs", "MLfs2", "AHfs","DSfs","NNS0","BGfs","WHfs","ANfs"]
 SUBJECT_NUM = len(SUBJECTS)
@@ -222,3 +227,4 @@ CACHE_EXPIRATION_TIME = 86400
 
 REFRESH_INTERVAL = 1000
 TIMEOUT_INTERVAL = 50000
+

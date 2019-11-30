@@ -1,0 +1,7 @@
+[run]
+include = */boldpredict/*
+omit =*/boldpredict/test_*, */boldpredict/migrations/*, */config/*, *tests*, */boldpredict/forms.py, */boldpredict/views.py
+
+[report]
+include = */boldpredict/*
+omit = */boldpredict/test_*, */boldpredict/migrations/*, */config/*, *tests*, */boldpredict/forms.py
