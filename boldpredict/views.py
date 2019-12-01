@@ -589,7 +589,7 @@ def forget(request):
         forgot_context['form'] = ForgotForm()
         return render(request, 'boldpredict/forget_password.html', forgot_context)
 
-
+@csrf_exempt
 def get_contrast(request):
     if not request.GET.get('contrast_id', None):
         raise Http404
